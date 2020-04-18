@@ -2027,12 +2027,12 @@ Pageheader
     font-size: 12px;
 }
 
+
 .page-breadcrumb .breadcrumb .breadcrumb-item+.breadcrumb-item::before {
     display: inline-block;
     padding-right: .5rem;
     color: #b1b1c0;
-    content: "\f105";
-    font-family: 'Font Awesome\ 5 Free';
+    content: '\02C3';
     font-weight: 600;
 }
 
