@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 
 namespace roleDemo.Areas.Identity.Pages.Account
 {
@@ -15,9 +16,12 @@ namespace roleDemo.Areas.Identity.Pages.Account
     {
         private readonly UserManager<IdentityUser> _userManager;
 
-        public ResetPasswordModel(UserManager<IdentityUser> userManager)
+        private readonly IConfiguration _configuration;
+
+        public ResetPasswordModel(UserManager<IdentityUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         [BindProperty]
