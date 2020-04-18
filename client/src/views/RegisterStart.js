@@ -1,46 +1,40 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
+const bodyStyles = {
+    height: '100vh',
+    display: 'flex',
+    msFlexAlign: 'center',
+    alignItems: 'center',
+    paddingTop: '40px',
+    paddingBottom: '40px'
+}
 
 const RegisterStart = (props) => {
-
     return (
-        <>
-            <div className="container d-flex justify-content-center align-items-center " style={{ height: "100vh" }}>
-
-                <div className="pt-1 bg-primary" style={{borderRadius: "10px"}}>
-
-                <div className="container card bg-light px-0 py-2 mb-0" style={{ width: "25rem"}}>
-                    <div className="h4 text-center mt-3 text-dark">Select Account Type</div>
-                    <div className="row align-items-center mb-2">
-                        <div className="col-sm-3 col-md-2 my-3"></div>
-                        <div className="col-sm-6 col-md-8" >
-                            <div style={{ maxWidth: "20rem" }} className="mx-auto">
-                                <button type="button" className="btn btn-sm btn-block rounded-0 my-2 bg-light border border-secondary">
-                                    <a href="#" className="text-dark">
-                                        <span style={{ fontSize: ".9rem" , lineHeight: "1.5rem" }}>
-                                        <i className="material-icons py-0">business</i>
-                                     I want to hire workers
-                                         </span>
-                                    </a>
-                                </button>
-                            </div>
-                            <div style={{ maxWidth: "20rem" }} className="mx-auto">
-                                <button type="button" className="btn btn-sm btn-block rounded-0 my-2 bg-light border border-secondary">
-                                    <a href="#" className="text-dark">
-                                        <span style={{ fontSize: ".9rem" , lineHeight: "1.5rem"}}>
-                                        <i className="material-icons py-0">account_box</i>
-                                    I want to find work
-                                     </span>
-                                    </a>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col-sm-3 col-md-2 my-3"></div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </>
+    <div style={bodyStyles}>
+    <form className="splash-container">
+    <div className="card">
+        <div className="card-header">
+            <h3 className="mb-1">Get Started</h3>
+            <p>Please select your account type.</p>
+        </div>
+        <div className="card-body">
+            <a href="/register/client" className="d-block btn btn-outline-primary btn-lg text-left mb-3">
+                <span className="h5"><i className="material-icons mr-2">business</i>Company Account</span><br />
+                <small>Post jobs and hire labourers</small>
+            </a>
+            <a href="/register/labourer" className="d-block btn btn-outline-primary btn-lg text-left">
+                <span className="h5"><i className="material-icons mr-2">emoji_people</i>Labourer Account</span><br />
+                <small>Find work fast based on your skills</small>
+            </a>
+        </div>
+        <div className="card-footer bg-white">
+            <p>Already have an account? <Link to="/login" className="text-primary">Login here.</Link></p>
+        </div>
+    </div>
+    </form>
+    </div>
     )
 }
 
