@@ -9,7 +9,7 @@ using labourRecruitment.Models.LabourRecruitment;
 namespace labourRecruitment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200418040348_InitialCreate")]
+    [Migration("20200418203614_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -227,6 +227,10 @@ namespace labourRecruitment.Migrations
                         .HasColumnName("client_city")
                         .HasMaxLength(20)
                         .IsUnicode(false);
+
+                    b.Property<string>("ClientDescription")
+                        .HasColumnName("client_description")
+                        .HasColumnType("text");
 
                     b.Property<string>("ClientEmail")
                         .HasColumnName("client_email")

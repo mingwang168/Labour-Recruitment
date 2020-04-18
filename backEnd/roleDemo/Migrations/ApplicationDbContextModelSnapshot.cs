@@ -226,6 +226,10 @@ namespace labourRecruitment.Migrations
                         .HasMaxLength(20)
                         .IsUnicode(false);
 
+                    b.Property<string>("ClientDescription")
+                        .HasColumnName("client_description")
+                        .HasColumnType("text");
+
                     b.Property<string>("ClientEmail")
                         .HasColumnName("client_email")
                         .HasMaxLength(30)

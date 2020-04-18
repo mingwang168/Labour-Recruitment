@@ -78,6 +78,10 @@ namespace labourRecruitment.Models.LabourRecruitment
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ClientDescription)
+                    .HasColumnName("client_description")
+                    .HasColumnType("text");
+
                 entity.Property(e => e.ClientEmail)
                     .HasColumnName("client_email")
                     .HasMaxLength(30)
@@ -372,7 +376,7 @@ namespace labourRecruitment.Models.LabourRecruitment
             modelBuilder.Entity<SystemUser>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK__SystemUs__B9BE370F34B081F3");
+                    .HasName("PK__SystemUs__B9BE370F38359059");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
