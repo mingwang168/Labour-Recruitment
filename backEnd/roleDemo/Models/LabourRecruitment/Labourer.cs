@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace roleDemo.Models.LabourerRecruitment
+namespace labourRecruitment.Models.LabourRecruitment
 {
     public partial class Labourer
     {
         public Labourer()
         {
-            Availability = new HashSet<Availability>();
+            AvailabilityLabourer = new HashSet<AvailabilityLabourer>();
             Incident = new HashSet<Incident>();
             LabourerDailyQualityRating = new HashSet<LabourerDailyQualityRating>();
             LabourerSafetyRating = new HashSet<LabourerSafetyRating>();
@@ -23,7 +23,7 @@ namespace roleDemo.Models.LabourerRecruitment
         public bool? IsAvailable { get; set; }
 
         public virtual SystemUser User { get; set; }
-        public virtual ICollection<Availability> Availability { get; set; }
+        public virtual ICollection<AvailabilityLabourer> AvailabilityLabourer { get; set; }
         public virtual ICollection<Incident> Incident { get; set; }
         public virtual ICollection<LabourerDailyQualityRating> LabourerDailyQualityRating { get; set; }
         public virtual ICollection<LabourerSafetyRating> LabourerSafetyRating { get; set; }

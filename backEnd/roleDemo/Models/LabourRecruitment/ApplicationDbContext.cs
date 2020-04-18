@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace roleDemo.Models.LabourerRecruitment
+namespace labourRecruitment.Models.LabourRecruitment
 {
     public partial class ApplicationDbContext : IdentityDbContext
     {
@@ -17,6 +17,7 @@ namespace roleDemo.Models.LabourerRecruitment
         }
 
         public virtual DbSet<Availability> Availability { get; set; }
+        public virtual DbSet<AvailabilityLabourer> AvailabilityLabourer { get; set; }
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<ClientQualityRating> ClientQualityRating { get; set; }
         public virtual DbSet<Incident> Incident { get; set; }
@@ -30,7 +31,7 @@ namespace roleDemo.Models.LabourerRecruitment
         public virtual DbSet<Skill> Skill { get; set; }
         public virtual DbSet<SystemUser> SystemUser { get; set; }
 
-       
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,17 +41,32 @@ namespace roleDemo.Models.LabourerRecruitment
             {
                 entity.Property(e => e.AvailabilityId).HasColumnName("availability_id");
 
-                entity.Property(e => e.AvailabilityTime)
-                    .HasColumnName("availability_time")
+                entity.Property(e => e.AvailabilityDay)
+                    .HasColumnName("availability_day")
                     .HasMaxLength(20)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<AvailabilityLabourer>(entity =>
+            {
+                entity.HasKey(e => e.AvailabilityLobourerId)
+                    .HasName("PK__Availabi__786BC51273B3EA27");
+
+                entity.Property(e => e.AvailabilityLobourerId).HasColumnName("availabilityLobourer_id");
+
+                entity.Property(e => e.AvailabilityId).HasColumnName("availability_id");
 
                 entity.Property(e => e.LabourerId).HasColumnName("labourer_id");
 
+                entity.HasOne(d => d.Availability)
+                    .WithMany(p => p.AvailabilityLabourer)
+                    .HasForeignKey(d => d.AvailabilityId)
+                    .HasConstraintName("FK__Availabil__avail__2F10007B");
+
                 entity.HasOne(d => d.Labourer)
-                    .WithMany(p => p.Availability)
+                    .WithMany(p => p.AvailabilityLabourer)
                     .HasForeignKey(d => d.LabourerId)
-                    .HasConstraintName("FK__Availabil__labou__2C3393D0");
+                    .HasConstraintName("FK__Availabil__labou__2E1BDC42");
             });
 
             modelBuilder.Entity<Client>(entity =>
@@ -93,7 +109,7 @@ namespace roleDemo.Models.LabourerRecruitment
             modelBuilder.Entity<ClientQualityRating>(entity =>
             {
                 entity.HasKey(e => e.QualityRating)
-                    .HasName("PK__ClientQu__5440651358CA4B58");
+                    .HasName("PK__ClientQu__54406513FAD3DB5A");
 
                 entity.Property(e => e.QualityRating).HasColumnName("quality_rating");
 
@@ -106,12 +122,12 @@ namespace roleDemo.Models.LabourerRecruitment
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.ClientQualityRating)
                     .HasForeignKey(d => d.ClientId)
-                    .HasConstraintName("FK__ClientQua__clien__34C8D9D1");
+                    .HasConstraintName("FK__ClientQua__clien__37A5467C");
 
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.ClientQualityRating)
                     .HasForeignKey(d => d.JobId)
-                    .HasConstraintName("FK__ClientQua__job_i__33D4B598");
+                    .HasConstraintName("FK__ClientQua__job_i__36B12243");
             });
 
             modelBuilder.Entity<Incident>(entity =>
@@ -140,17 +156,17 @@ namespace roleDemo.Models.LabourerRecruitment
                 entity.HasOne(d => d.IncidentType)
                     .WithMany(p => p.Incident)
                     .HasForeignKey(d => d.IncidentTypeId)
-                    .HasConstraintName("FK__Incident__incide__4316F928");
+                    .HasConstraintName("FK__Incident__incide__45F365D3");
 
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.Incident)
                     .HasForeignKey(d => d.JobId)
-                    .HasConstraintName("FK__Incident__job_id__412EB0B6");
+                    .HasConstraintName("FK__Incident__job_id__440B1D61");
 
                 entity.HasOne(d => d.Labourer)
                     .WithMany(p => p.Incident)
                     .HasForeignKey(d => d.LabourerId)
-                    .HasConstraintName("FK__Incident__labour__4222D4EF");
+                    .HasConstraintName("FK__Incident__labour__44FF419A");
             });
 
             modelBuilder.Entity<IncidentType>(entity =>
@@ -213,7 +229,7 @@ namespace roleDemo.Models.LabourerRecruitment
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Job)
                     .HasForeignKey(d => d.ClientId)
-                    .HasConstraintName("FK__Job__client_id__2F10007B");
+                    .HasConstraintName("FK__Job__client_id__31EC6D26");
             });
 
             modelBuilder.Entity<JobSkill>(entity =>
@@ -229,12 +245,12 @@ namespace roleDemo.Models.LabourerRecruitment
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.JobSkill)
                     .HasForeignKey(d => d.JobId)
-                    .HasConstraintName("FK__JobSkill__job_id__45F365D3");
+                    .HasConstraintName("FK__JobSkill__job_id__48CFD27E");
 
                 entity.HasOne(d => d.Skill)
                     .WithMany(p => p.JobSkill)
                     .HasForeignKey(d => d.SkillId)
-                    .HasConstraintName("FK__JobSkill__skill___46E78A0C");
+                    .HasConstraintName("FK__JobSkill__skill___49C3F6B7");
             });
 
             modelBuilder.Entity<Labourer>(entity =>
@@ -271,7 +287,7 @@ namespace roleDemo.Models.LabourerRecruitment
             modelBuilder.Entity<LabourerDailyQualityRating>(entity =>
             {
                 entity.HasKey(e => e.DailyQualityRating)
-                    .HasName("PK__Labourer__61640B197493ADBC");
+                    .HasName("PK__Labourer__61640B19E9E500D2");
 
                 entity.Property(e => e.DailyQualityRating).HasColumnName("daily_quality_rating");
 
@@ -288,18 +304,18 @@ namespace roleDemo.Models.LabourerRecruitment
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.LabourerDailyQualityRating)
                     .HasForeignKey(d => d.JobId)
-                    .HasConstraintName("FK__LabourerD__job_i__3B75D760");
+                    .HasConstraintName("FK__LabourerD__job_i__3E52440B");
 
                 entity.HasOne(d => d.Labourer)
                     .WithMany(p => p.LabourerDailyQualityRating)
                     .HasForeignKey(d => d.LabourerId)
-                    .HasConstraintName("FK__LabourerD__labou__3C69FB99");
+                    .HasConstraintName("FK__LabourerD__labou__3F466844");
             });
 
             modelBuilder.Entity<LabourerSafetyRating>(entity =>
             {
                 entity.HasKey(e => e.SafetyRating)
-                    .HasName("PK__Labourer__0A004E492D01DB68");
+                    .HasName("PK__Labourer__0A004E491C11091D");
 
                 entity.Property(e => e.SafetyRating).HasColumnName("safety_rating");
 
@@ -312,12 +328,12 @@ namespace roleDemo.Models.LabourerRecruitment
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.LabourerSafetyRating)
                     .HasForeignKey(d => d.JobId)
-                    .HasConstraintName("FK__LabourerS__job_i__37A5467C");
+                    .HasConstraintName("FK__LabourerS__job_i__3A81B327");
 
                 entity.HasOne(d => d.Labourer)
                     .WithMany(p => p.LabourerSafetyRating)
                     .HasForeignKey(d => d.LabourerId)
-                    .HasConstraintName("FK__LabourerS__labou__38996AB5");
+                    .HasConstraintName("FK__LabourerS__labou__3B75D760");
             });
 
             modelBuilder.Entity<LabourerSkill>(entity =>
@@ -331,12 +347,12 @@ namespace roleDemo.Models.LabourerRecruitment
                 entity.HasOne(d => d.Labourer)
                     .WithMany(p => p.LabourerSkill)
                     .HasForeignKey(d => d.LabourerId)
-                    .HasConstraintName("FK__LabourerS__labou__49C3F6B7");
+                    .HasConstraintName("FK__LabourerS__labou__4CA06362");
 
                 entity.HasOne(d => d.Skill)
                     .WithMany(p => p.LabourerSkill)
                     .HasForeignKey(d => d.SkillId)
-                    .HasConstraintName("FK__LabourerS__skill__4AB81AF0");
+                    .HasConstraintName("FK__LabourerS__skill__4D94879B");
             });
 
             modelBuilder.Entity<Skill>(entity =>

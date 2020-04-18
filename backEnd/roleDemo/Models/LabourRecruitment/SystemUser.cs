@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace roleDemo.Models.LabourerRecruitment
+namespace labourRecruitment.Models.LabourRecruitment
 {
     public partial class SystemUser
     {
@@ -13,8 +13,8 @@ namespace roleDemo.Models.LabourerRecruitment
 
         public int UserId { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
         public string Role { get; set; }
+        public string Password { get; set; }
 
         public virtual ICollection<Client> Client { get; set; }
         public virtual ICollection<Labourer> Labourer { get; set; }
