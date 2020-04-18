@@ -36,7 +36,7 @@ const Dashboard = () => {
 	            <div className="card-body">
                     <div className="d-inline-block">
                         <h5 className="text-muted">Active Jobs</h5>
-                        <h2 className="mb-0">5 jobs</h2>
+                        <h2 className="mb-0">5 active jobs</h2>
                     </div>
                     <div className="float-right icon-circle-medium icon-box-lg bg-info-light mt-1">
                         <i className="material-icons text-info">work</i>
@@ -63,7 +63,7 @@ const Dashboard = () => {
 	            <div className="card">
 	            <div className="card-body">
                     <div className="d-inline-block">
-                        <h5 className="text-muted">Expenses From Active Jobs</h5>
+                        <h5 className="text-muted">Estimated Expenses</h5>
                         <h2 className="mb-0">$224,800</h2>
                     </div>
                     <div className="float-right icon-circle-medium icon-box-lg bg-secondary-light mt-1">
@@ -78,7 +78,7 @@ const Dashboard = () => {
 	            <div className="card-body">
                     <div className="d-inline-block">
                         <h5 className="text-muted">Company Quality Rating</h5>
-                        <h2 className="mb-0">75.4% average</h2>
+                        <h2 className="mb-0">75.4%</h2>
                     </div>
                     <div className="float-right icon-circle-medium icon-box-lg bg-brand-light mt-1">
                         <i className="material-icons text-brand">thumb_up</i>
