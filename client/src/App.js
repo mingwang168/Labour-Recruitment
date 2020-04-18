@@ -9,11 +9,6 @@ import LabourerProfile from './views/labourer/LabourerProfile';
 import RegisterStart from './views/RegisterStart';
 import PageNotFound from './views/PageNotFound';
 
-import './css/styles.css';
-import './css/extras.min.css';
-import './css/custom.css';
-
-
 const App = () => {
     return (
     <>

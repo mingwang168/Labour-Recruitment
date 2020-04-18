@@ -1,51 +1,54 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const SideNav = (props) => {
+const SideNav = () => {
     return (
-        <aside className="main-sidebar col-12 col-md-3 col-lg-2 px-0">
+    <div className="nav-left-sidebar sidebar-dark">
+    <div className="menu-list">
+    <nav className="navbar navbar-expand-lg navbar-light">
 
-            {/* Logo */}
-            <div className="main-navbar">
-            <nav className="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
-              <a href="/" className="navbar-brand w-100 mr-0" style={{lineHeight:'25px'}}>
-                <div className="d-table m-auto">
-                  <span className="d-none d-md-inline">Labourer Recruitment Platform</span>
-                </div>
-              </a>
-              <span className="toggle-sidebar d-sm-inline d-md-none d-lg-none">
-                <i className="material-icons">&#xE5C4;</i>
-              </span>
-            </nav>
+        {/* Mobile Menu Toggle */}
+        <a className="d-xl-none d-lg-none" href="/dashboard">Dashboard</a>
+        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+        </button>
+
+        {/* Main Navigation */}
+        <div className="collapse navbar-collapse" id="navbarNav">
+        <ul className="navbar-nav flex-column">
+            <li className="nav-divider">
+                Client Menu
+            </li>
+            <div className="nav-item">
+                <Link to="/dashboard" className="nav-link">
+                    <i className="material-icons" style={{paddingBottom:'3px'}}>dashboard</i>Dashboard
+                </Link>
             </div>
-
-            {/* Side Navigation */}
-            <div className="nav-wrapper">
-
-            {/* NOTE: We should check what TYPE of user is logged in before loading the correct links below here */}
-            <ul className="nav flex-column">
-              <li className="nav-item">
-                <Link className="nav-link" to='/dashboard'>
-                  <i className="material-icons">dashboard</i>
-                  <span>Dashboard</span>
+            <div className="nav-item">
+                <Link to="/addjob" className="nav-link">
+                    <i className="material-icons" style={{paddingBottom:'3px'}}>edit</i>Add Job
                 </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/addjob">
-                  <i className="material-icons">create</i>
-                  <span>Add Job</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/profile/client">
-                  <i className="material-icons">person</i>
-                  <span>Profile</span>
-                </Link>
-              </li>
-            </ul>
-
             </div>
-        </aside> 
+            <div className="nav-item">
+                <Link to="/incidents" className="nav-link">
+                    <i className="material-icons" style={{paddingBottom:'3px'}}>report_problem</i>Incident Reports
+                </Link>
+            </div>
+            <div className="nav-item">
+                <Link to="/profile/client" className="nav-link">
+                    <i className="material-icons" style={{paddingBottom:'3px'}}>account_box</i>Company Profile
+                </Link>
+            </div>
+            <div className="nav-item">
+                <Link to="/profile/labourer" className="nav-link">
+                    <i className="material-icons" style={{paddingBottom:'3px'}}>account_box</i>Labourer Profile
+                </Link>
+            </div>
+        </ul>
+        </div>
+    </nav>
+    </div>
+    </div>
     )
 }
 

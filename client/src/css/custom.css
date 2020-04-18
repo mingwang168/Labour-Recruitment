@@ -1,9 +1,0 @@
-@media only screen and (max-width: 768px) {
-    .hero-text-container {
-        padding: 0 1rem;
-    }
-
-    .hero-text {
-      font-size: 1.5rem;
-    }
-}
