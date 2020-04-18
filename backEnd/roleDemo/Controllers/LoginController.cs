@@ -6,6 +6,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using labourRecruitment.Models.LabourRecruitment;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +17,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
-using roleDemo.Models.LabourerRecruitment;
 using roleDemo.ViewModels;
 
 namespace roleDemo.Controllers
@@ -41,38 +41,6 @@ namespace roleDemo.Controllers
             _context = context;
         }
 
-        //[HttpGet]
-        //[Route("List")]
-        //// Since we have cookie authentication and Jwt authentication we must
-        //// specify that we want Jwt authentication here.
-
-        //public JsonResult List()
-        //{
-        //    var claim = HttpContext.User.Claims.ElementAt(0);
-        //    string userName = claim.Value;
-        //    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        //    JArray todoList = new JArray();
-        //    todoList.Add("Wash car");
-        //    todoList.Add("Do laundry");
-        //    return Json(todoList);
-        //}
-
-
-        //[HttpGet]
-        //[Route("User")]
-
-        //public async Task<ActionResult<IEnumerable<UserVM>>> GetUsers()
-        //{
-        //    var claim = HttpContext.User.Claims.ElementAt(0);
-        //    string userName = claim.Value;
-        //    UserRepo userRepo = new UserRepo(_context);
-        //    IEnumerable<UserVM> users = userRepo.All();
-        //    List<UserVM> asList = users.ToList();
-        //    return asList;
-        //}
-
-
         [HttpPost]
         public async Task<JsonResult> OnPostAsync([FromBody]LoginVM loginVM)
         {
@@ -96,6 +64,7 @@ namespace roleDemo.Controllers
                         jsonResponse.token = tokenString;
                         jsonResponse.status = "OK";
                         jsonResponse.role = sysuser.Role;
+                        jsonResponse.email = sysuser.Email;
                         return Json(jsonResponse);
                     }
                 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace roleDemo.Models.LabourerRecruitment
+namespace labourRecruitment.Models.LabourRecruitment
 {
     public partial class Client
     {
@@ -18,6 +18,7 @@ namespace roleDemo.Models.LabourerRecruitment
         public string ClientPhoneNumber { get; set; }
         public string ClientCity { get; set; }
         public string ClientState { get; set; }
+        public string ClientDescription { get; set; }
 
         public virtual SystemUser User { get; set; }
         public virtual ICollection<ClientQualityRating> ClientQualityRating { get; set; }

@@ -9,9 +9,9 @@ import Dashboard from './views/Dashboard';
 import RegisterClient from './views/client/RegisterClient';
 import AddJob from './views/client/AddJob';
 import ClientProfile from './views/client/ClientProfile';
-
 import RegisterLabourer from './views/labourer/RegisterLabourer';
 import LabourerProfile from './views/labourer/LabourerProfile';
+
 
 
 const App = () => {
@@ -23,6 +23,7 @@ const App = () => {
         <Route path='/dashboard' exact render={props => <Dashboard {...props} />} />
         <Route path='/register' exact render={props => <RegisterStart {...props} />} />
 
+      
         {/* Client Views */}
         <Route path='/register/client' exact render={props => <RegisterClient {...props} />} />
         <Route path='/addjob' exact render={props => <AddJob {...props} />} />

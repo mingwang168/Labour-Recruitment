@@ -16,8 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using roleDemo.Models.LabourerRecruitment;
-using AutoMapper;
+using labourRecruitment.Models.LabourRecruitment;
 
 namespace roleDemo {
     public class Startup {

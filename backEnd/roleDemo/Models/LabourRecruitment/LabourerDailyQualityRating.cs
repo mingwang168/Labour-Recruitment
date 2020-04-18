@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace roleDemo.Models.LabourerRecruitment
+namespace labourRecruitment.Models.LabourRecruitment
 {
     public partial class LabourerDailyQualityRating
     {
