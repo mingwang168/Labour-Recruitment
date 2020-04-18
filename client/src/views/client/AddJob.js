@@ -1,36 +1,89 @@
 import React from 'react';
 
-import SideNav from '../../components/SideNav';
 import TopNav from '../../components/TopNav';
+import SideNav from '../../components/SideNav';
 
 const AddJob = (props) => {
+
     return (
-    <>
-    <div className="container-fluid">
-    <div className="row">
-      {/* Side Navigation */}
-      <SideNav {...props} />
+        <div className="dashboard-main-wrapper">
+        <TopNav />
+        <SideNav />
 
-      {/* Main */}
-      <main className="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
-        {/* Top Navigation */} 
-        <TopNav {...props} />
+        <div className="dashboard-wrapper">
+        <div className="container-fluid dashboard-content">
 
-        {/* Content */}
-        <div className="main-content-container container-fluid px-4">
-          <div className="page-header row no-gutters py-4">
-          <div className="col-12 col-sm-4 text-center text-sm-left mb-0">
-            <h3 className="page-title">Add Job</h3>
-          </div>
-          </div>
+           {/* Page Header */}
+           <div className="row">
+            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div className="page-header">
+                <h2 className="pageheader-title">Add New Job</h2>
+                <div className="page-breadcrumb">
+                <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="/dashboard" className="breadcrumb-link">Dashboard</a></li>
+                    <li className="breadcrumb-item active" aria-current="page">Add New Job</li>
+                </ol>
+                </nav>
+                </div>
+            </div>
+            </div>
+            </div>
 
-          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ex error maxime repudiandae ipsam commodi necessitatibus reiciendis beatae deserunt placeat at veniam possimus velit, laboriosam ducimus, amet facere? Voluptatem, cum sed?</p>
+            <div className="card">
+                <div className="card-body">
+                    <form>
+                        <div className="form-group">
+                            <label for="inputText3" className="col-form-label">
+                                Input Text
+                            </label>
+                            <input id="inputText3" type="text" className="form-control" />
+                        </div>
+                        <div className="form-group">
+                            <label for="inputEmail">Email address</label>
+                            <input
+                                id="inputEmail"
+                                type="email"
+                                placeholder="name@example.com"
+                                className="form-control"
+                            />
+                            <p className="mt-1">We'll never share your email with anyone else.</p>
+                        </div>
+                        <div className="form-group">
+                            <label for="inputText4" className="col-form-label">
+                                Number Input
+                            </label>
+                            <input
+                                id="inputText4"
+                                type="number"
+                                className="form-control"
+                                placeholder="Numbers"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label for="inputPassword">Password</label>
+                            <input
+                                id="inputPassword"
+                                type="password"
+                                placeholder="Password"
+                                className="form-control"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label for="exampleFormControlTextarea1">Example textarea</label>
+                            <textarea
+                                className="form-control"
+                                id="exampleFormControlTextarea1"
+                                rows="3"
+                            ></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
         </div>
-      </main>
+        </div>
     </div>
-    </div>
-    </>
     )
 }
 

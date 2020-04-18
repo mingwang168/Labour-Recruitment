@@ -1,36 +1,169 @@
 import React from 'react';
 
-import SideNav from '../components/SideNav';
 import TopNav from '../components/TopNav';
+import SideNav from '../components/SideNav';
 
-const Dashboard = (props) => {
+const Dashboard = () => {
     return (
-    <>
-    <div className="container-fluid">
-    <div className="row">
-      {/* Sidebar */}
-      <SideNav {...props} />
+    <div className="dashboard-main-wrapper">
+        <TopNav />
+        <SideNav />
 
-      {/* Main */}
-      <main className="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
-            
-        <TopNav {...props} />
+        <div className="dashboard-wrapper">
+        <div className="container-fluid dashboard-content">
 
-        {/* Content */}
-        <div className="main-content-container container-fluid px-4">
-          <div className="page-header row no-gutters py-4">
-          <div className="col-12 col-sm-4 text-center text-sm-left mb-0">
-            <h3 className="page-title">Dashboard</h3>
-          </div>
-          </div>
+            {/* Page Header */}
+            <div className="row">
+            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div className="page-header">
+                <h2 className="pageheader-title">Welcome back, Turner Construction!</h2>
+                <div className="page-breadcrumb">
+                <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="/dashboard" className="breadcrumb-link">Dashboard</a></li>
+                    <li className="breadcrumb-item active" aria-current="page">Client Dashboard</li>
+                </ol>
+                </nav>
+                </div>
+            </div>
+            </div>
+            </div>
 
-          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ex error maxime repudiandae ipsam commodi necessitatibus reiciendis beatae deserunt placeat at veniam possimus velit, laboriosam ducimus, amet facere? Voluptatem, cum sed?</p>
+            {/* Overview */}
+            <div className="row">
+                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+	            <div className="card">
+	            <div className="card-body">
+                    <div className="d-inline-block">
+                        <h5 className="text-muted">Active Jobs</h5>
+                        <h2 className="mb-0">5 jobs</h2>
+                    </div>
+                    <div className="float-right icon-circle-medium icon-box-lg bg-info-light mt-1">
+                        <i className="material-icons text-info">work</i>
+                    </div>
+	            </div>
+	            </div>
+	            </div>
+
+                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+	            <div className="card">
+	            <div className="card-body">
+                    <div className="d-inline-block">
+                        <h5 className="text-muted">Current Workers Hired</h5>
+                        <h2 className="mb-0">295 workers</h2>
+                    </div>
+                    <div className="float-right icon-circle-medium icon-box-lg bg-success-light mt-1">
+                        <i className="material-icons text-success">accessibility</i>
+                    </div>
+	            </div>
+	            </div>
+	            </div>
+
+                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+	            <div className="card">
+	            <div className="card-body">
+                    <div className="d-inline-block">
+                        <h5 className="text-muted">Expenses From Active Jobs</h5>
+                        <h2 className="mb-0">$224,800</h2>
+                    </div>
+                    <div className="float-right icon-circle-medium icon-box-lg bg-secondary-light mt-1">
+                        <i className="material-icons text-secondary">monetization_on</i>
+                    </div>
+	            </div>
+	            </div>
+	            </div>
+
+                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+	            <div className="card">
+	            <div className="card-body">
+                    <div className="d-inline-block">
+                        <h5 className="text-muted">Company Quality Rating</h5>
+                        <h2 className="mb-0">75.4% average</h2>
+                    </div>
+                    <div className="float-right icon-circle-medium icon-box-lg bg-brand-light mt-1">
+                        <i className="material-icons text-brand">thumb_up</i>
+                    </div>
+	            </div>
+	            </div>
+	            </div>
+            </div>
+
+            {/* Jobs */}
+            <div className="row">
+            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div className="card">
+                <h5 className="card-header">All Jobs</h5>
+                <div className="card-body">
+                <div className="table-responsive">
+                <table className="table table-striped table-bordered client-overview-table">
+                    <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th># Hired</th>
+                        <th>Status</th>
+                        <th>Reports</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Kwantlen Arts Building</td>
+                            <td><time>Aug 8, 2020</time></td>
+                            <td><time>Oct 1, 2020</time></td>
+                            <td>40</td>
+                            <td><span className="badge badge-brand">Upcoming</span></td>
+                            <td><span className="badge badge-dark">N/A</span></td>
+                            <td><a href="/job/123">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>Stanley Park Clean Up</td>
+                            <td><time>Apr 12, 2020</time></td>
+                            <td><time>Apr 15, 2020</time></td>
+                            <td>20</td>
+                            <td><span className="badge badge-primary">In Progress</span></td>
+                            <td><span className="badge badge-success">Complete</span></td>
+                            <td><a href="/job/123">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>General Construction</td>
+                            <td><time>Apr 1, 2020</time></td>
+                            <td><time>Apr 28, 2020</time></td>
+                            <td>60</td>
+                            <td><span className="badge badge-primary">In Progress</span></td>
+                            <td><span className="badge badge-success">Complete</span></td>
+                            <td><a href="/job/123">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>Liberty Homes</td>
+                            <td><time>Feb 20, 2020</time></td>
+                            <td><time>May 08, 2020</time></td>
+                            <td>100</td>
+                            <td><span className="badge badge-primary">In Progress</span></td>
+                            <td><span className="badge badge-danger">Required</span></td>
+                            <td><a href="/job/123">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>CF Richmond Centre Remodel</td>
+                            <td><time>Dec 14, 2019</time></td>
+                            <td><time>Apr 10, 2020</time></td>
+                            <td>75</td>
+                            <td><span className="badge badge-success">Completed</span></td>
+                            <td><span className="badge badge-danger">Required</span></td>
+                            <td><a href="/job/123">View Details</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                </div>
+            </div>
+            </div>
+            </div>
 
         </div>
-      </main>
+        </div>
     </div>
-    </div>
-    </>
     )
 }
 

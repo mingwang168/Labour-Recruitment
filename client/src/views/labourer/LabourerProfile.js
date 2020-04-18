@@ -1,26 +1,18 @@
 import React from 'react';
 
-import SideNav from '../../components/SideNav';
 import TopNav from '../../components/TopNav';
+import SideNav from '../../components/SideNav';
 
-import '../../css/styles.css';
-import '../../css/extras.min.css';
-
-
-const LabourerProfile = (props) => {
+const LabourerProfile = () => {
     return (
-    <div className="container-fluid">
-    <div className="row">
-      {/* Side Navigation */}
-      <SideNav {...props} />
+        <div className="dashboard-main-wrapper">
+            <TopNav />
+            <SideNav />
 
-      {/* Main */}
-      <main className="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
-        {/* Top Navigation */}
-        <TopNav {...props} />
+            <div className="dashboard-wrapper">
+            <div className="container-fluid dashboard-content">
 
-        {/* Content */}
-        <div className="main-content-container container-fluid px-4">
+            <div className="main-content-container container-fluid px-4">
           <div className="page-header row no-gutters py-4">
             <div className="col-12 col-sm-4 text-center text-sm-left mb-0">
               <h3 className="page-title">Labourer Profile</h3>
@@ -79,11 +71,11 @@ const LabourerProfile = (props) => {
             </div>
           </div>
         </div>
-      </main>
-    </div>
-    </div>
 
-  )
+            </div>
+            </div>
+        </div>
+    )
 }
 
 export default LabourerProfile;
