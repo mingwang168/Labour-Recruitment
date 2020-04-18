@@ -22,7 +22,7 @@ const Home = (props) => {
         <div className="col-6 col-xl-2">
             <h1 className="mb-0"><a href="/" className="text-white h4 mb-0">Jobstart</a></h1>
         </div>
-
+      
         <div className="col-6 col-xl-10 text-right pt-1">
             <a href="/dashboard" className="text-white mr-3">Client Dashboard</a>
             <a href="/register" className="text-white mr-3">Sign Up</a>
