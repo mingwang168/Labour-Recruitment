@@ -34,13 +34,13 @@ const AddJob = (props) => {
                 <div className="card-body">
                     <form>
                         <div className="form-group">
-                            <label for="inputText3" className="col-form-label">
+                            <label htmlFor="inputText3" className="col-form-label">
                                 Input Text
                             </label>
                             <input id="inputText3" type="text" className="form-control" />
                         </div>
                         <div className="form-group">
-                            <label for="inputEmail">Email address</label>
+                            <label htmlFor="inputEmail">Email address</label>
                             <input
                                 id="inputEmail"
                                 type="email"
@@ -50,7 +50,7 @@ const AddJob = (props) => {
                             <p className="mt-1">We'll never share your email with anyone else.</p>
                         </div>
                         <div className="form-group">
-                            <label for="inputText4" className="col-form-label">
+                            <label htmlFor="inputText4" className="col-form-label">
                                 Number Input
                             </label>
                             <input
@@ -61,7 +61,7 @@ const AddJob = (props) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label for="inputPassword">Password</label>
+                            <label htmlFor="inputPassword">Password</label>
                             <input
                                 id="inputPassword"
                                 type="password"
@@ -70,7 +70,7 @@ const AddJob = (props) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label for="exampleFormControlTextarea1">Example textarea</label>
+                            <label htmlFor="exampleFormControlTextarea1">Example textarea</label>
                             <textarea
                                 className="form-control"
                                 id="exampleFormControlTextarea1"
