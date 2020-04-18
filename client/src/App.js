@@ -16,7 +16,7 @@ const App = () => {
     <Switch>
         <Route path='/' exact render={props => <Home {...props} />} />
         <Route path='/dashboard' exact render={props => <Dashboard {...props} />} />
-        <Route path='/start' exact render={props => <RegisterStart {...props} />} />
+        <Route path='/register/start' exact render={props => <RegisterStart {...props} />} />
 
         {/* Client Views */}
         <Route path='/addjob' exact render={props => <AddJob {...props} />} />
