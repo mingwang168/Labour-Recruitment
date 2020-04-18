@@ -13,10 +13,4 @@ jQuery(document).ready(function($) {
             });
         });
     }
-
-    // if ($("table.second").length) {
-    //     $(document).ready(function() {
-    //         $('table.second').DataTable();
-    //     });
-    // }
 });
