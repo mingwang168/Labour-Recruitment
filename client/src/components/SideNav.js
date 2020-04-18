@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const SideNav = () => {
     return (
@@ -12,30 +13,36 @@ const SideNav = () => {
             <span className="navbar-toggler-icon"></span>
         </button>
 
+        {/* Main Navigation */}
         <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav flex-column">
             <li className="nav-divider">
                 Client Menu
             </li>
             <div className="nav-item">
-                <a href="/dashboard" className="nav-link">
+                <Link to="/dashboard" className="nav-link">
                     <i className="material-icons" style={{paddingBottom:'3px'}}>dashboard</i>Dashboard
-                </a>
+                </Link>
             </div>
             <div className="nav-item">
-                <a href="/addjob" className="nav-link">
+                <Link to="/addjob" className="nav-link">
                     <i className="material-icons" style={{paddingBottom:'3px'}}>edit</i>Add Job
-                </a>
+                </Link>
             </div>
             <div className="nav-item">
-                <a href="/incidents" className="nav-link" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1">
+                <Link to="/incidents" className="nav-link">
                     <i className="material-icons" style={{paddingBottom:'3px'}}>report_problem</i>Incident Reports
-                </a>
+                </Link>
             </div>
             <div className="nav-item">
-                <a href="/profile/client" className="nav-link" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1">
+                <Link to="/profile/client" className="nav-link">
                     <i className="material-icons" style={{paddingBottom:'3px'}}>account_box</i>Company Profile
-                </a>
+                </Link>
+            </div>
+            <div className="nav-item">
+                <Link to="/profile/labourer" className="nav-link">
+                    <i className="material-icons" style={{paddingBottom:'3px'}}>account_box</i>Labourer Profile
+                </Link>
             </div>
         </ul>
         </div>
