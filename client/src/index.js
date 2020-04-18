@@ -7,6 +7,9 @@ import './assets/other/bootstrap/css/bootstrap.min.css';
 import './assets/fonts/circular-std/style.css';
 import './assets/css/style.css';
 
+// Bootstrap multiselect CSS
+import './assets/other/bootstrap-select/css/bootstrap-select.css';
+
 // Data Table CSS
 import './assets/other/datatables/css/dataTables.bootstrap4.css';
 import './assets/other/datatables/css/buttons.bootstrap4.css';
