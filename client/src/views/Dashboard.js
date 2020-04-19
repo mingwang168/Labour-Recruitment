@@ -1,9 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
 
 const Dashboard = () => {
+
     return (
     <div className="dashboard-main-wrapper">
         <TopNav />
@@ -95,7 +97,7 @@ const Dashboard = () => {
                 <h5 className="card-header">All Jobs</h5>
                 <div className="card-body">
                 <div className="table-responsive">
-                <table className="table table-striped table-bordered client-overview-table">
+                <table className="table table-striped table-bordered">
                     <thead>
                     <tr>
                         <th>Job Title</th>
@@ -107,7 +109,7 @@ const Dashboard = () => {
                         <th>Actions</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody> 
                         <tr>
                             <td>Kwantlen Arts Building</td>
                             <td><time>Aug 8, 2020</time></td>
@@ -115,7 +117,7 @@ const Dashboard = () => {
                             <td>40</td>
                             <td><span className="badge badge-brand">Upcoming</span></td>
                             <td><span className="badge badge-dark">N/A</span></td>
-                            <td><a href="/job/123">View Details</a></td>
+                            <td><Link to="/job">View Details</Link></td>
                         </tr>
                         <tr>
                             <td>Stanley Park Clean Up</td>
@@ -124,7 +126,7 @@ const Dashboard = () => {
                             <td>20</td>
                             <td><span className="badge badge-primary">In Progress</span></td>
                             <td><span className="badge badge-success">Complete</span></td>
-                            <td><a href="/job/123">View Details</a></td>
+                            <td><Link to="/job">View Details</Link></td>
                         </tr>
                         <tr>
                             <td>General Construction</td>
@@ -133,7 +135,7 @@ const Dashboard = () => {
                             <td>60</td>
                             <td><span className="badge badge-primary">In Progress</span></td>
                             <td><span className="badge badge-success">Complete</span></td>
-                            <td><a href="/job/123">View Details</a></td>
+                            <td><Link to="/job">View Details</Link></td>
                         </tr>
                         <tr>
                             <td>Liberty Homes</td>
@@ -142,7 +144,7 @@ const Dashboard = () => {
                             <td>100</td>
                             <td><span className="badge badge-primary">In Progress</span></td>
                             <td><span className="badge badge-danger">Required</span></td>
-                            <td><a href="/job/123">View Details</a></td>
+                            <td><Link to="/job">View Details</Link></td>
                         </tr>
                         <tr>
                             <td>CF Richmond Centre Remodel</td>
@@ -151,7 +153,7 @@ const Dashboard = () => {
                             <td>75</td>
                             <td><span className="badge badge-success">Completed</span></td>
                             <td><span className="badge badge-danger">Required</span></td>
-                            <td><a href="/job/123">View Details</a></td>
+                            <td><Link to="/job">View Details</Link></td>
                         </tr>
                     </tbody>
                 </table>
