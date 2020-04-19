@@ -6,6 +6,11 @@
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20200418232726_addDescription.cs" />
+    <Compile Remove="Migrations\20200418232726_addDescription.Designer.cs" />
+  </ItemGroup>
+
 
   
   <ItemGroup>
