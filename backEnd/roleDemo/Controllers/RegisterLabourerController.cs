@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.Configuration;
 using labourRecruitment.Models.LabourRecruitment;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -19,7 +20,8 @@ namespace roleDemo.Controllers
 
         public RegisterLabourerController(
                 UserManager<IdentityUser> userManager,
-                ApplicationDbContext context)
+                ApplicationDbContext context,
+                IConfiguration config)
         {
             _userManager = userManager;
             _context = context;
@@ -39,7 +41,7 @@ namespace roleDemo.Controllers
                     Email = input.User.Email,
                     Role = input.User.Role
                 };
-               
+
                 Labourer labourer = new Labourer
                 {
                     LabourerFirstName = input.Labourer.LabourerFirstName,
@@ -73,7 +75,7 @@ namespace roleDemo.Controllers
                         _context.SaveChanges();
                         return BadRequest(new { status = 400, errors = "Available day is not valid" });
                     }
-                    
+
                 }
 
                 foreach (int skillId in input.SkillIds)
@@ -85,19 +87,20 @@ namespace roleDemo.Controllers
                     };
                     _context.LabourerSkill.Add(labourerSkill);
                     _context.SaveChanges();
-   
+
                 }
-               
+
                 return Ok(new { status = 200, title = "Registered successfully." });
             }
 
             foreach (IdentityError error in result.Errors)
             {
-               errorList.Add(error.Description);
+                errorList.Add(error.Description);
             }
 
             return BadRequest(new { status = 400, errors = errorList });
         }
+
     }
 
 }
