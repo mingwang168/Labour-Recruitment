@@ -111,7 +111,6 @@ namespace roleDemo.Controllers
                 jsonResponse.email = sysUser.Email;
                 return Json(jsonResponse);
 
-                //return Ok(new { status = 200, title = "Registered successfully." });
             }
 
             foreach (IdentityError error in result.Errors)
