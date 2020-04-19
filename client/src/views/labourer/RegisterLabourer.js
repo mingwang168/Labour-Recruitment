@@ -10,6 +10,11 @@ const bodyStyles = {
     paddingBottom: '40px'
 }
 
+const BASE_URL = "http://localhost:5000/api";
+const AUTH_TOKEN = "auth_token";
+const USER_NAME = "user_name";
+const USER_ID = "user_id";
+
 
 
 const RegisterLabourer = () => {

@@ -109,6 +109,7 @@ namespace roleDemo.Controllers
                 jsonResponse.status = "OK";
                 jsonResponse.role = sysUser.Role;
                 jsonResponse.email = sysUser.Email;
+                jsonResponse.labourerId = labourer.LabourerId;
                 return Json(jsonResponse);
 
             }
