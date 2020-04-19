@@ -3,34 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using labourRecruitment.Models.LabourRecruitment;
+using labourRecruitment.Repositories;
 using labourRecruitment.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace labourRecruitment.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegisterClientController : ControllerBase
+    public class RegisterClientController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private IConfiguration _config;
+        private IServiceProvider _serviceProvider;
         private readonly ApplicationDbContext _context;
 
         public RegisterClientController(
                 UserManager<IdentityUser> userManager,
-                ApplicationDbContext context)
+                SignInManager<IdentityUser> signInManager,
+                 IServiceProvider serviceProvider,
+                ApplicationDbContext context,
+                IConfiguration config)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
+            _config = config;
+            _serviceProvider = serviceProvider;
             _context = context;
         }
 
         [HttpPost]
-        public async Task<IActionResult> OnPostAsync([FromBody]ClientRegisterVM input)
+        public async Task<JsonResult> OnPostAsync([FromBody]ClientRegisterVM input)
         {
             var user = new IdentityUser { UserName = input.User.Email.ToLower(), Email = input.User.Email };
             var result = await _userManager.CreateAsync(user, input.User.Password);
             var errorList = new List<string>();
+
+            dynamic jsonResponse = new JObject();
 
             if (result.Succeeded)
             {
@@ -52,8 +66,14 @@ namespace labourRecruitment.Controllers
                 _context.SystemUser.Add(sysUser);
                 sysUser.Client.Add(client);
                 _context.SaveChanges();
-                
-                return Ok(new { status = 200, title = "Registered successfully." });
+
+                AuthRepo registerRepo = new AuthRepo(_signInManager, _config, _serviceProvider, _context);
+                var tokenString = registerRepo.GenerateJSONWebToken(user);
+                jsonResponse.token = tokenString;
+                jsonResponse.status = "OK";
+                jsonResponse.role = sysUser.Role;
+                jsonResponse.email = sysUser.Email;
+                return Json(jsonResponse);
             }
 
             foreach (IdentityError error in result.Errors)
@@ -61,7 +81,9 @@ namespace labourRecruitment.Controllers
                 errorList.Add(error.Description);
             }
 
-            return BadRequest(new { status = 400, errors = errorList });
+            jsonResponse.status = errorList;
+            jsonResponse.token = " ";
+            return Json(jsonResponse);
         }
     }
 }

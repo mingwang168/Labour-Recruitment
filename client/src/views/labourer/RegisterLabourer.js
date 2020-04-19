@@ -10,6 +10,8 @@ const bodyStyles = {
     paddingBottom: '40px'
 }
 
+
+
 const RegisterLabourer = () => {
 
     const validateForm = (e) => {
