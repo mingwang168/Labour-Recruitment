@@ -4,18 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using labourRecruitment.Models.LabourRecruitment;
 using labourRecruitment.Repositories;
+using labourRecruitment.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
-using roleDemo.ViewModels;
 
-namespace roleDemo.Controllers
+namespace labourRecruitment.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegisterLabourerController : Controller
+    public class RegisterClientController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -23,7 +23,7 @@ namespace roleDemo.Controllers
         private IServiceProvider _serviceProvider;
         private readonly ApplicationDbContext _context;
 
-        public RegisterLabourerController(
+        public RegisterClientController(
                 UserManager<IdentityUser> userManager,
                 SignInManager<IdentityUser> signInManager,
                  IServiceProvider serviceProvider,
@@ -38,13 +38,14 @@ namespace roleDemo.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> OnPostAsync([FromBody]LabourerRegisterVM input)
+        public async Task<JsonResult> OnPostAsync([FromBody]ClientRegisterVM input)
         {
             var user = new IdentityUser { UserName = input.User.Email.ToLower(), Email = input.User.Email };
             var result = await _userManager.CreateAsync(user, input.User.Password);
             var errorList = new List<string>();
 
             dynamic jsonResponse = new JObject();
+
             if (result.Succeeded)
             {
                 SystemUser sysUser = new SystemUser()
@@ -53,55 +54,18 @@ namespace roleDemo.Controllers
                     Role = input.User.Role
                 };
 
-                Labourer labourer = new Labourer
+                Client client = new Client
                 {
-                    LabourerFirstName = input.Labourer.LabourerFirstName,
-                    LabourerLastName = input.Labourer.LabourerLastName,
-                    LabourerSin = input.Labourer.LabourerSin,
-                    LabourerEmail = input.User.Email,
-                    IsAvailable = true,
+                    ClientName = input.Client.ClientName,
+                    ClientEmail = input.Client.ClientEmail,
+                    ClientPhoneNumber = input.Client.ClientPhoneNumber,
+                    ClientCity = input.Client.ClientCity,
+                    ClientState = input.Client.ClientState,
+                    ClientDescription = input.Client.ClientDescription
                 };
                 _context.SystemUser.Add(sysUser);
-                sysUser.Labourer.Add(labourer);
+                sysUser.Client.Add(client);
                 _context.SaveChanges();
-
-                foreach (string day in input.AvailableDays)
-                {
-                    Availability availability = _context.Availability.Where(a => a.AvailabilityDay == day).FirstOrDefault();
-                    if (availability != null)
-                    {
-                        AvailabilityLabourer availabilityLabourer = new AvailabilityLabourer
-                        {
-                            AvailabilityId = availability.AvailabilityId,
-                            LabourerId = labourer.LabourerId
-                        };
-                        _context.AvailabilityLabourer.Add(availabilityLabourer);
-                        _context.SaveChanges();
-                    }
-                    else
-                    {
-                        await _userManager.DeleteAsync(user);
-                        _context.Labourer.Remove(labourer);
-                        _context.SystemUser.Remove(sysUser);
-                        _context.SaveChanges();
-                        jsonResponse.status = "Available day is not valid";
-                        jsonResponse.token = " ";
-                        return Json(jsonResponse);
-                    }
-
-                }
-
-                foreach (int skillId in input.SkillIds)
-                {
-                    LabourerSkill labourerSkill = new LabourerSkill
-                    {
-                        SkillId = skillId,
-                        LabourerId = labourer.LabourerId
-                    };
-                    _context.LabourerSkill.Add(labourerSkill);
-                    _context.SaveChanges();
-
-                }
 
                 AuthRepo registerRepo = new AuthRepo(_signInManager, _config, _serviceProvider, _context);
                 var tokenString = registerRepo.GenerateJSONWebToken(user);
@@ -110,19 +74,16 @@ namespace roleDemo.Controllers
                 jsonResponse.role = sysUser.Role;
                 jsonResponse.email = sysUser.Email;
                 return Json(jsonResponse);
-
             }
 
             foreach (IdentityError error in result.Errors)
             {
                 errorList.Add(error.Description);
             }
+
             jsonResponse.status = errorList;
             jsonResponse.token = " ";
             return Json(jsonResponse);
-
         }
-
     }
-
 }
