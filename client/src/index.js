@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 
 // General CSS
+import './assets/other/bootstrap/css/bootstrap.min.css';
 import './assets/fonts/circular-std/style.css';
 import './assets/css/style.css';
 import './assets/other/bootstrap-select/css/bootstrap-select.css';
