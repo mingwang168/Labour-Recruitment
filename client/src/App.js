@@ -12,8 +12,6 @@ import Incidents from './views/Indicents';
 import JobDetail from './views/JobDetail';
 import IncidentDetail from './views/IncidentDetail';
 
-import RegisterClient from './views/client/RegisterClient';
-import AddJob from './views/client/AddJob';
 // Client Components
 import ClientRegister from './views/client/ClientRegister';
 import ClientProfile from './views/client/ClientProfile';
