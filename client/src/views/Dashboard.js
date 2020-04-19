@@ -138,7 +138,7 @@ const Dashboard = () => {
                             <td><Link to="/job">View Details</Link></td>
                         </tr>
                         <tr>
-                            <td>Liberty Homes</td>
+                            <td>Crescent Court Homes</td>
                             <td><time>Feb 20, 2020</time></td>
                             <td><time>May 08, 2020</time></td>
                             <td>100</td>
