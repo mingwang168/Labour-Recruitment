@@ -5,24 +5,24 @@ jQuery(document).ready(function($) {
     // ============================================================== 
     // Notification list
     // ============================================================== 
-    if ($(".notification-list").length) {
+    // if ($(".notification-list").length) {
 
-        $('.notification-list').slimScroll({
-            height: '250px'
-        });
+    //     $('.notification-list').slimScroll({
+    //         height: '250px'
+    //     });
 
-    }
+    // }
 
     // ============================================================== 
     // Menu Slim Scroll List
     // ============================================================== 
 
 
-    if ($(".menu-list").length) {
-        $('.menu-list').slimScroll({
+    // if ($(".menu-list").length) {
+    //     $('.menu-list').slimScroll({
 
-        });
-    }
+    //     });
+    // }
 
     // ============================================================== 
     // Sidebar scrollnavigation 
@@ -74,59 +74,8 @@ jQuery(document).ready(function($) {
     // ============================================================== 
     if ($('[data-toggle="tooltip"]').length) {
             
-            $('[data-toggle="tooltip"]').tooltip()
-
-        }
-
-     // ============================================================== 
-    // popover
-    // ============================================================== 
-       if ($('[data-toggle="popover"]').length) {
-            $('[data-toggle="popover"]').popover()
+        $('[data-toggle="tooltip"]').tooltip()
 
     }
-     // ============================================================== 
-    // Chat List Slim Scroll
-    // ============================================================== 
-        
 
-        if ($('.chat-list').length) {
-            $('.chat-list').slimScroll({
-            color: 'false',
-            width: '100%'
-
-
-        });
-    }
-    // ============================================================== 
-    // dropzone script
-    // ============================================================== 
-
- //     if ($('.dz-clickable').length) {
- //            $(".dz-clickable").dropzone({ url: "/file/post" });
- // }
-
-}); // AND OF JQUERY
-
-
-// $(function() {
-//     "use strict";
-
-
-    
-
-   // var monkeyList = new List('test-list', {
-    //    valueNames: ['name']
-
-     // });
-  // var monkeyList = new List('test-list-2', {
-    //    valueNames: ['name']
-
-   // });
-
-
-
-   
-   
-
-// });
+});
