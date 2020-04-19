@@ -71,5 +71,21 @@ namespace labourRecruitment.Repositories
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        public int GetIdByRole(string userEmail, string role)
+        {
+            int id = 0;
+            if (role.IndexOf("client", 0, StringComparison.CurrentCultureIgnoreCase) != -1)
+            {
+                var client = _context.Client.Where(c => c.ClientEmail == userEmail).FirstOrDefault();
+                id = client.ClientId;
+            }
+            else if (role.IndexOf("labourer", 0, StringComparison.CurrentCultureIgnoreCase) != -1)
+            {
+                Labourer labourer = _context.Labourer.Where(l => l.LabourerEmail == userEmail).FirstOrDefault();
+                id = labourer.LabourerId;
+            }
+            return id;
+        }
+
     }
 }

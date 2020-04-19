@@ -73,7 +73,7 @@ namespace labourRecruitment.Controllers
                 jsonResponse.status = "OK";
                 jsonResponse.role = sysUser.Role;
                 jsonResponse.email = sysUser.Email;
-                jsonResponse.clientId = client.ClientId;
+                jsonResponse.id = client.ClientId;
                 return Json(jsonResponse);
             }
 
@@ -82,7 +82,7 @@ namespace labourRecruitment.Controllers
                 errorList.Add(error.Description);
             }
 
-            jsonResponse.status = errorList;
+            jsonResponse.status = errorList[0];
             jsonResponse.token = " ";
             return Json(jsonResponse);
         }

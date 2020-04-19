@@ -109,7 +109,7 @@ namespace roleDemo.Controllers
                 jsonResponse.status = "OK";
                 jsonResponse.role = sysUser.Role;
                 jsonResponse.email = sysUser.Email;
-                jsonResponse.labourerId = labourer.LabourerId;
+                jsonResponse.id = labourer.LabourerId;
                 return Json(jsonResponse);
 
             }
@@ -118,7 +118,7 @@ namespace roleDemo.Controllers
             {
                 errorList.Add(error.Description);
             }
-            jsonResponse.status = errorList;
+            jsonResponse.status = errorList[0];
             jsonResponse.token = " ";
             return Json(jsonResponse);
 
