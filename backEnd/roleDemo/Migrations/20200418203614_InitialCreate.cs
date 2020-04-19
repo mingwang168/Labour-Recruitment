@@ -218,7 +218,8 @@ namespace labourRecruitment.Migrations
                     client_email = table.Column<string>(unicode: false, maxLength: 30, nullable: true),
                     client_phone_number = table.Column<string>(unicode: false, maxLength: 30, nullable: true),
                     client_city = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
-                    client_state = table.Column<string>(unicode: false, maxLength: 10, nullable: true)
+                    client_state = table.Column<string>(unicode: false, maxLength: 10, nullable: true),
+                    client_description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
