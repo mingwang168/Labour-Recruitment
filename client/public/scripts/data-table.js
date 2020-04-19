@@ -1,16 +1,45 @@
-jQuery(document).ready(function($) {
-    'use strict';
+$(document).ready(function($) {
+     'use strict';
 
-    // Client Dashboard Table
-    // if ($("table.client-overview-table").length) {
-    //     $(document).ready(function() {
-    //         $('table.client-overview-table').DataTable({
-    //             columnDefs: [ {
-    //                 'targets': [0,1,2,3,4,5,6],
-    //                 'orderable': false
-    //             }],
-    //             aaSorting: []
-    //         });
-    //     });
-    // }
+    // Job Detail: Daily Quality Rating Table
+    if ($("table.job-dqr-table").length) {
+        $(document).ready(function() {
+            $('table.job-dqr-table').DataTable({
+                lengthMenu: [ 5, 10, 25 ],
+                columnDefs: [ {
+                    'targets': [0,1,2],
+                    'orderable': false
+                }],
+                aaSorting: []
+            });
+        });
+    }
+
+    // Job Detail: Safety Meetings Table
+    if ($("table.job-safetymeetings-table").length) {
+        $(document).ready(function() {
+            $('table.job-safetymeetings-table').DataTable({
+                lengthMenu: [ 5, 10, 25 ],
+                columnDefs: [ {
+                    'targets': [0,1,2],
+                    'orderable': false
+                }],
+                aaSorting: []
+            });
+        });
+    }
+
+    // Job Detail: Safety Ratings Table
+    if ($("table.job-safetyratings-table").length) {
+        $(document).ready(function() {
+            $('table.job-safetyratings-table').DataTable({
+                lengthMenu: [ 10, 15, 25 ],
+                columnDefs: [ {
+                    'targets': [0,1,2],
+                    'orderable': false
+                }],
+                aaSorting: []
+            });
+        });
+    }
 });
