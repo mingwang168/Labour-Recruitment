@@ -21,6 +21,8 @@ namespace labourRecruitment.Controllers
         }
 
         // GET: api/Skills
+        // tested in postman: ok
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Skill>>> GetSkill()
         {
