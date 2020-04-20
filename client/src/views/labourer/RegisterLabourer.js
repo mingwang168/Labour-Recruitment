@@ -34,7 +34,7 @@ const RegisterLabourer = () => {
     const onChange = e => {
         e.preventDefault();
         setUser({ ...user, [e.target.name]: e.target.value });
-         
+        setLabourer({ ...labourer, [e.target.name]: e.target.value })    
     }
     
     const validateForm = (e) => {
@@ -53,7 +53,13 @@ const RegisterLabourer = () => {
             password,
             "role" : "Labourer"
           }
-         
+          const LabourerFirstName = fullname.split(' ')[0]
+          const LabourerLastName = fullname.split(' ')[1]
+          const newLabourer = {
+            LabourerFirstName,
+            LabourerLastName
+          }
+       
           // Fetch
           fetch(BASE_URL + "/RegisterLabourer", {
             method: "POST",
