@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
-import AddJobWidget from './components/AddJobWidget';
+// import AddJobWidget from './components/AddJobWidget';
 
 const ClientAddJob = (props) => {
 
@@ -141,7 +141,7 @@ const ClientAddJob = (props) => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="workers">Select workers <span className="text-danger">*</span></label>
-                    <AddJobWidget />
+                    {/* <AddJobWidget /> */}
                 </div>
                 <div className="form-group row text-right">
                 <div className="col col-sm-10 col-lg-12">
