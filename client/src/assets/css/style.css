@@ -6816,3 +6816,8 @@ Media Query
 .simple-card .nav.nav-tabs .nav-item .nav-link {
     padding: 17px 29px;}
 }
+
+.css-yk16xz-control {
+    padding: 4px;
+    border-radius: 0 !important;
+}
