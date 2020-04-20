@@ -1,162 +1,7 @@
 @charset "UTF-8";
-/**
- * Summary:
- *
- *  0. ELEMENT
- *      - 0.1. Body / Typography
- *      - 0.2. Type Elements
-        - 0.3. Header
-        - 0.4. Sidebar
-        - 0.5. Container
-        - 0.6. Pageheader
-        - 0.7. Footer
-
-   -------------------------
-
- *  1. Dashboard
-
- *      - 1.1. TYPE ELEMENT
- *      - 1.2. TYPE ELEMENT
-
-   --------------------------
-
-2. UI Elements
-
-    - 2.1.  Alerts
-    - 2.2.  Buttons
-    - 2.3.  Cards
-    - 2.4.  General
-    - 2.5.  Modals
-    - 2.6.  Notifications
-    - 2.7.  Icon
-    - 2.8.  Tabs
-    - 2.9.  Accordions
-    - 2.10. Typography
-    - 2.11. Listgroup
-    - 2.12. Multiselect
-    - 2.13. Badge
-    - 2.14. Pagination
-    - 2.15. Switch Toogle
-    - 2.16. Spinner
-
-
-    ----------------------------
-
-3. Charts
-
-    - 3.1.  Chartist js
-    - 3.2.  Sparklines
-    - 3.3.  Chart.js
-    - 3.4.  Morris.js
-    - 3.5.  C3 Charts.js
-
-     ----------------------------
-
-4. Forms
-
-    - 4.1.  Elements
-    - 4.2.  Validations
-    - 4.3.  Multiselect
-    - 4.4.  Wizard
-    - 4.5.  Input Mask
-    - 4.6.  Summar Note text editor
-    - 4.7.  Multi Upload
-
-
-     ----------------------------
-
-
-5. Tables
-
-    - 5.1.  General
-    - 5.2.  Data Tables
-    - 5.3.  Table Filters
-
-
-
-         ----------------------------
-
-
-6. Pages
-
-    - 6.1.   Blank Page
-    - 6.2.   Blank Page Header
-    - 6.3.   Login
-    - 6.4.   Sign up
-    - 6.5.   Forgot Password
-    - 6.6.   Profile
-    - 6.7.   Pricing
-    - 6.8.   Timline
-    - 6.9.   Calendar
-    - 6.10.  Metrics
-    - 6.11.  Media Object
-    - 6.12.  Shortable / Nestable
-    - 6.13.  404 Error
-
-
-
-
-
-
-         ----------------------------
-
-7. Email
-
-    - 7.1.  Inbox
-    - 7.2.  Email Detail
-    - 7.3.  Email Compose
-    - 7.4.  Message Chat
-
-       ----------------------------
-
-
-8. Layouts
-
-    - 8.1. Primary Header
-    - 8.2. Success Header
-    - 8.3. Warning Header
-    - 8.4. Danger Header
-    - 8.5. Search Input
-    - 8.6. Off Canvas Menu
-    - 8.7. Without Left Sidebar
-    - 8.8. Without Right Sidebar
-    - 8.9. Without Both Sidebars
-    - 8.10. Fixed Left Sidebar
-    - 8.11. Boxed Layout
-    - 8.12. Page Aside
-    - 8.13. Collapsible Sidebar
-    - 8.14. Sub Navigation
-
-
-
-       ----------------------------
-
-
-9. Maps
-
-    - 9.1.  Google Map
-    - 9.2.  Vector Map
-
-       ----------------------------
-
-
-10. Menu Level
-
-    - 10.1.  Level 1
-    - 10.2.  Level 2
-   */
-
-
-/* ==========================================================================
-   0. ELEMENT
-   ========================================================================== */
-
-
-/* 0.1. Body / Typography
-   ========================================================================== */
 
 body {
-    font-family: 'Circular Std Book';
+    font-family: 'Circular Std Book', 'Segoe UI';
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
@@ -173,7 +18,7 @@ h5,
 h6 {
     color: #3d405c;
     margin: 0px 0px 15px 0px;
-    font-family: 'Circular Std Medium';
+    font-family: 'Circular Std Medium', 'Segoe UI';
 }
 
 h1 {
@@ -247,7 +92,7 @@ label {
     display: inline-block;
     max-width: 100%;
     margin-bottom: 5px;
-    font-size: 15px;
+    font-size: 16px;
     color: #71748d;
 }
 
@@ -2333,7 +2178,7 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
     background-color: #59b3ff;
     padding: 31px 15px;
     text-align: center;
-    left: 10px;  font-family: 'Circular Std Medium'; color: #fff;}
+    left: 10px;  font-family: 'Circular Std Medium', 'Segoe UI'; color: #fff;}
 
    .ribbons-text{transform: rotate(90deg);
     position: absolute;
@@ -2360,7 +2205,7 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 .product-rating{font-size: 12px;
 
     color: #ffa811;}
-.product-price{ position: absolute; top: 0; right: 0; font-size: 16px; color: #3d405c;font-family: 'Circular Std Medium'; line-height: 1;}
+.product-price{ position: absolute; top: 0; right: 0; font-size: 16px; color: #3d405c;font-family: 'Circular Std Medium', 'Segoe UI'; line-height: 1;}
 .product-btn{}
 .product-del{font-size: 14px; color: #71748d;}
 .product-sidebar{ background-color: #fff; border:1px solid #e6e6f2;  }
@@ -2552,7 +2397,7 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
   text-align: center;
   color: #333;
   font-size: 13px;
-  font-family: 'Circular Std Medium';
+  font-family: 'Circular Std Medium', 'Segoe UI';
 
   line-height: 1.6;
   -webkit-transform: translateX(-100%);
@@ -4495,6 +4340,7 @@ Pills vertical
 
 .table {
     margin-bottom: 0px;
+    color: #71748d;
 }
 
 .table td,
@@ -4513,7 +4359,7 @@ Pills vertical
 .table thead th,
 .table th {
     color: #3d405c;
-    font-family: 'Circular Std Medium';
+    font-family: 'Circular Std Medium', 'Segoe UI';
 }
 
 .table-bordered {
@@ -4545,7 +4391,7 @@ tr.group,
 tr.group:hover {
     background-color: #5969ff !important;
     color: #fff;
-    font-family: 'Circular Std Medium';
+    font-family: 'Circular Std Medium', 'Segoe UI';
     font-size: 18px;
 }
 
@@ -6971,8 +6817,7 @@ Media Query
     padding: 17px 29px;}
 }
 
-
-
-
-/* Custom, iPhone Retina */
-@media only screen and (max-width:320px) {}
+.css-yk16xz-control {
+    padding: 4px;
+    border-radius: 0 !important;
+}

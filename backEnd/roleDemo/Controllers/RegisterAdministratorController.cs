@@ -15,7 +15,7 @@ namespace labourRecruitment.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegisterClientController : Controller
+    public class RegisterAdministratorController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -23,7 +23,7 @@ namespace labourRecruitment.Controllers
         private IServiceProvider _serviceProvider;
         private readonly ApplicationDbContext _context;
 
-        public RegisterClientController(
+        public RegisterAdministratorController(
                 UserManager<IdentityUser> userManager,
                 SignInManager<IdentityUser> signInManager,
                  IServiceProvider serviceProvider,
@@ -38,10 +38,10 @@ namespace labourRecruitment.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> OnPostAsync([FromBody]ClientRegisterVM input)
+        public async Task<JsonResult> OnPostAsync([FromBody]SystemUser input)
         {
-            var user = new IdentityUser { UserName = input.User.Email.ToLower(), Email = input.User.Email };
-            var result = await _userManager.CreateAsync(user, input.User.Password);
+            var user = new IdentityUser { UserName = input.Email.ToLower(), Email = input.Email };
+            var result = await _userManager.CreateAsync(user, input.Password);
             var errorList = new List<string>();
 
             dynamic jsonResponse = new JObject();
@@ -50,21 +50,12 @@ namespace labourRecruitment.Controllers
             {
                 SystemUser sysUser = new SystemUser()
                 {
-                    Email = input.User.Email,
-                    Role = input.User.Role
+                    Email = input.Email,
+                    Role = input.Role
                 };
 
-                Client client = new Client
-                {
-                    ClientName = input.Client.ClientName,
-                    ClientEmail = input.Client.ClientEmail,
-                    ClientPhoneNumber = input.Client.ClientPhoneNumber,
-                    ClientCity = input.Client.ClientCity,
-                    ClientState = input.Client.ClientState,
-                    ClientDescription = input.Client.ClientDescription
-                };
                 _context.SystemUser.Add(sysUser);
-                sysUser.Client.Add(client);
+
                 _context.SaveChanges();
 
                 AuthRepo registerRepo = new AuthRepo(_signInManager, _config, _serviceProvider, _context);
