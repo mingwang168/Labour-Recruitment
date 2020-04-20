@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
@@ -117,7 +117,7 @@ const Dashboard = () => {
                             <td>40</td>
                             <td><span className="badge badge-brand">Upcoming</span></td>
                             <td><span className="badge badge-dark">N/A</span></td>
-                            <td><Link to="/job">View Details</Link></td>
+                            <td><a href="/job">View Details</a></td>
                         </tr>
                         <tr>
                             <td>Stanley Park Clean Up</td>
@@ -126,7 +126,7 @@ const Dashboard = () => {
                             <td>20</td>
                             <td><span className="badge badge-primary">In Progress</span></td>
                             <td><span className="badge badge-success">Complete</span></td>
-                            <td><Link to="/job">View Details</Link></td>
+                            <td><a href="/job">View Details</a></td>
                         </tr>
                         <tr>
                             <td>General Construction</td>
@@ -135,7 +135,7 @@ const Dashboard = () => {
                             <td>60</td>
                             <td><span className="badge badge-primary">In Progress</span></td>
                             <td><span className="badge badge-success">Complete</span></td>
-                            <td><Link to="/job">View Details</Link></td>
+                            <td><a href="/job">View Details</a></td>
                         </tr>
                         <tr>
                             <td>Crescent Court Homes</td>
@@ -144,7 +144,7 @@ const Dashboard = () => {
                             <td>100</td>
                             <td><span className="badge badge-primary">In Progress</span></td>
                             <td><span className="badge badge-danger">Required</span></td>
-                            <td><Link to="/job">View Details</Link></td>
+                            <td><a href="/job">View Details</a></td>
                         </tr>
                         <tr>
                             <td>CF Richmond Centre Remodel</td>
@@ -153,7 +153,7 @@ const Dashboard = () => {
                             <td>75</td>
                             <td><span className="badge badge-success">Completed</span></td>
                             <td><span className="badge badge-danger">Required</span></td>
-                            <td><Link to="/job">View Details</Link></td>
+                            <td><a href="/job">View Details</a></td>
                         </tr>
                     </tbody>
                 </table>
