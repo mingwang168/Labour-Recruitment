@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
-import AddJobWidget from '../../components/AddJobWidget';
+import AddJobWidget from './components/AddJobWidget';
 
 const ClientAddJob = (props) => {
 
