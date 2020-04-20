@@ -16,6 +16,7 @@ const BASE_URL = "http://localhost:5000/api";
 //const USER_ID = "user_id";
 
 const RegisterLabourer = () => {
+    const [skill, setSkill] = useState([])
     const [user, setUser] = useState({
         "email" : "",
         "password" : "",
@@ -25,8 +26,8 @@ const RegisterLabourer = () => {
          "LabourerFirstName" : "",
          "LabourerLastName" : ""
     })
-    //const [availability, setAvailability] = useState([])
-    //const [skill, setSkill] = useState([])
+    const [availability, setAvailability] = useState([])
+    
 
     const {email, password,confirmpassword} = user
     const {fullname} = labourer
