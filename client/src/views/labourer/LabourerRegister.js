@@ -1,4 +1,4 @@
-import React , {useState} from 'react';
+import React , {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 
 const bodyStyles = {
@@ -15,8 +15,10 @@ const BASE_URL = "http://localhost:5000/api";
 //const USER_NAME = "user_name";
 //const USER_ID = "user_id";
 
+
 const RegisterLabourer = () => {
-    const [skill, setSkill] = useState([])
+    const [skill, setSkill] = useState([{
+    }])
     const [user, setUser] = useState({
         "email" : "",
         "password" : "",
@@ -27,15 +29,47 @@ const RegisterLabourer = () => {
          "LabourerLastName" : ""
     })
     const [availability, setAvailability] = useState([])
-    
 
     const {email, password,confirmpassword} = user
     const {fullname} = labourer
+
+    
+    
+    useEffect(() => {
+        fetchSkills()
+      
+      }, [])
+
+    const fetchSkills = async() => {
+        try {
+            const response = await fetch(BASE_URL + '/skills', {
+                method: 'GET',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                }
+            })
+
+            // Unable to fetch skills
+            if(!response.ok || response.status === 500) {
+                console.log("Unable to retrieve recipe.");
+            }
+
+            //fetch successfull
+            let data = await response.json();
+            //console.log(data[0].skillName)
+            setSkill(data)
+          
+        }  catch(e) {
+            console.error(e);
+        }
+    }
     
     const onChange = e => {
         e.preventDefault();
         setUser({ ...user, [e.target.name]: e.target.value });
         setLabourer({ ...labourer, [e.target.name]: e.target.value })    
+        setAvailability([ ...availability, e.target.value ])
     }
     
     const validateForm = (e) => {
