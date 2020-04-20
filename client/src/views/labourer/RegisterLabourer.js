@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState} from 'react';
 import { Link } from 'react-router-dom';
 
 const bodyStyles = {
@@ -11,22 +11,72 @@ const bodyStyles = {
 }
 
 const BASE_URL = "http://localhost:5000/api";
-const AUTH_TOKEN = "auth_token";
-const USER_NAME = "user_name";
-const USER_ID = "user_id";
-
-
+//const AUTH_TOKEN = "auth_token";
+//const USER_NAME = "user_name";
+//const USER_ID = "user_id";
 
 const RegisterLabourer = () => {
+    const [user, setUser] = useState({
+        "email" : "",
+        "password" : "",
+        "role" : ""
+    })
+    const [labourer, setLabourer] = useState({
+         "LabourerFirstName" : "",
+         "LabourerLastName" : ""
+    })
+    //const [availability, setAvailability] = useState([])
+    //const [skill, setSkill] = useState([])
 
+    const {email, password,confirmpassword} = user
+    const {fullname} = labourer
+    
+    const onChange = e => {
+        e.preventDefault();
+        setUser({ ...user, [e.target.name]: e.target.value });
+         
+    }
+    
     const validateForm = (e) => {
         e.preventDefault();
         alert("Form submitted!");
     }
 
+    const onSubmit = e => {
+        e.preventDefault();
+
+        if(password !== confirmpassword) {
+          console.log("Passwords do not match.");
+        } else {
+          const newUser = {
+            email,
+            password,
+            "role" : "Labourer"
+          }
+         
+          // Fetch
+          fetch(BASE_URL + "/RegisterLabourer", {
+            method: "POST",
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer})
+          })
+          .then(response => response.json())
+          .then(json => {
+            
+            console.log(json)
+          })
+          .catch(function (error) {
+            console.log("Server error. Please try again later.");
+          })
+        }
+    }
+
     return (
     <div style={bodyStyles}>
-    <form className="splash-container">
+    <form className="splash-container" onSubmit={e => onSubmit(e)}>
     <div className="card">
         <div className="card-header">
             <h3 className="mb-1">Create Labourer Account</h3>
@@ -41,6 +91,7 @@ const RegisterLabourer = () => {
                     type="text"
                     placeholder="Enter full name"
                     required
+                    onChange={e => onChange(e)}
                 />
             </div>
             <div className="form-group">
@@ -51,6 +102,8 @@ const RegisterLabourer = () => {
                     type="email"
                     placeholder="Enter email address"
                     required
+                   
+                    onChange={e => onChange(e)}
                 />
             </div>
             <div className="form-group">
@@ -61,6 +114,7 @@ const RegisterLabourer = () => {
                     type="password"
                     placeholder="Enter password"
                     required
+                    onChange={e => onChange(e)}
                 />
             </div>
             <div className="form-group">
@@ -71,6 +125,7 @@ const RegisterLabourer = () => {
                     type="password"
                     placeholder="Enter password again"
                     required
+                    onChange={e => onChange(e)}
                 />
             </div>
             <div className="form-group">
@@ -81,6 +136,7 @@ const RegisterLabourer = () => {
                     data-width="100%"
                     name="skills"
                     multiple
+                    onChange={e => onChange(e)}
                 >
                     <option value="carpentry">Carpentry</option>
                     <option value="painting">Painting</option>
@@ -100,6 +156,7 @@ const RegisterLabourer = () => {
                     data-width="100%"
                     name="availability"
                     multiple
+                    onChange={e => onChange(e)}
                 >
                     <option value="monday">Monday</option>
                     <option value="tuesday">Tuesday</option>
@@ -112,7 +169,7 @@ const RegisterLabourer = () => {
             </div>
             <div className="form-group pt-2">
                 <button
-                    onClick={e => validateForm(e)}
+                   // onClick={e => validateForm(e)}
                     className="btn btn-block btn-primary btn-lg"
                     type="submit"
                 >
