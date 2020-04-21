@@ -84,5 +84,27 @@ namespace labourRecruitment.Controllers
             return NoContent();
         }
 
+        // DELETE: api/Todo?id=5
+        [HttpDelete]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> DeleteLabourerProfile(int id)
+        {
+
+
+            var lb = await _context.Labourer.FindAsync(id);
+            if (lb == null)
+            {
+                return NotFound();
+            }
+
+            _context.Labourer.Remove(lb);
+            await _context.SaveChangesAsync();
+            return new ObjectResult(lb);
+
+        }
+
+
+
+
     }
 }
