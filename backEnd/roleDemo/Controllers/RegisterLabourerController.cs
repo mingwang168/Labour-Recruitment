@@ -65,11 +65,13 @@ namespace roleDemo.Controllers
                 sysUser.Labourer.Add(labourer);
                 _context.SaveChanges();
 
-                foreach (string day in input.AvailableDays)
+                if (input.AvailableDays != null)
                 {
-                    Availability availability = _context.Availability.Where(a => a.AvailabilityDay == day).FirstOrDefault();
-                    if (availability != null)
+
+                    foreach (string day in input.AvailableDays)
                     {
+                        Availability availability = _context.Availability.Where(a => a.AvailabilityDay == day).FirstOrDefault();
+
                         AvailabilityLabourer availabilityLabourer = new AvailabilityLabourer
                         {
                             AvailabilityId = availability.AvailabilityId,
@@ -78,20 +80,20 @@ namespace roleDemo.Controllers
                         _context.AvailabilityLabourer.Add(availabilityLabourer);
                         _context.SaveChanges();
                     }
-                    else
-                    {
-                        await _userManager.DeleteAsync(user);
-                        _context.Labourer.Remove(labourer);
-                        _context.SystemUser.Remove(sysUser);
-                        _context.SaveChanges();
-                        jsonResponse.status = "Available day is not valid";
-                        jsonResponse.token = " ";
-                        return Json(jsonResponse);
-                    }
-
+                }
+                else
+                {
+                    await _userManager.DeleteAsync(user);
+                    _context.Labourer.Remove(labourer);
+                    _context.SystemUser.Remove(sysUser);
+                    _context.SaveChanges();
+                    jsonResponse.status = "Available day is not valid";
+                    jsonResponse.token = " ";
+                    return Json(jsonResponse);
                 }
 
-                foreach (int skillId in input.SkillIds)
+
+                foreach (int skillId in input.Skills)
                 {
                     LabourerSkill labourerSkill = new LabourerSkill
                     {
