@@ -14,7 +14,7 @@ namespace labourRecruitment.Repositories
     public class AuthRepo
     {
         private readonly ApplicationDbContext _context;
-        private Microsoft.Extensions.Configuration.IConfiguration _config;
+        private IConfiguration _config;
         private readonly SignInManager<IdentityUser> _signInManager;
         private IServiceProvider _serviceProvider;
         private SignInManager<IdentityUser> signInManager;
@@ -23,7 +23,7 @@ namespace labourRecruitment.Repositories
         private ApplicationDbContext context;
 
         public AuthRepo(SignInManager<IdentityUser> signInManager,
-                                Microsoft.Extensions.Configuration.IConfiguration config,
+                                IConfiguration config,
                                 IServiceProvider serviceProvider,
                                 ApplicationDbContext context)
         {
@@ -80,6 +80,22 @@ namespace labourRecruitment.Repositories
                 expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public int GetIdByRole(string userEmail, string role)
+        {
+            int id = 0;
+            if (role.IndexOf("client", 0, StringComparison.CurrentCultureIgnoreCase) != -1)
+            {
+                var client = _context.Client.Where(c => c.ClientEmail == userEmail).FirstOrDefault();
+                id = client.ClientId;
+            }
+            else if (role.IndexOf("labourer", 0, StringComparison.CurrentCultureIgnoreCase) != -1)
+            {
+                Labourer labourer = _context.Labourer.Where(l => l.LabourerEmail == userEmail).FirstOrDefault();
+                id = labourer.LabourerId;
+            }
+            return id;
         }
 
     }

@@ -11,6 +11,6 @@ namespace roleDemo.ViewModels
         public SystemUser User { get; set; }
         public Labourer Labourer { get; set; }
         public IEnumerable<string> AvailableDays { get; set; }
-        public IEnumerable<int> SkillIds { get; set; }
+        public IEnumerable<int> Skills { get; set; }
     }
 }
