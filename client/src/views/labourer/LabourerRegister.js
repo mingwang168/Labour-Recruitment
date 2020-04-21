@@ -1,5 +1,6 @@
 import React , {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
+import Select from 'react-select';
 
 const bodyStyles = {
     height: '100vh',
@@ -10,15 +11,18 @@ const bodyStyles = {
     paddingBottom: '40px'
 }
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "http://localhost:5001/api";
 //const AUTH_TOKEN = "auth_token";
 //const USER_NAME = "user_name";
 //const USER_ID = "user_id";
 
 
 const RegisterLabourer = () => {
-    const [skill, setSkill] = useState([{
-    }])
+    
+    const [skills, setSkills] = useState([{
+        "skillId" : "",
+        "skillName" : ""
+    }]);
     const [user, setUser] = useState({
         "email" : "",
         "password" : "",
@@ -32,39 +36,23 @@ const RegisterLabourer = () => {
 
     const {email, password,confirmpassword} = user
     const {fullname} = labourer
-
-    
-    
-    useEffect(() => {
-        fetchSkills()
-      
-      }, [])
-
+  
     const fetchSkills = async() => {
         try {
-            const response = await fetch(BASE_URL + '/skills', {
-                method: 'GET',
-                headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                }
-            })
-
-            // Unable to fetch skills
-            if(!response.ok || response.status === 500) {
-                console.log("Unable to retrieve recipe.");
-            }
-
-            //fetch successfull
+            const response = await fetch(BASE_URL + '/skills');
             let data = await response.json();
-            //console.log(data[0].skillName)
-            setSkill(data)
-          
-        }  catch(e) {
+            setSkills(data);
+        } catch (e) {
             console.error(e);
         }
     }
+
     
+    useEffect(() => {
+        fetchSkills()
+      }, [])
+
+        
     const onChange = e => {
         e.preventDefault();
         setUser({ ...user, [e.target.name]: e.target.value });
@@ -143,7 +131,6 @@ const RegisterLabourer = () => {
                     type="email"
                     placeholder="Enter email address"
                     required
-                   
                     onChange={e => onChange(e)}
                 />
             </div>
@@ -171,30 +158,16 @@ const RegisterLabourer = () => {
             </div>
             <div className="form-group">
                 <label className="d-block" htmlFor="skills">Select Skills <span className="text-danger">*</span></label>
-                <select
-                    className="selectpicker"
-                    data-dropup-auto="false"
-                    data-width="100%"
-                    name="skills"
-                    multiple
-                    onChange={e => onChange(e)}
-                >
-                    <option value="carpentry">Carpentry</option>
-                    <option value="painting">Painting</option>
-                    <option value="drywall">Drywall</option>
-                    <option value="electrical">Electrical</option>
-                    <option value="plumbing">Plumbing</option>
-                    <option value="framing">Framing</option>
-                    <option value="roofing">Roofing</option>
-                    <option value="demolition">Demolition</option>
-                </select>
+                <Select 
+                options={
+                    skills.map((o, i) => {
+                    return { value: o.skillId, label: o.skillName } 
+                      }) 
+                }  isMulti />
             </div>
             <div className="form-group">
                 <label className="d-block" htmlFor="availability">Select Availability <span className="text-danger">*</span></label>
                 <select
-                    className="selectpicker"
-                    data-dropup-auto="false"
-                    data-width="100%"
                     name="availability"
                     multiple
                     onChange={e => onChange(e)}
