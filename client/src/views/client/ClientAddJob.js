@@ -150,6 +150,7 @@ const ClientAddJob = (props) => {
                     <button onClick={() => validateForm()} className="btn btn-space btn-primary btn-lg">Create New Job</button>
                 </div>
                 </div>
+  
             </form>
             </div>
             </div>
