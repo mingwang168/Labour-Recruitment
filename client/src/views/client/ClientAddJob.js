@@ -5,17 +5,6 @@ import Select from 'react-select';
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
 
-let options = [
-    {value: 'carpentry', label: 'Carpentry'},
-    {value: 'painting', label: 'Painting'},
-    {value: 'drywall', label: 'Drywall'},
-    {value: 'electrical', label: 'Electrical'},
-    {value: 'plumbing', label: 'Plumbing'},
-    {value: 'framing', label: 'Framing'},
-    {value: 'roofing', label: 'Roofing'},
-    {value: 'demolition', label: 'Demolition'}
-]
-
 const ClientAddJob = (props) => {
 
     const [workers, setWorkers] = useState([]);
@@ -163,36 +152,7 @@ const ClientAddJob = (props) => {
                         </select>
                     </div>
                 </div>
-
-                <div className="form-group">
-                    <label htmlFor="workers">Select workers <span className="text-danger">*</span></label>
-                    <div className="form-row">
-                        <div className="col col-md-3">
-                        <Select
-                            options={options}
-                            onChange={setSkill}
-                        />
-                        </div>
-                        <div className="col col-md-3">
-                        <input
-                            required
-                            type="number"
-                            name="workersrequired"
-                            placeholder="# required"
-                            className="form-control form-control-lg"
-                        />
-                        </div>
-                        <div className="col">
-                        <button
-                            onClick={addWorkers}
-                            className="btn btn-primary btn-lg"
-                        >
-                            Add
-                        </button>
-                    </div>
-                    </div>
-                </div>
-
+  
                 <div className="form-group row text-right">
                 <div className="col col-sm-10 col-lg-12">
                     <Link to="/dashboard" className="btn btn-space btn-light">Cancel</Link>
