@@ -1,6 +1,7 @@
 import React , {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
-import Select from 'react-select';
+import Select, {components} from 'react-select';
+
 
 const bodyStyles = {
     height: '100vh',
@@ -33,10 +34,11 @@ const RegisterLabourer = () => {
          "LabourerLastName" : ""
     })
     const [availability, setAvailability] = useState([])
+    const [selectedSkills, setSelectedSkills] = useState([]);
 
     const {email, password,confirmpassword} = user
     const {fullname} = labourer
-  
+   
     const fetchSkills = async() => {
         try {
             const response = await fetch(BASE_URL + '/skills');
@@ -47,7 +49,6 @@ const RegisterLabourer = () => {
         }
     }
 
-    
     useEffect(() => {
         fetchSkills()
       }, [])
@@ -59,7 +60,14 @@ const RegisterLabourer = () => {
         setLabourer({ ...labourer, [e.target.name]: e.target.value })    
         setAvailability([ ...availability, e.target.value ])
     }
-    
+
+    //Set selected skills in dropdown
+    const setSkill = (skill) => {
+       
+        setSelectedSkills(skill);
+        console.log(selectedSkills)
+    }
+
     const validateForm = (e) => {
         e.preventDefault();
         alert("Form submitted!");
@@ -82,7 +90,7 @@ const RegisterLabourer = () => {
             LabourerFirstName,
             LabourerLastName
           }
-       
+          console.log(JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : availability, "SkillIds" : selectedSkills }))
           // Fetch
           fetch(BASE_URL + "/RegisterLabourer", {
             method: "POST",
@@ -90,7 +98,7 @@ const RegisterLabourer = () => {
               "Accept": "application/json",
               "Content-Type": "application/json"
             },
-            body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer})
+            body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : availability, "Skills" : selectedSkills }),
           })
           .then(response => response.json())
           .then(json => {
@@ -160,10 +168,12 @@ const RegisterLabourer = () => {
                 <label className="d-block" htmlFor="skills">Select Skills <span className="text-danger">*</span></label>
                 <Select 
                 options={
-                    skills.map((o, i) => {
-                    return { value: o.skillId, label: o.skillName } 
-                      }) 
-                }  isMulti />
+                    skills.map((skill, i) => {
+                    return { value: skill.skillId, label: skill.skillName } 
+                    }) 
+                } 
+                onChange={setSkill} 
+                isMulti />
             </div>
             <div className="form-group">
                 <label className="d-block" htmlFor="availability">Select Availability <span className="text-danger">*</span></label>
@@ -172,13 +182,7 @@ const RegisterLabourer = () => {
                     multiple
                     onChange={e => onChange(e)}
                 >
-                    <option value="monday">Monday</option>
-                    <option value="tuesday">Tuesday</option>
-                    <option value="wednesday">Wednesday</option>
-                    <option value="thursday">Thursday</option>
-                    <option value="friday">Friday</option>
-                    <option value="saturday">Saturday</option>
-                    <option value="sunday">Sunday</option>
+                    
                 </select>
             </div>
             <div className="form-group pt-2">
