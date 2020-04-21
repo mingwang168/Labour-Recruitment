@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
-import AddJobWidget from './components/AddJobWidget';
+import SelectWorkers from './components/SelectWorkers';
 
 const ClientAddJob = (props) => {
 
-    const validateForm = (e) => {
-        console.log('Validating form....');
+    const [workers, setWorkers] = useState([]);
+
+    const validateForm = _ => {
+        console.log("Validating form...")
     }
 
     return (
@@ -39,8 +41,8 @@ const ClientAddJob = (props) => {
             {/* Form */}
             <div className="card">
             <div className="card-body">
-            <form>
-                <div className="form-group">
+            <form className="client-add-job-form">
+                <div className="form-group mb-4">
                     <label htmlFor="title">Job Title <span className="text-danger">*</span></label>
                     <input
                         required
@@ -50,7 +52,7 @@ const ClientAddJob = (props) => {
                         className="form-control form-control-lg"
                     />
                 </div>
-                <div className="form-row mb-2">
+                <div className="form-row mb-4">
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
                         <label htmlFor="startdate">Start Date <span className="text-danger">*</span></label>
                         <input
@@ -70,7 +72,7 @@ const ClientAddJob = (props) => {
                         />
                     </div>
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                        <label for="payrate">Base Pay (per hour) <span className="text-danger">*</span></label>
+                        <label htmlFor="payrate">Base Pay (per hour) <span className="text-danger">*</span></label>
                         <input
                             required
                             name="payrate"
@@ -81,7 +83,7 @@ const ClientAddJob = (props) => {
                         />
                     </div>
                 </div>
-                <div className="form-group mb-3">
+                <div className="form-group mb-4">
                     <label htmlFor="description">Job Description</label>
                     <textarea
                         name="description"
@@ -91,9 +93,9 @@ const ClientAddJob = (props) => {
                         className="form-control form-control-lg"
                     />
                 </div>
-                <div className="form-row mb-2">
+                <div className="form-row mb-4">
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                        <label for="address">Address <span className="text-danger">*</span></label>
+                        <label htmlFor="address">Address <span className="text-danger">*</span></label>
                         <input
                             required
                             name="address"
@@ -103,13 +105,13 @@ const ClientAddJob = (props) => {
                         />
                     </div>
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                        <label for="province">Province <span className="text-danger">*</span></label>
+                        <label htmlFor="province">Province <span className="text-danger">*</span></label>
                         <select
                             required
                             name="province"
                             className="form-control form-control-lg"
                         >
-                            <option selected disabled>Select province</option>
+                            <option defaultValue="" disabled>Select province</option>
                             <option value="alberta">Alberta</option>
                             <option value="bc">British Columbia</option>
                             <option value="manitoba">Manitoba</option>
@@ -124,13 +126,13 @@ const ClientAddJob = (props) => {
                         </select>
                     </div>
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                        <label for="city">City <span className="text-danger">*</span></label>
+                        <label htmlFor="city">City <span className="text-danger">*</span></label>
                         <select
                             required
                             name="enddate"
                             className="form-control form-control-lg"
                         >
-                            <option selected disabled>Select city</option>
+                            <option defaultValue="" disabled>Select city</option>
                             <option value="toronto">Toronto</option>
                             <option value="montreal">Montreal</option>
                             <option value="vancouver">Vancouver</option>
@@ -139,16 +141,16 @@ const ClientAddJob = (props) => {
                         </select>
                     </div>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="workers">Select workers <span className="text-danger">*</span></label>
-                    <AddJobWidget />
+
+                <SelectWorkers workers={workers} setWorkers={setWorkers} />
+
+                <div className="form-group row text-right mt-4">
+                <div className="col col-lg-12">
+                    <Link to="/dashboard" className="btn btn-space btn-light btn-lg">Cancel</Link>
+                    <button onClick={() => validateForm()} className="btn btn-space btn-primary btn-lg">Create New Job</button>
                 </div>
-                <div className="form-group row text-right">
-                <div className="col col-sm-10 col-lg-12">
-                    <Link to="/dashboard" className="btn btn-space btn-light">Cancel</Link>
-                    <button onClick={e => validateForm(e)} className="btn btn-space btn-primary">Add Job</button>
                 </div>
-                </div>
+  
             </form>
             </div>
             </div>
