@@ -77,7 +77,8 @@ const RegisterLabourer = () => {
 
     //Set selected days in dropdown
     const setAvailability = (day) => {
-        setSelectedDays([... day]);
+        console.log(JSON.stringify(day))
+        setSelectedDays(day);
         console.log(selectedDays)
     }
 
