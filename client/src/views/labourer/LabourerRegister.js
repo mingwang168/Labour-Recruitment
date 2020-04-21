@@ -33,12 +33,21 @@ const RegisterLabourer = () => {
          "LabourerFirstName" : "",
          "LabourerLastName" : ""
     })
-    const [availability, setAvailability] = useState([])
+    const [selectedDays, setSelectedDays] = useState([])
     const [selectedSkills, setSelectedSkills] = useState([]);
 
     const {email, password,confirmpassword} = user
     const {fullname} = labourer
-   
+    const availability = [
+        { value: 'monday', label: 'Monday' },
+        { value: 'tuesday', label: 'Tuesday' },
+        { value: 'wednesday', label: 'Wednesday' },
+        { value: 'thursday', label: 'Thursay' },
+        { value: 'friday', label: 'Friday' },
+        { value: 'saturday', label: 'Saturday' },
+        { value: 'sunday', label: 'Sunday' }   
+    ];
+    
     const fetchSkills = async() => {
         try {
             const response = await fetch(BASE_URL + '/skills');
@@ -58,14 +67,18 @@ const RegisterLabourer = () => {
         e.preventDefault();
         setUser({ ...user, [e.target.name]: e.target.value });
         setLabourer({ ...labourer, [e.target.name]: e.target.value })    
-        setAvailability([ ...availability, e.target.value ])
     }
 
     //Set selected skills in dropdown
     const setSkill = (skill) => {
-       
         setSelectedSkills(skill);
         console.log(selectedSkills)
+    }
+
+    //Set selected days in dropdown
+    const setAvailability = (day) => {
+        setSelectedDays([... day]);
+        console.log(selectedDays)
     }
 
     const validateForm = (e) => {
@@ -90,7 +103,7 @@ const RegisterLabourer = () => {
             LabourerFirstName,
             LabourerLastName
           }
-          console.log(JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : availability, "SkillIds" : selectedSkills }))
+          console.log(JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays, "SkillIds" : selectedSkills }))
           // Fetch
           fetch(BASE_URL + "/RegisterLabourer", {
             method: "POST",
@@ -98,7 +111,7 @@ const RegisterLabourer = () => {
               "Accept": "application/json",
               "Content-Type": "application/json"
             },
-            body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : availability, "Skills" : selectedSkills }),
+            body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays, "Skills" : selectedSkills }),
           })
           .then(response => response.json())
           .then(json => {
@@ -167,23 +180,22 @@ const RegisterLabourer = () => {
             <div className="form-group">
                 <label className="d-block" htmlFor="skills">Select Skills <span className="text-danger">*</span></label>
                 <Select 
-                options={
-                    skills.map((skill, i) => {
-                    return { value: skill.skillId, label: skill.skillName } 
-                    }) 
-                } 
-                onChange={setSkill} 
-                isMulti />
+                    options={
+                        skills.map((skill, i) => {
+                        return { value: skill.skillId, label: skill.skillName } 
+                        }) 
+                    } 
+                    onChange = {setSkill} 
+                    isMulti 
+                />
             </div>
             <div className="form-group">
                 <label className="d-block" htmlFor="availability">Select Availability <span className="text-danger">*</span></label>
-                <select
-                    name="availability"
-                    multiple
-                    onChange={e => onChange(e)}
-                >
-                    
-                </select>
+                <Select
+                    options = {availability}
+                    onChange = {setAvailability}
+                    isMulti
+                />
             </div>
             <div className="form-group pt-2">
                 <button
