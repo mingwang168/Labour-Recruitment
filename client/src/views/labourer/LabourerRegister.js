@@ -12,9 +12,10 @@ const bodyStyles = {
 }
 
 const BASE_URL = "http://localhost:5001/api";
-//const AUTH_TOKEN = "auth_token";
-//const USER_NAME = "user_name";
-//const USER_ID = "user_id";
+const AUTH_TOKEN = "auth_token";
+const USER_NAME = "user_name";
+const USER_ID = "user_id";
+const USER_ROLE = "user_role";
 
 
 const RegisterLabourer = () => {
@@ -97,28 +98,32 @@ const RegisterLabourer = () => {
             email,
             password,
             "role" : "Labourer"
-          }
-          const LabourerFirstName = fullname.split(' ')[0]
-          const LabourerLastName = fullname.split(' ')[1]
-          const newLabourer = {
-            LabourerFirstName,
-            LabourerLastName
-          }
+        }
+        const LabourerFirstName = fullname.split(' ')[0]
+        const LabourerLastName = fullname.split(' ')[1]
+        const newLabourer = {
+        LabourerFirstName,
+        LabourerLastName
+        }
 
-         console.log(JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays, "Skills" : selectedSkills }))
-          // Fetch
-          fetch(BASE_URL + "/RegisterLabourer", {
-            method: "POST",
-            headers: {
-              "Accept": "application/json",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays.value, "Skills" : selectedSkills }),
-          })
-          .then(response => response.json())
-          .then(json => {
-            
-            console.log(json)
+        // Fetch
+        fetch(BASE_URL + "/RegisterLabourer", {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays, "Skills" : selectedSkills }),
+        })
+        .then(response => response.json())
+        .then(json => {
+            if (json.token !== "" && json.token != null) {
+                sessionStorage.setItem(AUTH_TOKEN, json["token"]);
+                sessionStorage.setItem(USER_NAME, json.email);
+                sessionStorage.setItem(USER_ROLE, json.role);
+                sessionStorage.setItem(USER_ID, json.id);
+                //setRedirect(true);
+            }
           })
           .catch(function (error) {
             console.log("Server error. Please try again later.");
