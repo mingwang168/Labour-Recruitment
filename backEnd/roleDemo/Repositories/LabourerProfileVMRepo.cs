@@ -34,13 +34,18 @@ namespace labourRecruitment.Repositories
             // var a =  _context.LabourerSafetyRating.Where(lsr => lsr.LabourerId == labourerID).Select(l => new List<double>().Add ( l.SafetyRating)).ToList();
             // var b = a;
 
-            //var L = _context.LabourerSafetyRating.Where(lsr => lsr.LabourerId == labourerID).ToList();
-            //var sum = 0;
+            //  var L = _context.LabourerSafetyRating.Where(lsr => lsr.LabourerId == labourerID).ToList();
+
+            //var sum = 0.0d;
             //foreach (LabourerSafetyRating l in L)
             //{
-            //    sum = sum + l.SafetyRating;
+            //    sum = sum + (double)l.Rating;
             //}
 
+            var avgerageSafety = _context.LabourerSafetyRating
+                  .Where(l => l.LabourerId == labourerID && l.Rating != null).Average(av => av.Rating);
+            var avgerageQuality = _context.LabourerDailyQualityRating
+                 .Where(l => l.LabourerId == labourerID && l.Rating != null).Average(av => av.Rating);
             LabourerProfileVM lp = new LabourerProfileVM()
             {
                 Labourer = Labourer,
@@ -49,7 +54,12 @@ namespace labourRecruitment.Repositories
                     AvailabilityId = avl.Availability.AvailabilityId,
                     AvailabilityDay = avl.Availability.AvailabilityDay
                 }),
-                AverageSafety = 3.5d
+                AverageSafety = (double)avgerageSafety,
+                SafetyRatingNumber = _context.LabourerSafetyRating
+                  .Where(l => l.LabourerId == labourerID && l.Rating != null).Count(),
+                AverageQuality = (double)avgerageQuality,
+                QualityRatingNumber = _context.LabourerDailyQualityRating
+                 .Where(l => l.LabourerId == labourerID && l.Rating != null).Count()
             };
             return lp;
         }
