@@ -1,7 +1,6 @@
 import React , {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
-import Select, {components} from 'react-select';
-
+import Select from 'react-select';
 
 const bodyStyles = {
     height: '100vh',
@@ -71,15 +70,16 @@ const RegisterLabourer = () => {
 
     //Set selected skills in dropdown
     const setSkill = (skill) => {
-        setSelectedSkills(skill);
-        console.log(selectedSkills)
+        skill.forEach(element => {
+            setSelectedSkills([ ... selectedSkills,element.value]);
+        });
     }
 
     //Set selected days in dropdown
     const setAvailability = (day) => {
-        console.log(JSON.stringify(day))
-        setSelectedDays(day);
-        console.log(selectedDays)
+        day.forEach(element => {
+            setSelectedDays([ ... selectedDays,element.value]);
+        });
     }
 
     const validateForm = (e) => {
@@ -104,7 +104,8 @@ const RegisterLabourer = () => {
             LabourerFirstName,
             LabourerLastName
           }
-          console.log(JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays, "SkillIds" : selectedSkills }))
+
+         console.log(JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays, "Skills" : selectedSkills }))
           // Fetch
           fetch(BASE_URL + "/RegisterLabourer", {
             method: "POST",
@@ -112,7 +113,7 @@ const RegisterLabourer = () => {
               "Accept": "application/json",
               "Content-Type": "application/json"
             },
-            body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays, "Skills" : selectedSkills }),
+            body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays.value, "Skills" : selectedSkills }),
           })
           .then(response => response.json())
           .then(json => {
@@ -192,10 +193,10 @@ const RegisterLabourer = () => {
             </div>
             <div className="form-group">
                 <label className="d-block" htmlFor="availability">Select Availability <span className="text-danger">*</span></label>
-                <Select
-                    options = {availability}
-                    onChange = {setAvailability}
-                    isMulti
+                <Select 
+                    options={availability}
+                    onChange = {setAvailability} 
+                    isMulti 
                 />
             </div>
             <div className="form-group pt-2">
