@@ -63,7 +63,7 @@ const RegisterClient = () => {
                 "ClientState" : province,
                 "ClientDescription" : companydescription
             }
-            console.log(JSON.stringify({ "User" : newUser , "Client" : newClient }))
+            
             fetch(BASE_URL + '/RegisterClient', {
                 method: "POST",
                 headers: {
@@ -73,7 +73,14 @@ const RegisterClient = () => {
                 body : JSON.stringify({ "User" : newUser , "Client" : newClient })
             })
             .then( response => response.json() ) 
-            .then( json => console.log(json))
+            .then( json => {
+                if (json.token !== "" && json.token != null) {
+                    sessionStorage.setItem(AUTH_TOKEN, json["token"]);
+                    sessionStorage.setItem(USER_NAME, json.email);
+                    sessionStorage.setItem(USER_ROLE, json.role);
+                    sessionStorage.setItem(USER_ID, json.id);
+                }
+            })
             .catch(function (error) {
                 console.log("Server error. Please try again later.");
             })

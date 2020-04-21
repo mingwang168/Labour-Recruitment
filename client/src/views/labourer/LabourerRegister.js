@@ -122,7 +122,6 @@ const RegisterLabourer = () => {
                 sessionStorage.setItem(USER_NAME, json.email);
                 sessionStorage.setItem(USER_ROLE, json.role);
                 sessionStorage.setItem(USER_ID, json.id);
-                //setRedirect(true);
             }
           })
           .catch(function (error) {
