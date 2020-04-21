@@ -1,38 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Select from 'react-select';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
-
-let options = [
-    {value: 'carpentry', label: 'Carpentry'},
-    {value: 'painting', label: 'Painting'},
-    {value: 'drywall', label: 'Drywall'},
-    {value: 'electrical', label: 'Electrical'},
-    {value: 'plumbing', label: 'Plumbing'},
-    {value: 'framing', label: 'Framing'},
-    {value: 'roofing', label: 'Roofing'},
-    {value: 'demolition', label: 'Demolition'}
-]
+import SelectWorkers from './components/SelectWorkers';
 
 const ClientAddJob = (props) => {
 
     const [workers, setWorkers] = useState([]);
-    const [selectedSkill, setSelectedSkill] = useState();
-    const [numWorkers, setNumWorkers] = useState(0);
 
-    const validateForm = (e) => {
-        console.log('Validating form....');
-    }
-
-    const setSkill = (skill) => {
-        console.log(skill)
-        setSelectedSkill(skill);
-    }
-
-    const addWorkers = () => {
-
+    const validateForm = _ => {
+        console.log("Validating form...")
     }
 
     return (
@@ -63,8 +41,8 @@ const ClientAddJob = (props) => {
             {/* Form */}
             <div className="card">
             <div className="card-body">
-            <form>
-                <div className="form-group">
+            <form className="client-add-job-form">
+                <div className="form-group mb-4">
                     <label htmlFor="title">Job Title <span className="text-danger">*</span></label>
                     <input
                         required
@@ -74,7 +52,7 @@ const ClientAddJob = (props) => {
                         className="form-control form-control-lg"
                     />
                 </div>
-                <div className="form-row mb-2">
+                <div className="form-row mb-4">
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
                         <label htmlFor="startdate">Start Date <span className="text-danger">*</span></label>
                         <input
@@ -105,7 +83,7 @@ const ClientAddJob = (props) => {
                         />
                     </div>
                 </div>
-                <div className="form-group mb-3">
+                <div className="form-group mb-4">
                     <label htmlFor="description">Job Description</label>
                     <textarea
                         name="description"
@@ -115,7 +93,7 @@ const ClientAddJob = (props) => {
                         className="form-control form-control-lg"
                     />
                 </div>
-                <div className="form-row mb-2">
+                <div className="form-row mb-4">
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
                         <label htmlFor="address">Address <span className="text-danger">*</span></label>
                         <input
@@ -164,41 +142,15 @@ const ClientAddJob = (props) => {
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="workers">Select workers <span className="text-danger">*</span></label>
-                    <div className="form-row">
-                        <div className="col col-md-3">
-                        <Select
-                            options={options}
-                            onChange={setSkill}
-                        />
-                        </div>
-                        <div className="col col-md-3">
-                        <input
-                            required
-                            type="number"
-                            name="workersrequired"
-                            placeholder="# required"
-                            className="form-control form-control-lg"
-                        />
-                        </div>
-                        <div className="col">
-                        <button
-                            onClick={addWorkers}
-                            className="btn btn-primary btn-lg"
-                        >
-                            Add
-                        </button>
-                    </div>
-                    </div>
-                </div>
+                <SelectWorkers workers={workers} setWorkers={setWorkers} />
 
-                <div className="form-group row text-right">
-                <div className="col col-sm-10 col-lg-12">
-                    <Link to="/dashboard" className="btn btn-space btn-light">Cancel</Link>
-                    <button onClick={e => validateForm(e)} className="btn btn-space btn-primary">Add Job</button>
+                <div className="form-group row text-right mt-4">
+                <div className="col col-lg-12">
+                    <Link to="/dashboard" className="btn btn-space btn-light btn-lg">Cancel</Link>
+                    <button onClick={() => validateForm()} className="btn btn-space btn-primary btn-lg">Create New Job</button>
                 </div>
                 </div>
+  
             </form>
             </div>
             </div>

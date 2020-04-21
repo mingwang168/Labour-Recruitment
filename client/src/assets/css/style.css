@@ -6817,7 +6817,44 @@ Media Query
     padding: 17px 29px;}
 }
 
+/* Add Job Styles */
 .css-yk16xz-control {
     padding: 4px;
     border-radius: 0 !important;
+}
+
+.select-workers-widget tr {
+    -webkit-animation: fadein 0.5s;
+    -moz-animation:    fadein 0.5s;
+    -o-animation:      fadein 0.5s;
+    animation:         fadein 0.5s;
+}
+
+.select-workers-widget td {
+    border-top: none;
+    border-bottom: 1px solid #e3e3f5;
+}
+
+.select-workers-widget tr:last-of-type td {
+    border: none;
+}
+
+@-webkit-keyframes fadein {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@-moz-keyframes fadein {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@-o-keyframes fadein {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadein {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
 }
