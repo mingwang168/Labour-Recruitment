@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Select from 'react-select';
+//import Select from 'react-select';
 
 let options = [
     {skillId: '1', value: 'carpentry', label: 'Carpentry'},
