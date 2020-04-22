@@ -86,6 +86,7 @@ const RegisterClient = () => {
             })
         }
     }
+    
     return (
         <div style={bodyStyles}>
             <form className="splash-container" onSubmit={e => onSubmit(e)}>
