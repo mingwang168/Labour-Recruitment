@@ -134,12 +134,11 @@ const RegisterLabourer = (props) => {
           })
         }
     }
-    
+
     return (
     <>
     {redirect ? <Redirect to = {{
-        pathname : '/dashboard',
-        
+        pathname : '/addjob',
     }} />:  null }
 
     <div style={bodyStyles}>

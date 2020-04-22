@@ -94,13 +94,6 @@ const RegisterClient = (props) => {
         }
     }
 
-    function getPrevLocation() {
-        if (props.location.state === undefined) {
-          return '/';
-        }
-        return props.location.state.prevLocation
-    }
-    
     return (
         <>
        {redirect ? <Redirect to = {{
