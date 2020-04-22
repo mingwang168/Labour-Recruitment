@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 const bodyStyles = {
     height: '100vh',
@@ -16,14 +16,19 @@ const USER_NAME = "user_name";
 const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
-const RegisterClient = () => {
+const RegisterClient = (props) => {
+
+    useEffect(() => {
+        if(sessionStorage.getItem(AUTH_TOKEN)) {
+            setRedirect(true)
+        }
+      }, [])
 
     const [user, setUser] = useState({
         "email" : "",
         "password" : "",
         "role" : ""
     })
-
     const [client, setClient] = useState({
         "ClientName" : "",
         "ClientPhoneNumber" : "",
@@ -31,6 +36,7 @@ const RegisterClient = () => {
         "ClientState" : "",
         "ClientDescription" : ""
     })
+    const [redirect, setRedirect] = useState(false)
 
     const{email,password,confirmpassword} = user
     const{companyname,phonenumber,city,province,companydescription} = client
@@ -79,6 +85,7 @@ const RegisterClient = () => {
                     sessionStorage.setItem(USER_NAME, json.email);
                     sessionStorage.setItem(USER_ROLE, json.role);
                     sessionStorage.setItem(USER_ID, json.id);
+                    setRedirect(true)
                 }
             })
             .catch(function (error) {
@@ -86,8 +93,22 @@ const RegisterClient = () => {
             })
         }
     }
+
+    function getPrevLocation() {
+        if (props.location.state === undefined) {
+          return '/';
+        }
+        return props.location.state.prevLocation
+    }
     
     return (
+        <>
+        {redirect ? <Redirect to = {{
+        pathname : getPrevLocation(),
+        state : {
+            loggedIn: true
+        }
+        }} />:  null }
         <div style={bodyStyles}>
             <form className="splash-container" onSubmit={e => onSubmit(e)}>
                 <div className="card">
@@ -202,6 +223,7 @@ const RegisterClient = () => {
                 </div>
             </form>
         </div >
+        </>
     )
 }
 

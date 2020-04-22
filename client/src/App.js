@@ -46,23 +46,10 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 };
 
 class App extends Component {
-    // state = {
-    //     loggedIn: false
-    // }
-    // handleLogin = () => {
-    //     const { state = {} } = this.props.location;
-    //     const { prevLocation } = state;
-    //     console.log(state)
-    //     this.setState(
-    //       {
-    //         loggedIn: true,
-    //       },
-    //       () => {
-    //         this.props.history.push(prevLocation);
-    //       },
-    //     );
-    // };
-
+    state = {
+        loggedIn: false
+    }
+    
     render() {
     return (
     <>

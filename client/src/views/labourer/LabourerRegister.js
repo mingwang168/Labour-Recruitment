@@ -134,7 +134,7 @@ const RegisterLabourer = (props) => {
           })
         }
     }
-
+    
     function getPrevLocation() {
         if (props.location.state === undefined) {
           return '/';
