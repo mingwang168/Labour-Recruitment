@@ -24,9 +24,10 @@ namespace labourRecruitment.Controllers
         {
             _context = context;
         }
+       
 
         [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<ClientProfileVM>> GetLClientProfile(int id)
         {
             return  new ClientProfileVMRepo(_context).GetClient(id);
@@ -36,41 +37,30 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PutClientProfile(ClientProfileVM clientProfile)
         {
-            var lp = _context.Client.SingleOrDefault(l => l.ClientId == clientProfile.Client.ClientId);
+            var cp = _context.Client.SingleOrDefault(c => c.ClientId == clientProfile.Client.ClientId);
 
-            if (lp == null)
+            if (cp == null)
             {
                 return NotFound();
             }
             else
             {
-                lp.ClientName = clientProfile.Client.ClientName;               
-             
-                lp.ClientEmail = clientProfile.Client.ClientEmail;
-             }
+                cp.ClientName = clientProfile.Client.ClientName;
+
+                cp.ClientEmail = clientProfile.Client.ClientEmail;
+
+                cp.ClientPhoneNumber = clientProfile.Client.ClientPhoneNumber;
+
+                cp.ClientCity = clientProfile.Client.ClientCity;
+
+                cp.ClientState = clientProfile.Client.ClientState;
+
+                cp.ClientDescription = clientProfile.Client.ClientDescription;
+
+    }
 
 
-            //_context.AvailabilityLabourer.RemoveRange(_context.AvailabilityLabourer.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
-
-            //foreach (string day in labourerProfile.Availabilities.Select(av=> av.AvailabilityDay))
-            //{
-            //    Availability availability = _context.Availability.Where(a => a.AvailabilityDay == day).FirstOrDefault();
-            //    if (availability != null)
-            //    {
-            //        AvailabilityLabourer availabilityLabourer = new AvailabilityLabourer
-            //        {
-            //            AvailabilityId = availability.AvailabilityId,
-            //            LabourerId = labourerProfile.Labourer.LabourerId
-            //        };
-            //        _context.AvailabilityLabourer.Add(availabilityLabourer);
-            //        _context.SaveChanges();
-            //    }
-            //    else
-            //    {
-            //        return NotFound();
-            //    }
-
-            //}
+            
 
             try
             {
@@ -81,6 +71,16 @@ namespace labourRecruitment.Controllers
                 throw;
             }
             return NoContent();
+        }
+
+        // POST: api/Clients
+        [HttpPost]
+        public async Task<ActionResult<Client>> PostClient(Client client)
+        {
+            _context.Client.Add(client);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetClient", new { id = client.ClientId }, client);
         }
 
         // DELETE: api/
@@ -102,9 +102,5 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(lb);
 
         }
-
-
-
-
     }
 }
