@@ -59,6 +59,7 @@ namespace roleDemo.Controllers
                         jsonResponse.status = "OK";
                         jsonResponse.role = sysuser.Role;
                         jsonResponse.email = sysuser.Email;
+                        jsonResponse.id = loginRepo.GetIdByRole(sysuser.Email, sysuser.Role);
                         return Json(jsonResponse);
                     }
                 }
