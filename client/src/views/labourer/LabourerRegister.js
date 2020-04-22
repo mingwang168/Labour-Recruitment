@@ -135,20 +135,11 @@ const RegisterLabourer = (props) => {
         }
     }
     
-    function getPrevLocation() {
-        if (props.location.state === undefined) {
-          return '/';
-        }
-        return props.location.state.prevLocation
-    }
-    
     return (
     <>
     {redirect ? <Redirect to = {{
-        pathname : getPrevLocation(),
-        state : {
-            loggedIn: true
-        }
+        pathname : '/dashboard',
+        
     }} />:  null }
 
     <div style={bodyStyles}>

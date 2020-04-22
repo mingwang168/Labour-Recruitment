@@ -103,11 +103,9 @@ const RegisterClient = (props) => {
     
     return (
         <>
-        {redirect ? <Redirect to = {{
-        pathname : getPrevLocation(),
-        state : {
-            loggedIn: true
-        }
+       {redirect ? <Redirect to = {{
+        pathname : '/dashboard',
+        
         }} />:  null }
         <div style={bodyStyles}>
             <form className="splash-container" onSubmit={e => onSubmit(e)}>

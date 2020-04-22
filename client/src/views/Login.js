@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Redirect } from 'react-router-dom';
 
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
@@ -7,6 +8,12 @@ const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
 const Login = () => {
+    useEffect(() => {
+        if(sessionStorage.getItem(AUTH_TOKEN)) {
+            setRedirect(true)
+        }
+      }, [])
+
     const [redirect, setRedirect] = useState(false)
     const [user, setUser] = useState({
         "email" : "",
@@ -41,12 +48,28 @@ const Login = () => {
                 sessionStorage.setItem(USER_NAME, json.email);
                 sessionStorage.setItem(USER_ROLE, json.role);
                 sessionStorage.setItem(USER_ID, json.id);
-                //setRedirect(true)
+                setRedirect(true)
             }
         })
+    } 
+
+    function getLocation() {
+        if (sessionStorage.getItem(USER_ROLE) === 'Client') {
+            return <Redirect to = {{
+                pathname : '/dashboard',
+                
+            }} />
+        } else if (sessionStorage.getItem(USER_ROLE) === 'Labourer') {
+            return <Redirect to = {{
+                pathname : '/addjob',
+                
+            }} />
+        }
     }
 
     return (
+        <>
+        { redirect ? getLocation() : null }
         <div>
             <div className="container d-flex justify-content-center align-items-center " style={{ height: "100vh" }}>
                 <div className="pt-1 bg-primary" style={{ borderRadius: "10px" }}>
@@ -76,6 +99,7 @@ const Login = () => {
                 </div>
             </div>
         </div>
+        </>
     )
 }
 
