@@ -33,10 +33,6 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
               <Redirect
                 to={{
                   pathname: "/login",
-                  state: {
-                    prevLocation: path,
-                    error: "You need to login first!",
-                  },
                 }}
               />
             );
