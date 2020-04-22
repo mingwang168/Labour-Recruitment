@@ -20,6 +20,7 @@ import ClientAddJob from './views/client/ClientAddJob';
 // Labourer Components
 import LabourerRegister from './views/labourer/LabourerRegister';
 import LabourerProfile from './views/labourer/LabourerProfile';
+import LabourerDashboard from './views/labourer/LabourerDashboard';
 
 const App = () => {
     return (
@@ -39,11 +40,12 @@ const App = () => {
         {/* Client Views */}
         <Route path='/register/client' exact render={props => <ClientRegister {...props} />} />
         <Route path='/profile/client' exact render={props => <ClientProfile {...props} />} />
-        <Route path='/addjob' exact render={props => <ClientAddJob {...props} />} />
+        <Route path='/addjob' exact render={props => <ClientAddJob {...props} />} />        
 
         {/* Labourer Views */}
         <Route path='/register/labourer' exact render={props => <LabourerRegister {...props} />} />
         <Route path='/profile/labourer' exact render={props => <LabourerProfile {...props} />} />
+        <Route path='/labourerdashboard' exact render={props => <LabourerDashboard {...props} />} />
 
         <Route component={PageNotFound} />
     </Switch>
