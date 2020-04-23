@@ -54,14 +54,16 @@ const SelectWorkers = ({workers, setWorkers}) => {
     const getSkillIdByName = (name) => {
         let id = null;
         skills.forEach((i) => {
-            if(name === i.label) {
+            if(name === i.skillName) {
                 id = i.skillId;
                 return;
             }
         })
+        
         return id;
+        
     }
-
+   
     return (
     <div className="form-group">
         <label htmlFor="workers">Select workers <span className="text-danger">*</span></label>

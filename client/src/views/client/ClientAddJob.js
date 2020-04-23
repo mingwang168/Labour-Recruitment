@@ -74,6 +74,7 @@ const ClientAddJob = (props) => {
         // .then(json => console.log(json))
     }
 
+    console.log(workers)
     return (
         <div className="dashboard-main-wrapper">
         <TopNav />
