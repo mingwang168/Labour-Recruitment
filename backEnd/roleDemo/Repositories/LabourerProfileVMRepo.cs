@@ -16,15 +16,14 @@ namespace labourRecruitment.Repositories
             _context = context;
         }
 
-
         public LabourerProfileVM GetLabourer(int labourerID)
         {
             Labourer Labourer = _context.Labourer.FirstOrDefault(l => l.LabourerId == labourerID);
+            var avgerageSafety = _context.JobLabourer
+                  .Where(j => j.LabourerId == labourerID && j.LabourerSafetyRating != null).Average(av => av.LabourerSafetyRating);
+            var avgerageQuality = _context.LabourerAttendance
+                 .Where(l => l.LabourerId == labourerID && l.DailyQualityRating != null).Average(av => av.DailyQualityRating);
 
-            var avgerageSafety = _context.LabourerSafetyRating
-                  .Where(l => l.LabourerId == labourerID && l.Rating != null).Average(av => av.Rating);
-            var avgerageQuality = _context.LabourerDailyQualityRating
-                 .Where(l => l.LabourerId == labourerID && l.Rating != null).Average(av => av.Rating);
             LabourerProfileVM lp = new LabourerProfileVM()
             {
                 Labourer = Labourer,
@@ -33,12 +32,14 @@ namespace labourRecruitment.Repositories
                     AvailabilityId = avl.Availability.AvailabilityId,
                     AvailabilityDay = avl.Availability.AvailabilityDay
                 }),
+
                 AverageSafety = avgerageSafety,
-                SafetyRatingNumber = _context.LabourerSafetyRating
-                  .Where(l => l.LabourerId == labourerID && l.Rating != null).Count(),
+                SafetyRatingNumber = _context.JobLabourer
+                  .Where(j => j.LabourerId == labourerID && j.LabourerSafetyRating != null).Count(),
                 AverageQuality = avgerageQuality,
-                QualityRatingNumber = _context.LabourerDailyQualityRating
-                 .Where(l => l.LabourerId == labourerID && l.Rating != null).Count()
+                QualityRatingNumber = _context.LabourerAttendance
+                 .Where(l => l.LabourerId == labourerID && l.DailyQualityRating != null).Count()
+
             };
             return lp;
         }

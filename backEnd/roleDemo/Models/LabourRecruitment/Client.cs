@@ -7,7 +7,6 @@ namespace labourRecruitment.Models.LabourRecruitment
     {
         public Client()
         {
-            ClientQualityRating = new HashSet<ClientQualityRating>();
             Job = new HashSet<Job>();
         }
 
@@ -21,7 +20,6 @@ namespace labourRecruitment.Models.LabourRecruitment
         public string ClientDescription { get; set; }
 
         public virtual SystemUser User { get; set; }
-        public virtual ICollection<ClientQualityRating> ClientQualityRating { get; set; }
         public virtual ICollection<Job> Job { get; set; }
     }
 }

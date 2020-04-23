@@ -57,7 +57,7 @@ namespace labourRecruitment.Controllers
                 Client client = new Client
                 {
                     ClientName = input.Client.ClientName,
-                    ClientEmail = input.Client.ClientEmail,
+                    ClientEmail = input.User.Email,
                     ClientPhoneNumber = input.Client.ClientPhoneNumber,
                     ClientCity = input.Client.ClientCity,
                     ClientState = input.Client.ClientState,

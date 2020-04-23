@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 
 const bodyStyles = {
@@ -18,7 +18,7 @@ const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
 
-const RegisterLabourer = () => {
+const RegisterLabourer = (props) => {
     
     const [skills, setSkills] = useState([{
         "skillId" : "",
@@ -35,6 +35,7 @@ const RegisterLabourer = () => {
     })
     const [selectedDays, setSelectedDays] = useState([])
     const [selectedSkills, setSelectedSkills] = useState([]);
+    const [redirect, setRedirect] = useState(false)
 
     const {email, password,confirmpassword} = user
     const {fullname} = labourer
@@ -60,6 +61,9 @@ const RegisterLabourer = () => {
 
     useEffect(() => {
         fetchSkills()
+        if(sessionStorage.getItem(AUTH_TOKEN)) {
+            setRedirect(true)
+        }
       }, [])
 
         
@@ -122,7 +126,7 @@ const RegisterLabourer = () => {
                 sessionStorage.setItem(USER_NAME, json.email);
                 sessionStorage.setItem(USER_ROLE, json.role);
                 sessionStorage.setItem(USER_ID, json.id);
-                //setRedirect(true);
+                setRedirect(true)
             }
           })
           .catch(function (error) {
@@ -132,6 +136,11 @@ const RegisterLabourer = () => {
     }
 
     return (
+    <>
+    {redirect ? <Redirect to = {{
+        pathname : '/addjob',
+    }} />:  null }
+
     <div style={bodyStyles}>
     <form className="splash-container" onSubmit={e => onSubmit(e)}>
     <div className="card">
@@ -220,6 +229,7 @@ const RegisterLabourer = () => {
     </div>
     </form>
     </div>
+    </>
     )
 }
 

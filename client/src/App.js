@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import React , {Component} from 'react';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import Home from './views/Home';
 import Login from './views/Login';
@@ -16,13 +16,36 @@ import IncidentDetail from './views/IncidentDetail';
 import ClientRegister from './views/client/ClientRegister';
 import ClientProfile from './views/client/ClientProfile';
 import ClientAddJob from './views/client/ClientAddJob';
+import ClientAddIncident from './views/client/ClientAddIncident';
 
 // Labourer Components
 import LabourerRegister from './views/labourer/LabourerRegister';
 import LabourerProfile from './views/labourer/LabourerProfile';
 import LabourerDashboard from './views/labourer/LabourerDashboard';
 
-const App = () => {
+const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
+    return (
+      <Route
+        path={path}
+        {...rest}
+        render={(props) => {
+          return sessionStorage.getItem("auth_token") !== null ? (
+            <Comp {...props} />
+            ) : (
+              <Redirect
+                to={{
+                  pathname: "/login",
+                }}
+              />
+            );
+        }}
+      />
+    );
+};
+
+class App extends Component {
+    
+    render() {
     return (
     <>
     <Router>
@@ -30,28 +53,29 @@ const App = () => {
         <Route path='/' exact render={props => <Home {...props} />} />
         <Route path='/login' exact render={props => <Login {...props} />} />
         <Route path='/register' exact render={props => <RegisterStart {...props} />} />
+        <Route path='/register/client' exact render={props => <ClientRegister {...props} />} />
+        <Route path='/register/labourer' exact render={props => <LabourerRegister {...props} />} />
 
         {/* Shared Views */}
-        <Route path='/dashboard' exact render={props => <Dashboard {...props} />} />
-        <Route path='/incidents' exact render={props => <Incidents {...props} />} />
-        <Route path='/job' exact render={props => <JobDetail {...props} />} />
-        <Route path='/incident' exact render={props => <IncidentDetail {...props} />} />
+        <ProtectedRoute  path='/dashboard' exact component={Dashboard} />
+        <ProtectedRoute  path='/incidents' exact component={Incidents} />
+        <ProtectedRoute  path='/job' exact component={JobDetail} />
+        <ProtectedRoute  path='/incident' exact component={IncidentDetail} />
       
         {/* Client Views */}
-        <Route path='/register/client' exact render={props => <ClientRegister {...props} />} />
-        <Route path='/profile/client' exact render={props => <ClientProfile {...props} />} />
-        <Route path='/addjob' exact render={props => <ClientAddJob {...props} />} />        
+        <ProtectedRoute  path='/profile/client' exact component={ClientProfile} />
+        <ProtectedRoute  path='/addjob' exact component={ClientAddJob} />
+        <ProtectedRoute  path='/addincident' exact component={ClientAddIncident} />
 
         {/* Labourer Views */}
-        <Route path='/register/labourer' exact render={props => <LabourerRegister {...props} />} />
-        <Route path='/profile/labourer' exact render={props => <LabourerProfile {...props} />} />
-        <Route path='/labourerdashboard' exact render={props => <LabourerDashboard {...props} />} />
+        <ProtectedRoute  path='/profile/labourer' exact component={LabourerProfile} />
 
         <Route component={PageNotFound} />
     </Switch>
     </Router>
     </>
     );
+    }
 }
 
 export default App;

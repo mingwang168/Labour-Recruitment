@@ -29,7 +29,7 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<LabourerProfileVM>> GetLabourerProfile(int id)
         {
-            return  new LabourerProfileVMRepo(_context).GetLabourer(id);
+            return new LabourerProfileVMRepo(_context).GetLabourer(id);
         }
 
         [HttpPut("{id}")]
