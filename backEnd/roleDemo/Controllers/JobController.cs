@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace labourRecruitment.Controllers
 {
@@ -20,6 +21,13 @@ namespace labourRecruitment.Controllers
         public JobController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        // GET: api/Jobs
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Job>>> GetJob()
+        {
+            return await _context.Job.ToListAsync();
         }
 
         // GET: api/Skills/5
