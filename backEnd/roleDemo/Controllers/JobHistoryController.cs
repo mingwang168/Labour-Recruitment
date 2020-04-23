@@ -28,18 +28,34 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<JobHistoryVM>>> GetJobHistorys(int id)
         {
-
             return await _context.JobLabourer.Where(jl => jl.LabourerId == id).Select(ojl => new JobHistoryVM()
             {
                 Job = ojl.Job,
                 report = ojl.ClientQualityRating != null ? "Complete" : "Required"
             }).ToListAsync();
-
         }
 
 
         // GET: api/LabourerID
-        [HttpPut]
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetLabourerSafetyRating([FromBody] JobLabourerRating jlr)
+        {
+            var jobLabourer = _context.JobLabourer.SingleOrDefault(jl => jl.LabourerId == jlr.LabourerId && jl.JobId == jlr.JobId);
+
+            if (jobLabourer != null)
+            {
+                return  new ObjectResult(jobLabourer.LabourerSafetyRating);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+   
+
+    // GET: api/LabourerID
+    [HttpPut]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PutClientQualityRating([FromBody] JobLabourerRating jlr)
         {
