@@ -27,11 +27,11 @@ namespace labourRecruitment.Controllers
        
 
         [HttpGet("{id}")]
-       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<ActionResult<ClientProfileVM>> GetLClientProfile(int id)
-        //{
-        //    return  new ClientProfileVMRepo(_context).GetClient(id);
-        //}
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<ClientProfileVM>> GetLClientProfile(int id)
+        {
+            return new ClientProfileVMRepo(_context).GetClient(id);
+        }
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -57,10 +57,7 @@ namespace labourRecruitment.Controllers
 
                 cp.ClientDescription = clientProfile.Client.ClientDescription;
 
-    }
-
-
-            
+            }
 
             try
             {
