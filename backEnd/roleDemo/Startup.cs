@@ -38,10 +38,6 @@ namespace roleDemo {
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //   options.UseSqlServer(
-            //       Configuration.GetConnectionString("DefaultConnection")));
-
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

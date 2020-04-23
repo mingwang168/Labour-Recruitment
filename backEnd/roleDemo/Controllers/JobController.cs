@@ -38,7 +38,7 @@ namespace labourRecruitment.Controllers
 
         // POST: api/Job
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<Job>> PostJob(JobSkillVM jobSkill)
         {
             
