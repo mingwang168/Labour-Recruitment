@@ -54,8 +54,9 @@ namespace labourRecruitment.Controllers
         }
    
 
-    // GET: api/LabourerID
+
     [HttpPut]
+    [Route("ClientQuality")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PutClientQualityRating([FromBody] JobLabourerRating jlr)
         {
@@ -80,6 +81,37 @@ namespace labourRecruitment.Controllers
             }
             return new ObjectResult(jobLabourer);
         }
+
+
+        [HttpPut]
+        [Route("LabourerSafety")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> PutLabourerSafetyRating([FromBody] JobLabourerRating jlr)
+        {
+            var jobLabourer = _context.JobLabourer.SingleOrDefault(jl => jl.LabourerId == jlr.LabourerId && jl.JobId == jlr.JobId);
+
+            if (jobLabourer != null)
+            {
+                jobLabourer.LabourerSafetyRating = jlr.LabourerSafetyRating;
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+            return new ObjectResult(jobLabourer);
+        }
+
+
+
     }
 
     public class JobLabourerRating
@@ -87,5 +119,6 @@ namespace labourRecruitment.Controllers
         public int? JobId { get; set; }
         public int? LabourerId { get; set; }
         public double? ClientQualityRating { get; set; }
+        public double? LabourerSafetyRating { get; set; }
     }
 }
