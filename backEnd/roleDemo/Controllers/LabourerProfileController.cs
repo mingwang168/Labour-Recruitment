@@ -25,12 +25,12 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<LabourerProfileVM>> GetLabourerProfile(int id)
-        {
-            return  new LabourerProfileVMRepo(_context).GetLabourer(id);
-        }
+        //[HttpGet("{id}")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //public async Task<ActionResult<LabourerProfileVM>> GetLabourerProfile(int id)
+        //{
+        //    return  new LabourerProfileVMRepo(_context).GetLabourer(id);
+        //}
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

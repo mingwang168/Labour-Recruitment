@@ -7,11 +7,10 @@ namespace labourRecruitment.Models.LabourRecruitment
     {
         public Job()
         {
-            ClientQualityRating = new HashSet<ClientQualityRating>();
             Incident = new HashSet<Incident>();
+            JobLabourer = new HashSet<JobLabourer>();
             JobSkill = new HashSet<JobSkill>();
-            LabourerDailyQualityRating = new HashSet<LabourerDailyQualityRating>();
-            LabourerSafetyRating = new HashSet<LabourerSafetyRating>();
+            LabourerAttendance = new HashSet<LabourerAttendance>();
         }
 
         public int JobId { get; set; }
@@ -28,10 +27,9 @@ namespace labourRecruitment.Models.LabourRecruitment
         public string PostalCode { get; set; }
 
         public virtual Client Client { get; set; }
-        public virtual ICollection<ClientQualityRating> ClientQualityRating { get; set; }
         public virtual ICollection<Incident> Incident { get; set; }
+        public virtual ICollection<JobLabourer> JobLabourer { get; set; }
         public virtual ICollection<JobSkill> JobSkill { get; set; }
-        public virtual ICollection<LabourerDailyQualityRating> LabourerDailyQualityRating { get; set; }
-        public virtual ICollection<LabourerSafetyRating> LabourerSafetyRating { get; set; }
+        public virtual ICollection<LabourerAttendance> LabourerAttendance { get; set; }
     }
 }

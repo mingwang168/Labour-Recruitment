@@ -17,20 +17,20 @@ namespace labourRecruitment.Repositories
         }
 
        
-        public ClientProfileVM GetClient(int clientID)
-        {
-            Client Client = _context.Client.FirstOrDefault(c => c.ClientId == clientID);
+        //public ClientProfileVM GetClient(int clientID)
+        //{
+        //    Client Client = _context.Client.FirstOrDefault(c => c.ClientId == clientID);
             
             
-            var avgerageQuality = _context.ClientQualityRating
-                 .Where(c => c.ClientId == clientID && c.Rating != null).Average(av => av.Rating);
-            ClientProfileVM cp = new ClientProfileVM()
-            {
-                Client = Client,
-                AverageRating = (double)avgerageQuality
+        //    var avgerageQuality = _context.ClientQualityRating
+        //         .Where(c => c.ClientId == clientID && c.Rating != null).Average(av => av.Rating);
+        //    ClientProfileVM cp = new ClientProfileVM()
+        //    {
+        //        Client = Client,
+        //        AverageRating = (double)avgerageQuality
                 
-            };
-            return cp;
-        }
+        //    };
+        //    return cp;
+        //}
     }
 }
