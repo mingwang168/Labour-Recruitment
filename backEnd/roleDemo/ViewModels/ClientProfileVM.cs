@@ -9,7 +9,7 @@ namespace labourRecruitment.ViewModels
     public class ClientProfileVM
     {
         public Client Client { get; set; }
-        public double AverageRating { get; set; }
+        public double? AverageRating { get; set; }
 
     }
 }

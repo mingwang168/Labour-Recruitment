@@ -16,31 +16,10 @@ namespace labourRecruitment.Repositories
             _context = context;
         }
 
-        //public IEnumerable<LabourerProfileVM> GetAll()
-        //{
-        //    return _context.Labourer.Select(l => new LabourerProfileVM()
-        //    {
-        //        Labourer = l,
-        //        Availabilities = l.AvailabilityLabourer,
-        //        AverageSafety = l.LabourerSafetyRating
-        //    });
-        //}
 
         public LabourerProfileVM GetLabourer(int labourerID)
         {
             Labourer Labourer = _context.Labourer.FirstOrDefault(l => l.LabourerId == labourerID);
-            //  List<double> a = new List<double>();
-            //    a.Add(3.4d);
-            // var a =  _context.LabourerSafetyRating.Where(lsr => lsr.LabourerId == labourerID).Select(l => new List<double>().Add ( l.SafetyRating)).ToList();
-            // var b = a;
-
-            //  var L = _context.LabourerSafetyRating.Where(lsr => lsr.LabourerId == labourerID).ToList();
-
-            //var sum = 0.0d;
-            //foreach (LabourerSafetyRating l in L)
-            //{
-            //    sum = sum + (double)l.Rating;
-            //}
 
             var avgerageSafety = _context.LabourerSafetyRating
                   .Where(l => l.LabourerId == labourerID && l.Rating != null).Average(av => av.Rating);
@@ -54,10 +33,10 @@ namespace labourRecruitment.Repositories
                     AvailabilityId = avl.Availability.AvailabilityId,
                     AvailabilityDay = avl.Availability.AvailabilityDay
                 }),
-                AverageSafety = (double)avgerageSafety,
+                AverageSafety = avgerageSafety,
                 SafetyRatingNumber = _context.LabourerSafetyRating
                   .Where(l => l.LabourerId == labourerID && l.Rating != null).Count(),
-                AverageQuality = (double)avgerageQuality,
+                AverageQuality = avgerageQuality,
                 QualityRatingNumber = _context.LabourerDailyQualityRating
                  .Where(l => l.LabourerId == labourerID && l.Rating != null).Count()
             };
