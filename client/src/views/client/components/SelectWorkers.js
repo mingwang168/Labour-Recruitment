@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 
-let options = [
-    {skillId: '1', value: 'carpentry', label: 'Carpentry'},
-    {skillId: '2', value: 'painting', label: 'Painting'},
-    {skillId: '3', value: 'drywall', label: 'Drywall'},
-    {skillId: '4', value: 'electrical', label: 'Electrical'},
-    {skillId: '5', value: 'plumbing', label: 'Plumbing'},
-    {skillId: '6', value: 'framing', label: 'Framing'},
-    {skillId: '7', value: 'roofing', label: 'Roofing'}
-]
+
+const BASE_URL = "http://localhost:5001/api";
 
 const SelectWorkers = ({workers, setWorkers}) => {
 
+    const [skills, setSkills] = useState([])
     const [selectedSkill, setSelectedSkill] = useState();
     const [selectedNumWorkers, setSelectedNumWorkers] = useState('');
+
+    useEffect (() => {
+        const fetchSkills = async() => {
+            try {
+                const response = await fetch(BASE_URL + '/skills');
+                let data = await response.json();
+                setSkills(data);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        fetchSkills()
+    }, [])
 
     const addWorkers = () => {
         if(selectedSkill && selectedNumWorkers > 0) {
@@ -25,13 +32,14 @@ const SelectWorkers = ({workers, setWorkers}) => {
                     updated[indexOfExistingSkill].quantity = selectedNumWorkers;
                     setWorkers(updated);
                 } else {
-                    setWorkers(workers => [...workers, {skillId: getSkillIdByName(selectedSkill), skill: selectedSkill, quantity: selectedNumWorkers}]);
+                    setWorkers(workers => [...workers, {SkillId: getSkillIdByName(selectedSkill), skill: selectedSkill, quantity: selectedNumWorkers}]);
                 }
             } else {
-                setWorkers(workers => [...workers, {skillId: getSkillIdByName(selectedSkill), skill: selectedSkill, quantity: selectedNumWorkers}]);
+                setWorkers(workers => [...workers, {SkillId: getSkillIdByName(selectedSkill), skill: selectedSkill, quantity: selectedNumWorkers}]);
             }
             setSelectedNumWorkers('');
         }
+
     }
 
     const deleteWorkers = (index) => {
@@ -45,7 +53,7 @@ const SelectWorkers = ({workers, setWorkers}) => {
 
     const getSkillIdByName = (name) => {
         let id = null;
-        options.forEach((i) => {
+        skills.forEach((i) => {
             if(name === i.label) {
                 id = i.skillId;
                 return;
@@ -77,7 +85,11 @@ const SelectWorkers = ({workers, setWorkers}) => {
         <div className="form-row">
             <div className="col col-md-5 col-lg-2">
             <Select
-                options={options}
+                options={
+                    skills.map((skill, i) => {
+                    return { value: skill.skillId, label: skill.skillName } 
+                    }) 
+                } 
                 onChange={e => setSelectedSkill(e.label)}
             />
             </div>
