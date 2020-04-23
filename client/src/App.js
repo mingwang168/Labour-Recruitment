@@ -16,6 +16,7 @@ import IncidentDetail from './views/IncidentDetail';
 import ClientRegister from './views/client/ClientRegister';
 import ClientProfile from './views/client/ClientProfile';
 import ClientAddJob from './views/client/ClientAddJob';
+import ClientAddIncident from './views/client/ClientAddIncident';
 
 // Labourer Components
 import LabourerRegister from './views/labourer/LabourerRegister';
@@ -64,6 +65,7 @@ class App extends Component {
         {/* Client Views */}
         <ProtectedRoute  path='/profile/client' exact component={ClientProfile} />
         <ProtectedRoute  path='/addjob' exact component={ClientAddJob} />
+        <ProtectedRoute  path='/addincident' exact component={ClientAddIncident} />
 
         {/* Labourer Views */}
         <ProtectedRoute  path='/profile/labourer' exact component={LabourerProfile} />
