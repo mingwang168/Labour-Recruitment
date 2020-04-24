@@ -57,14 +57,14 @@ namespace roleDemo.Controllers
 
                         if (sysuser.Role == "Client")
                         {
-                            jsonResponse.fullName = _context.Client.FirstOrDefault(c => c.UserId == sysuser.UserId).ClientName;
+                            jsonResponse.name = _context.Client.FirstOrDefault(c => c.UserId == sysuser.UserId).ClientName;
                         } else if (sysuser.Role == "Labourer") 
                         {
-                            jsonResponse.fullName = _context.Labourer.FirstOrDefault(l => l.UserId == sysuser.UserId).LabourerFirstName
+                            jsonResponse.name = _context.Labourer.FirstOrDefault(l => l.UserId == sysuser.UserId).LabourerFirstName
                                 + " " +_context.Labourer.FirstOrDefault(l => l.UserId == sysuser.UserId).LabourerLastName;
                         } else if (sysuser.Role == "Administrator")
                         {
-                            jsonResponse.fullName = "Admin";
+                            jsonResponse.name = "Admin";
                         }
 
                         jsonResponse.token = tokenString;

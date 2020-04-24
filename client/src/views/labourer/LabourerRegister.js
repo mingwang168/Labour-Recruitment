@@ -138,7 +138,7 @@ const RegisterLabourer = (props) => {
     return (
     <>
     {redirect ? <Redirect to = {{
-        pathname : '/addjob',
+        pathname : '/profile/labourer',
     }} />:  null }
 
     <div style={bodyStyles}>
