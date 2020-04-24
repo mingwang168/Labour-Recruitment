@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace labourRecruitment.Controllers
 {
@@ -20,6 +21,13 @@ namespace labourRecruitment.Controllers
         public JobController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        // GET: api/Jobs
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Job>>> GetJob()
+        {
+            return await _context.Job.ToListAsync();
         }
 
         // GET: api/Skills/5
@@ -38,8 +46,8 @@ namespace labourRecruitment.Controllers
 
         // POST: api/Job
         [HttpPost]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<Job>> PostJob(JobSkillVM jobSkill)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult PostJob(JobSkillVM jobSkill)
         {
             
             _context.Job.Add(jobSkill.Job);
@@ -49,10 +57,10 @@ namespace labourRecruitment.Controllers
                 _context.JobSkill.Add(js);
             }
 
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
 
-            return new ObjectResult(jobSkill); 
-           // return CreatedAtAction("GetJob", new { id = jobSkill.Job.JobId }, jobSkill);
+            return new ObjectResult(jobSkill.Job.JobId); 
+   
         }
 
     }
