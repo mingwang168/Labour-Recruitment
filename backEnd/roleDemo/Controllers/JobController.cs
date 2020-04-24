@@ -32,17 +32,16 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Skills/5
         [HttpGet("{id}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetJob(int id)
         {
             var job = _context.Job.Where(j => j.JobId == id).FirstOrDefault();
-            int clientId = job.ClientId;
-
             if (job == null)
             {
                 return NotFound();
             }
 
+            int clientId = job.ClientId;
             var client = _context.Client.FirstOrDefault(c => c.ClientId == clientId);
             JobVM responseObj = new JobVM
             {
@@ -63,7 +62,7 @@ namespace labourRecruitment.Controllers
 
         // POST: api/Job
         [HttpPost]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostJob(JobSkillVM jobSkill)
         {
             
