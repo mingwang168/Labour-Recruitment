@@ -8,7 +8,7 @@ import SideNav from '../components/SideNav';
 const BASE_URL = "http://localhost:5001/api";
 
 const JobDetail = (props) => {
-    const [job,setJob] = useState()
+    const [details,setDetails] = useState()
 
     const changeSafetyRating = () => {
         console.log("Changing safety rating...");
@@ -25,7 +25,7 @@ const JobDetail = (props) => {
             }
         })
         .then(response => response.json())
-        .then(json => console.log(json))
+        .then(json => setDetails(json))
         .catch(function (error) {
             console.log("Server error. Please try again later.");
         })
@@ -35,6 +35,7 @@ const JobDetail = (props) => {
         fetchJobDetails(props.match.params.id)
     }, [props.match.params.id])
 
+    console.log(details)
     return (
     <div className="dashboard-main-wrapper">
         <TopNav />
