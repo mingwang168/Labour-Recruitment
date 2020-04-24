@@ -32,6 +32,7 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Skills/5
         [HttpGet("{id}")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetJob(int id)
         {
             var job = _context.Job.Where(j => j.JobId == id).FirstOrDefault();
@@ -42,21 +43,32 @@ namespace labourRecruitment.Controllers
                 return NotFound();
             }
 
-            var client = _context.Client.Where(c => c.ClientId == clientId).FirstOrDefault();
-            JobVM jobClient = new JobVM();
-            jobClient.ClientName = client.ClientName;
-            jobClient.Job = job;
-            return new ObjectResult(jobClient);
+            var client = _context.Client.FirstOrDefault(c => c.ClientId == clientId);
+            JobVM responseObj = new JobVM
+            {
+                JobId = job.JobId,
+                Title = job.Title,
+                JobDescription = job.JobDescription,
+                StartDate = job.StartDate,
+                EndDate = job.EndDate,
+                InProgress = job.InProgress,
+                IsComplete = job.IsComplete,
+                Street = job.Street,
+                City = job.City,
+                State = job.State,
+                ClientName = client.ClientName
+            };
+            return new ObjectResult(responseObj);
         }
 
         // POST: api/Job
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostJob(JobSkillVM jobSkill)
         {
             
             _context.Job.Add(jobSkill.Job);
-
+           
             foreach (JobSkill js in jobSkill.JobSkills) {
                 js.JobId = jobSkill.Job.JobId;
                 _context.JobSkill.Add(js);

@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Ratings from 'react-ratings-declarative';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
 
-const JobDetail = (props) => {
+const BASE_URL = "http://localhost:5001/api";
 
+const JobDetail = (props) => {
+    const [job,setJob] = useState()
 
     const changeSafetyRating = () => {
         console.log("Changing safety rating...");
@@ -14,12 +16,24 @@ const JobDetail = (props) => {
 
     const fetchJobDetails = (id) => {
         let token = sessionStorage.getItem("auth_token")
-        
+        fetch(BASE_URL + '/job/' + id , {
+            method : 'GET',
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(json => console.log(json))
+        .catch(function (error) {
+            console.log("Server error. Please try again later.");
+        })
     }
 
     useEffect(() => {
-        
-    }, [])
+        fetchJobDetails(props.match.params.id)
+    }, [props.match.params.id])
 
     return (
     <div className="dashboard-main-wrapper">
