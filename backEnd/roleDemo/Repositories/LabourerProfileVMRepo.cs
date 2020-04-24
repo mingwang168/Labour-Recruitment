@@ -23,6 +23,7 @@ namespace labourRecruitment.Repositories
                   .Where(j => j.LabourerId == labourerID && j.LabourerSafetyRating != null).Average(av => av.LabourerSafetyRating);
             var avgerageQuality = _context.LabourerAttendance
                  .Where(l => l.LabourerId == labourerID && l.DailyQualityRating != null).Average(av => av.DailyQualityRating);
+
             LabourerProfileVM lp = new LabourerProfileVM()
             {
                 Labourer = Labourer,
@@ -31,12 +32,14 @@ namespace labourRecruitment.Repositories
                     AvailabilityId = avl.Availability.AvailabilityId,
                     AvailabilityDay = avl.Availability.AvailabilityDay
                 }),
-                AverageSafety = (double)avgerageSafety,
+
+                AverageSafety = avgerageSafety,
                 SafetyRatingNumber = _context.JobLabourer
                   .Where(j => j.LabourerId == labourerID && j.LabourerSafetyRating != null).Count(),
-                AverageQuality = (double)avgerageQuality,
+                AverageQuality = avgerageQuality,
                 QualityRatingNumber = _context.LabourerAttendance
                  .Where(l => l.LabourerId == labourerID && l.DailyQualityRating != null).Count()
+
             };
             return lp;
         }
