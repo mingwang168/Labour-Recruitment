@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import TopNav from '../../components/TopNav';
@@ -25,8 +25,6 @@ const ClientAddJob = (props) => {
 
     const [workers, setWorkers] = useState([]);
     const [jobSkills, setJobSkills] = useState([])
-    
-    const [redirect, setRedirect] = useState(false)
   
     const {title,startdate,enddate,description,address,province,city} = job
 
@@ -73,7 +71,12 @@ const ClientAddJob = (props) => {
             body : JSON.stringify({"Job" : newJob, "JobSkills" : jobSkills}) 
         })
         .then(response => response.json())
-        .then(json => console.log(json))
+        .then(json => {
+            if(json) {
+                props.history.push(`/job`);
+                window.location.reload();
+              }
+        })
         .catch(function (error) {
             console.log("Server error. Please try again later.");
         })
