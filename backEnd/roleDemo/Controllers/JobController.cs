@@ -44,6 +44,8 @@ namespace labourRecruitment.Controllers
             return job;
         }
 
+        
+
         // POST: api/Job
         [HttpPost]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -61,6 +63,41 @@ namespace labourRecruitment.Controllers
 
             return new ObjectResult(jobSkill); 
            // return CreatedAtAction("GetJob", new { id = jobSkill.Job.JobId }, jobSkill);
+        }
+
+        // PUT: api/Job/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutJob(int id, Job job)
+        {
+            if (id != job.JobId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(job).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!JobExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        private bool JobExists(int id)
+        {
+            return _context.Job.Any(e => e.JobId == id);
         }
 
     }
