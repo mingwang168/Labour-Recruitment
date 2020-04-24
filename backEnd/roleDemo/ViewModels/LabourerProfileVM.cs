@@ -10,9 +10,9 @@ namespace labourRecruitment.ViewModels
     {
         public Labourer Labourer { get; set; }
         public IEnumerable<Availability> Availabilities { get; set; }
-        public double AverageSafety { get; set; }
+        public double? AverageSafety { get; set; }
         public int SafetyRatingNumber { get; set; }
-        public double AverageQuality { get; set; }
+        public double? AverageQuality { get; set; }
         public int QualityRatingNumber { get; set; }
     }
 }

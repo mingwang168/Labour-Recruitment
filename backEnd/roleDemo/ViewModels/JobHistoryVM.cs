@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace labourRecruitment.ViewModels
 {
-    public class ClientProfileVM
+    public class JobHistoryVM
     {
-        public Client Client { get; set; }
-        public double? AverageRating { get; set; }
-
+        public Job Job { get; set; }
+        public string report { get; set; }
     }
 }

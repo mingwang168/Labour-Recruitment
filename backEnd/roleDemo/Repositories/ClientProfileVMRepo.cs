@@ -27,7 +27,8 @@ namespace labourRecruitment.Repositories
             ClientProfileVM cp = new ClientProfileVM()
             {
                 Client = Client,
-                AverageRating = (double)avgerageQuality
+
+                AverageRating = avgerageQuality
 
             };
             return cp;
