@@ -1,15 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { authenticateUser, authenticateAdmin } from '../utils/Auth';
 
 import NotificationsTab from './NotificationsTab';
-
-import logo from '../assets/images/avatars/turner.jpg';
+import placeholder from '../assets/images/avatars/placeholder.jpg';
 
 const TopNav = () => {
+
+    useEffect(() => {
+        if(authenticateUser()) {
+            setUsername(sessionStorage.getItem("user_name"));
+            setIsAdministrator(authenticateAdmin());
+        }
+    }, [])
+
+    const [username, setUsername] = useState();
+    const [isAdministrator, setIsAdministrator] = useState(false);
+
+    const logout = _ => {
+        sessionStorage.clear();
+    }
+
     return (
     <div className="dashboard-header">
     <nav className="navbar navbar-expand-lg bg-white fixed-top">
         {/* Logo */}
-        <a href="/dashboard" className="navbar-brand" style={{color:'#3d405c', textTransform:'none'}}>Jobstart</a>
+        <a href="/dashboard" className="navbar-brand topnav-logo" style={{color:'#3d405c', textTransform:'none'}}>Jobstart</a>
 
         {/* Mobile Menu Toggle Button */}
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,18 +35,18 @@ const TopNav = () => {
         {/* User Menu */}
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav ml-auto navbar-right-top">
-            {/* Notifications (Admin Only) */}
-            <NotificationsTab />
+            {/* Notifications */}
+            {isAdministrator && <NotificationsTab /> }
 
             {/* User Dropdown */}
             <li className="nav-item dropdown nav-user">
                 <a className="d-flex nav-link nav-user-img" href="/dashboard" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img src={logo} alt="Logo" className="user-avatar-md rounded-circle" />
-                    <h5 className="ml-2 mt-1 mb-0 text-dark nav-user-name">Turner Construction</h5>
+                    <img src={placeholder} alt={username}className="user-avatar-md rounded-circle" />
+                    <h5 className="ml-2 mt-1 mb-0 text-dark nav-user-name">{username}</h5>
                 </a>
                 <div className="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                     <a className="dropdown-item mt-1" href="/profile/client">Settings</a>
-                    <a className="dropdown-item" href="/">Logout</a>
+                    <a href="/" onClick={logout} className="dropdown-item">Logout</a>
                 </div>
             </li>
         </ul>
