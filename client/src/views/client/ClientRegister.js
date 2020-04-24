@@ -1,5 +1,9 @@
 import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import Select from 'react-select';
+
+import FormValidator from '../../utils/FormValidator';
+import PROVINCES from '../../utils/Provinces';
 
 const bodyStyles = {
     height: '100vh',
@@ -18,96 +22,133 @@ const USER_ROLE = "user_role";
 
 const RegisterClient = (props) => {
 
+    const [redirect, setRedirect] = useState(false);
+    const [formErrors, setFormErrors] = useState([]);
+    const [client, setClient] = useState({
+        email: "",
+        password: "",
+        role: "",
+        ClientName: "",
+        ClientPhoneNumber: "",
+        ClientCity: "",
+        ClientState: "",
+        ClientDescription: ""
+    })
+    const {
+        email,
+        password,
+        confirmpassword,
+        role,
+        name,
+        phonenumber,
+        city,
+        province,
+        companydescription
+    } = client;
+
     useEffect(() => {
         if(sessionStorage.getItem(AUTH_TOKEN)) {
             setRedirect(true)
         }
-      }, [])
+    }, [])
 
-    const [user, setUser] = useState({
-        "email" : "",
-        "password" : "",
-        "role" : ""
-    })
-    const [client, setClient] = useState({
-        "ClientName" : "",
-        "ClientPhoneNumber" : "",
-        "ClientCity" : "",
-        "ClientState" : "",
-        "ClientDescription" : ""
-    })
-    const [redirect, setRedirect] = useState(false)
-
-    const{email,password,confirmpassword} = user
-    const{companyname,phonenumber,city,province,companydescription} = client
-
-    const onChange = (e) => {
-        e.preventDefault()
-        setUser({ ... user, [e.target.name]:e.target.value })
+    const onChange = e => {
         setClient({ ... client, [e.target.name]:e.target.value })
     }
-    const validateForm = (e) => {
-        e.preventDefault();
-        alert("Form submitted!");
+
+    const onChangeProvince = e => {
+        setClient({ ... client, ClientState: e.label })
     }
 
-    const onSubmit= (e) => {
+    const validateForm = e => {
         e.preventDefault();
-        if(password != confirmpassword) {
-            console.log("Passwords do not match.")
-        } else {
-            const newUser = {
-                email,
-                password,
-                "role" : "Client" 
-            }
+        let errors = [];
 
-            const newClient = {
-                "ClientName" : companyname,
-                "ClientPhoneNumber" : phonenumber,
-                "ClientCity" : city,
-                "ClientState" : province,
-                "ClientDescription" : companydescription
+        // Check email
+        if(!FormValidator("email", email)) {
+            errors.push("Invalid email entered.")
+        }
+
+        // Check password
+        if(password === confirmpassword) {
+            if(!FormValidator("password", password)) {
+                errors.push("Password must contain at least 6 letters, and each of the following: one uppercase letter, one lowercase letter, one number, and one symbol.");
             }
-            
-            fetch(BASE_URL + '/RegisterClient', {
+        } else {
+            errors.push("Passwords do not match.");
+        }
+
+        // Check phone
+        if(!FormValidator("phone", phonenumber)) {
+            errors.push("Invalid phone number entered.");
+        }
+
+        if(errors.length) {
+            setFormErrors(errors);
+        } else {
+            submitForm();
+        }
+    }
+
+    const submitForm = async() => {
+        try {
+            const response = await fetch(BASE_URL + "/RegisterClient", {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json"
                 },
-                body : JSON.stringify({ "User" : newUser , "Client" : newClient })
-            })
-            .then( response => response.json() ) 
-            .then( json => {
-                if (json.token !== "" && json.token != null) {
-                    sessionStorage.setItem(AUTH_TOKEN, json["token"]);
-                    sessionStorage.setItem(USER_NAME, json.email);
-                    sessionStorage.setItem(USER_ROLE, json.role);
-                    sessionStorage.setItem(USER_ID, json.id);
-                    setRedirect(true)
-                }
-            })
-            .catch(function (error) {
-                console.log("Server error. Please try again later.");
-            })
+                body: JSON.stringify({
+                    User: {
+                        email,
+                        password,
+                        role: "Client"
+                    },
+                    Client: client
+                })
+            });
+
+            // Bad response
+            if(response.status !== 200) {
+                setFormErrors(["Registration failed. Please try again later."]);
+                throw response;
+            }
+
+            // Success
+            let data = await response.json();
+            if(data.token && data.token !== "") {
+                sessionStorage.setItem(AUTH_TOKEN, data.token);
+                sessionStorage.setItem(USER_NAME, data.email);
+                sessionStorage.setItem(USER_ROLE, data.role);
+                sessionStorage.setItem(USER_ID, data.id);
+                setRedirect(true);
+            }
+        } catch(e) {
+            console.error(e);
+            setFormErrors(["Registration failed. Please try again later."]);
         }
     }
 
     return (
         <>
-       {redirect ? <Redirect to = {{
-        pathname : '/dashboard',
-        
-        }} />:  null }
+        {redirect ? <Redirect to = {{pathname : '/dashboard'}} /> :  null }
         <div style={bodyStyles}>
-            <form className="splash-container" onSubmit={e => onSubmit(e)}>
+            <form className="splash-container">
                 <div className="card">
                     <div className="card-header">
                         <h3 className="mb-1">Create Client Account</h3>
                         <p>Enter your user information.</p>
                     </div>
                     <div className="card-body">
+                        {/* Display form errors, if any */}
+                        { formErrors.length > 0 &&
+                        <div className="alert alert-danger">
+                        <ul className="pl-3 mb-0">
+                        { formErrors.map((error, i) => <li key={i}>{error}</li>) }
+                        </ul>
+                        </div>
+                        }
+                        
                         <div className="form-group">
                             <label htmlFor="companyname">Company Name <span className="text-danger">*</span></label>
                             <input
@@ -157,7 +198,7 @@ const RegisterClient = (props) => {
                             <input
                                 className="form-control form-control-lg"
                                 name="phonenumber"
-                                type="text"
+                                type="tel"
                                 placeholder="Enter phone number"
                                 required
                                 onChange={e => onChange(e)}
@@ -176,13 +217,10 @@ const RegisterClient = (props) => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="province">Province <span className="text-danger">*</span></label>
-                            <input
-                                className="form-control form-control-lg"
-                                name="province"
-                                type="text"
-                                placeholder="Enter province"
+                            <Select
+                                options={PROVINCES}
+                                onChange={e => onChangeProvince(e)}
                                 required
-                                onChange={e => onChange(e)}
                             />
                         </div>
                         <div className="form-group">
@@ -199,9 +237,8 @@ const RegisterClient = (props) => {
 
                         <div className="form-group pt-2">
                             <button
-                                //onClick={e => validateForm(e)}
                                 className="btn btn-block btn-primary btn-lg"
-                                type="submit"
+                                onClick={validateForm}
                             >
                                 Create Account
                             </button>

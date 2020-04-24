@@ -20,14 +20,14 @@ const RegisterStart = (props) => {
             <p>Please select your account type.</p>
         </div>
         <div className="card-body">
-            <a href="/register/client" className="d-block btn btn-outline-primary btn-lg text-left mb-3">
+            <Link to="/register/client" className="d-block btn btn-outline-primary btn-lg text-left mb-3">
                 <span className="h5"><i className="material-icons mr-2">business</i>Company Account</span><br />
                 <small>Post jobs and hire labourers</small>
-            </a>
-            <a href="/register/labourer" className="d-block btn btn-outline-primary btn-lg text-left">
+            </Link>
+            <Link to="/register/labourer" className="d-block btn btn-outline-primary btn-lg text-left">
                 <span className="h5"><i className="material-icons mr-2">emoji_people</i>Labourer Account</span><br />
                 <small>Find work fast based on your skills</small>
-            </a>
+            </Link>
         </div>
         <div className="card-footer bg-white">
             <p>Already have an account? <Link to="/login" className="text-primary">Login here.</Link></p>
