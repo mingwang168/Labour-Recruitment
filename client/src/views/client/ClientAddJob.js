@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
 import SelectWorkers from './components/SelectWorkers';
-import forceLogout from '../../utils/forceLogout'
+import {forceLogout} from '../../utils/Auth';
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -37,7 +37,7 @@ const ClientAddJob = (props) => {
         console.log("Validating form...")
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = async(e) => {
         e.preventDefault()
         let token = sessionStorage.getItem("auth_token")
         let id
@@ -61,26 +61,27 @@ const ClientAddJob = (props) => {
             "state" : province
         }
         
-        fetch(BASE_URL + '/job', {
-            method : 'POST',
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                'Authorization': `Bearer ${token}`
-            },
-            body : JSON.stringify({"Job" : newJob, "JobSkills" : jobSkills}) 
-        })
-        .then(response => response.json())
-        .then(json => {
-            if(json) {
-                props.history.push(`/job`);
-                window.location.reload();
-              }
-        })
-        .catch(function (error) {
-            console.log("Server error. Please try again later.");
-        })
+        try {
+            let response = await fetch(BASE_URL + '/job', {
+                method : 'POST',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body : JSON.stringify({"Job" : newJob, "JobSkills" : jobSkills}) 
+            })
 
+            let data = response.json();
+            if (data) {
+                props.history.push('/job' + data);
+                window.location.reload();
+            }
+
+        } catch(e) {
+            console.error(e);
+        }
+      
     }
 
     return (

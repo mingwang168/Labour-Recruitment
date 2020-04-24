@@ -40,7 +40,7 @@ const RegisterClient = (props) => {
         password,
         confirmpassword,
         role,
-        name,
+        companyname,
         phonenumber,
         city,
         province,
