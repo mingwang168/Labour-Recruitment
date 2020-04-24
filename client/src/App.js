@@ -59,7 +59,7 @@ class App extends Component {
         {/* Shared Views */}
         <ProtectedRoute  path='/dashboard' exact component={Dashboard} />
         <ProtectedRoute  path='/incidents' exact component={Incidents} />
-        <ProtectedRoute  path='/job' exact component={JobDetail} />
+        <ProtectedRoute  path='/job/:id' exact component={JobDetail} />
         <ProtectedRoute  path='/incident' exact component={IncidentDetail} />
       
         {/* Client Views */}

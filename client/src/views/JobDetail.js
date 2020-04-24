@@ -7,8 +7,14 @@ import SideNav from '../components/SideNav';
 
 const JobDetail = (props) => {
 
+
     const changeSafetyRating = () => {
         console.log("Changing safety rating...");
+    }
+
+    const fetchJobDetails = (id) => {
+        let token = sessionStorage.getItem("auth_token")
+        
     }
 
     useEffect(() => {

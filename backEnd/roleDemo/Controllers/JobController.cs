@@ -32,16 +32,21 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Skills/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Job>> GetJob(int id)
+        public IActionResult GetJob(int id)
         {
-            var job = await _context.Job.FindAsync(id);
+            var job = _context.Job.Where(j => j.JobId == id).FirstOrDefault();
+            int clientId = job.ClientId;
 
             if (job == null)
             {
                 return NotFound();
             }
 
-            return job;
+            var client = _context.Client.Where(c => c.ClientId == clientId).FirstOrDefault();
+            JobVM jobClient = new JobVM();
+            jobClient.ClientName = client.ClientName;
+            jobClient.Job = job;
+            return new ObjectResult(jobClient);
         }
 
         // POST: api/Job
