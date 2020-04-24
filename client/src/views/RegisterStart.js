@@ -1,18 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const bodyStyles = {
-    height: '100vh',
-    display: 'flex',
-    msFlexAlign: 'center',
-    alignItems: 'center',
-    paddingTop: '40px',
-    paddingBottom: '40px'
-}
-
 const RegisterStart = (props) => {
     return (
-    <div style={bodyStyles}>
+    <div className="splash-container-wrapper">
     <form className="splash-container">
     <div className="card">
         <div className="card-header">

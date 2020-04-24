@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { authenticateUser, authenticateAdmin } from '../utils/Auth';
+import { Link } from 'react-router-dom';
+import * as Auth from '../utils/Auth';
 
 import NotificationsTab from './NotificationsTab';
 import placeholder from '../assets/images/avatars/placeholder.jpg';
@@ -7,9 +8,9 @@ import placeholder from '../assets/images/avatars/placeholder.jpg';
 const TopNav = () => {
 
     useEffect(() => {
-        if(authenticateUser()) {
+        if(Auth.authenticateUser()) {
             setUsername(sessionStorage.getItem("user_name"));
-            setIsAdministrator(authenticateAdmin());
+            setIsAdministrator(Auth.authenticateAdmin());
         }
     }, [])
 
@@ -40,13 +41,13 @@ const TopNav = () => {
 
             {/* User Dropdown */}
             <li className="nav-item dropdown nav-user">
-                <a className="d-flex nav-link nav-user-img" href="/dashboard" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <Link className="d-flex nav-link nav-user-img" to="/dashboard" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img src={placeholder} alt={username}className="user-avatar-md rounded-circle" />
                     <h5 className="ml-2 mt-1 mb-0 text-dark nav-user-name">{username}</h5>
-                </a>
+                </Link>
                 <div className="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                     <a className="dropdown-item mt-1" href="/profile/client">Settings</a>
-                    <a href="/" onClick={logout} className="dropdown-item">Logout</a>
+                    <Link to="/" onClick={logout} className="dropdown-item">Logout</Link>
                 </div>
             </li>
         </ul>

@@ -2,15 +2,6 @@ import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 
-const bodyStyles = {
-    height: '100vh',
-    display: 'flex',
-    msFlexAlign: 'center',
-    alignItems: 'center',
-    paddingTop: '40px',
-    paddingBottom: '40px'
-}
-
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
 const USER_NAME = "user_name";
@@ -143,7 +134,7 @@ const RegisterLabourer = (props) => {
         pathname : '/profile/labourer',
     }} />:  null }
 
-    <div style={bodyStyles}>
+    <div className="splash-container-wrapper">
     <form className="splash-container" onSubmit={e => onSubmit(e)}>
     <div className="card">
         <div className="card-header">
