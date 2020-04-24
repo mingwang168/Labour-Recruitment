@@ -4,7 +4,7 @@ import Select from 'react-select';
 
 const BASE_URL = "http://localhost:5001/api";
 
-const SelectWorkers = ({workers, setWorkers}) => {
+const SelectWorkers = ({workers, setWorkers, jobSkills, setJobSkills}) => {
 
     const [skills, setSkills] = useState([])
     const [selectedSkill, setSelectedSkill] = useState();
@@ -29,13 +29,18 @@ const SelectWorkers = ({workers, setWorkers}) => {
                 let indexOfExistingSkill = workers.findIndex(i => i.skill === selectedSkill);
                 if(indexOfExistingSkill > -1) {
                     let updated = [...workers];
+                    let skillUpdated = [...jobSkills]
                     updated[indexOfExistingSkill].quantity = selectedNumWorkers;
+                    skillUpdated[indexOfExistingSkill].NumberNeeded = selectedNumWorkers;
                     setWorkers(updated);
+                    setJobSkills(skillUpdated)
                 } else {
-                    setWorkers(workers => [...workers, {SkillId: getSkillIdByName(selectedSkill), skill: selectedSkill, quantity: selectedNumWorkers}]);
+                    setWorkers(workers => [...workers, {skillId: getSkillIdByName(selectedSkill), skill: selectedSkill, quantity: selectedNumWorkers}]);
+                    setJobSkills(jobSkills => [ ...jobSkills, {skillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumWorkers}])
                 }
             } else {
                 setWorkers(workers => [...workers, {SkillId: getSkillIdByName(selectedSkill), skill: selectedSkill, quantity: selectedNumWorkers}]);
+                setJobSkills(jobSkills => [ ...jobSkills, {SkillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumWorkers}])
             }
             setSelectedNumWorkers('');
         }
@@ -63,7 +68,7 @@ const SelectWorkers = ({workers, setWorkers}) => {
         return id;
         
     }
-   
+
     return (
     <div className="form-group">
         <label htmlFor="workers">Select workers <span className="text-danger">*</span></label>

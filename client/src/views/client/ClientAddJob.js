@@ -22,7 +22,10 @@ const ClientAddJob = (props) => {
         "City" : "",
         "State" : "",
     })
+
     const [workers, setWorkers] = useState([]);
+    const [jobSkills, setJobSkills] = useState([])
+    
     const [redirect, setRedirect] = useState(false)
   
     const {title,startdate,enddate,description,address,province,city} = job
@@ -50,31 +53,33 @@ const ClientAddJob = (props) => {
         let newJob = {
             "ClientId" : id,
             title,
-            description,
+            "jobDescription" : description,
             startdate,
             enddate,
             "InProgress" : true , 
             "IsComplete" :  false, 
-            address,
+            "street" : address,
             city,
-            province
+            "state" : province
         }
         
-        
-        // fetch(BASE_URL + '/job', {
-        //     method : 'POST',
-        //     headers: {
-        //         "Accept": "application/json",
-        //         "Content-Type": "application/json",
-        //         'Authorization': `Bearer ${token}`
-        //     },
-        //     body : JSON.stringify({"Job" : newJob, "JobSkills" : {"SkillId" : workers.SkillId, "NumberNeeded" : workers.quantity} }) 
-        // })
-        // .then(response => response.json())
-        // .then(json => console.log(json))
+        fetch(BASE_URL + '/job', {
+            method : 'POST',
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
+            },
+            body : JSON.stringify({"Job" : newJob, "JobSkills" : jobSkills}) 
+        })
+        .then(response => response.json())
+        .then(json => console.log(json))
+        .catch(function (error) {
+            console.log("Server error. Please try again later.");
+        })
+
     }
 
-    console.log(workers)
     return (
         <div className="dashboard-main-wrapper">
         <TopNav />
@@ -211,7 +216,7 @@ const ClientAddJob = (props) => {
                     </div>
                 </div>
 
-                <SelectWorkers workers={workers} setWorkers={setWorkers}  />
+                <SelectWorkers workers={workers} setWorkers={setWorkers}  jobSkills={jobSkills} setJobSkills={setJobSkills}/>
                
                 <div className="form-group row text-right mt-4">
                 <div className="col col-lg-12">
