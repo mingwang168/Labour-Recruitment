@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
 import SelectWorkers from './components/SelectWorkers';
-import forceLogout from '../../utils/forceLogout'
+import * as Auth from '../../utils/Auth'
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -44,7 +44,7 @@ const ClientAddJob = (props) => {
         if(sessionStorage.getItem("user_id") && sessionStorage.getItem("user_role") !== 'Labourer') {
             id = sessionStorage.getItem("user_id")
         } else {
-            forceLogout();
+            Auth.forceLogout();
             return
         }
 
