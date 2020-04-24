@@ -112,6 +112,7 @@ namespace roleDemo.Controllers
                 jsonResponse.role = sysUser.Role;
                 jsonResponse.email = sysUser.Email;
                 jsonResponse.id = labourer.LabourerId;
+                jsonResponse.name = labourer.LabourerFirstName + ' ' + labourer.LabourerLastName;
                 return Json(jsonResponse);
 
             }

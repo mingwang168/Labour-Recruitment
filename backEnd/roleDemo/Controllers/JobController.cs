@@ -32,16 +32,32 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Skills/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Job>> GetJob(int id)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetJob(int id)
         {
-            var job = await _context.Job.FindAsync(id);
-
+            var job = _context.Job.Where(j => j.JobId == id).FirstOrDefault();
             if (job == null)
             {
                 return NotFound();
             }
 
-            return job;
+            int clientId = job.ClientId;
+            var client = _context.Client.FirstOrDefault(c => c.ClientId == clientId);
+            JobVM responseObj = new JobVM
+            {
+                JobId = job.JobId,
+                Title = job.Title,
+                JobDescription = job.JobDescription,
+                StartDate = job.StartDate,
+                EndDate = job.EndDate,
+                InProgress = job.InProgress,
+                IsComplete = job.IsComplete,
+                Street = job.Street,
+                City = job.City,
+                State = job.State,
+                ClientName = client.ClientName
+            };
+            return new ObjectResult(responseObj);
         }
 
         
@@ -53,7 +69,7 @@ namespace labourRecruitment.Controllers
         {
             
             _context.Job.Add(jobSkill.Job);
-
+           
             foreach (JobSkill js in jobSkill.JobSkills) {
                 js.JobId = jobSkill.Job.JobId;
                 _context.JobSkill.Add(js);

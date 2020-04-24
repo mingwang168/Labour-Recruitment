@@ -1,21 +1,45 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Ratings from 'react-ratings-declarative';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
 
+const BASE_URL = "http://localhost:5001/api";
+
 const JobDetail = (props) => {
+    const [details,setDetails] = useState()
 
     const changeSafetyRating = () => {
         console.log("Changing safety rating...");
     }
 
+    const fetchJobDetails = async(id) => {
+        let token = sessionStorage.getItem("auth_token")
+        try {
+            const response = await fetch(BASE_URL + '/job/' + id , {
+                method : 'GET',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            let data = await response.json();
+            setDetails(data)
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     useEffect(() => {
-        
-    }, [])
+        fetchJobDetails(props.match.params.id)
+    }, [props.match.params.id])
+
 
     return (
+    <>
+    {details && 
     <div className="dashboard-main-wrapper">
         <TopNav />
         <SideNav />
@@ -32,7 +56,7 @@ const JobDetail = (props) => {
                 <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item"><a href="/dashboard" className="breadcrumb-link">Dashboard</a></li>
-                    <li className="breadcrumb-item active" aria-current="page">Crescent Court Homes</li>
+                    <li className="breadcrumb-item active" aria-current="page">{details.title}</li>
                 </ol>
                 </nav>
                 </div>
@@ -45,23 +69,24 @@ const JobDetail = (props) => {
                 <div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div className="card">
                         <div className="card-body">
-                            <h1 className="font-26 mb-0">Crescent Court Homes</h1>
-                            <p>Turner Construction</p>
+                            <h1 className="font-26 mb-0">{details.title}</h1>
+                            <p>{details.clientName}</p>
                         </div>
                         <div className="card-body border-top">
-                            <p>Crescent Court offers exceptional homes in a natural setting with the benefits of urban living, situated at SFU's UniverCity community.</p>
+                            <p>{details.jobDescription}</p>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Status</h3>
-                            <span className="badge badge-primary">In Progress</span>
+                            {details.inProgress && <span className="badge badge-primary">In Progress</span> }
+                            {details.isComplete && <span className="badge badge-success">Complete</span> }
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Dates</h3>
-                            <time>Feb 20, 2020</time> to <time>May 8, 2020</time>
+                            <time>{details.startDate.split('T')[0]}</time> to <time>{details.endDate.split('T')[0]}</time>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Location</h3>
-                            <p>8725 University Crescent<br/>Burnaby, BC V5A4X9</p>
+                            <p>{details.street}<br/><span className="text-capitalize">{details.city}</span>,<span className="text-uppercase">{details.state}</span></p>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Labourers Hired</h3>
@@ -307,6 +332,8 @@ const JobDetail = (props) => {
         </div>
         </div>
     </div>
+    }
+    </>
     )
 }
 
