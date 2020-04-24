@@ -51,7 +51,7 @@ const RegisterClient = (props) => {
         alert("Form submitted!");
     }
 
-    const onSubmit= (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
         if(password != confirmpassword) {
             console.log("Passwords do not match.")
