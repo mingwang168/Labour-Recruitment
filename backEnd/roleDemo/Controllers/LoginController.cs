@@ -55,6 +55,18 @@ namespace roleDemo.Controllers
                         var sysuser = _context.SystemUser.FirstOrDefault(u => u.Email == loginVM.Email);
                         var tokenString = loginRepo.GenerateJSONWebToken(user);
 
+                        if (sysuser.Role == "Client")
+                        {
+                            jsonResponse.fullName = _context.Client.FirstOrDefault(c => c.UserId == sysuser.UserId).ClientName;
+                        } else if (sysuser.Role == "Labourer") 
+                        {
+                            jsonResponse.fullName = _context.Labourer.FirstOrDefault(l => l.UserId == sysuser.UserId).LabourerFirstName
+                                + " " +_context.Labourer.FirstOrDefault(l => l.UserId == sysuser.UserId).LabourerLastName;
+                        } else if (sysuser.Role == "Administrator")
+                        {
+                            jsonResponse.fullName = "Admin";
+                        }
+
                         jsonResponse.token = tokenString;
                         jsonResponse.status = "OK";
                         jsonResponse.role = sysuser.Role;
