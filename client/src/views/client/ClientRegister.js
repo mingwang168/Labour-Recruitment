@@ -2,8 +2,8 @@ import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 
-import FormValidator from '../../util/FormValidator';
-import PROVINCES from '../../util/Provinces';
+import FormValidator from '../../utils/FormValidator';
+import PROVINCES from '../../utils/Provinces';
 
 const bodyStyles = {
     height: '100vh',
