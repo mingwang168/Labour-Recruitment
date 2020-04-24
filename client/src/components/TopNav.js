@@ -31,7 +31,7 @@ const TopNav = () => {
                 </a>
                 <div className="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                     <a className="dropdown-item mt-1" href="/profile/client">Settings</a>
-                    <a className="dropdown-item" href="/">Logout</a>
+                    <a href="/" onClick={() => {sessionStorage.clear()}} className="dropdown-item">Logout</a>
                 </div>
             </li>
         </ul>
