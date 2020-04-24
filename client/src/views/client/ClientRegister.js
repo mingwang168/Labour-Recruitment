@@ -17,6 +17,7 @@ const bodyStyles = {
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
 const USER_NAME = "user_name";
+const USER_EMAIL = "user_email";
 const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
@@ -118,7 +119,8 @@ const RegisterClient = (props) => {
             let data = await response.json();
             if(data.token && data.token !== "") {
                 sessionStorage.setItem(AUTH_TOKEN, data.token);
-                sessionStorage.setItem(USER_NAME, data.email);
+                sessionStorage.setItem(USER_EMAIL, data.email);
+                sessionStorage.setItem(USER_NAME, data.name);
                 sessionStorage.setItem(USER_ROLE, data.role);
                 sessionStorage.setItem(USER_ID, data.id);
                 setRedirect(true);
