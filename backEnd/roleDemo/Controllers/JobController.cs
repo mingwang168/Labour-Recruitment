@@ -46,8 +46,8 @@ namespace labourRecruitment.Controllers
 
         // POST: api/Job
         [HttpPost]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<Job>> PostJob(JobSkillVM jobSkill)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult PostJob(JobSkillVM jobSkill)
         {
             
             _context.Job.Add(jobSkill.Job);
@@ -57,10 +57,10 @@ namespace labourRecruitment.Controllers
                 _context.JobSkill.Add(js);
             }
 
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
 
-            return new ObjectResult(jobSkill); 
-           // return CreatedAtAction("GetJob", new { id = jobSkill.Job.JobId }, jobSkill);
+            return new ObjectResult(jobSkill.Job.JobId); 
+   
         }
 
     }
