@@ -36,7 +36,7 @@ namespace labourRecruitment.Controllers
         }
 
 
-        // GET: api/LabourerID
+
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetLabourerSafetyRating([FromBody] JobLabourerRating jlr)
