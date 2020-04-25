@@ -29,6 +29,10 @@ const RegisterClient = (props) => {
         email,
         password,
         confirmpassword,
+<<<<<<< HEAD
+        role,
+=======
+>>>>>>> master
         companyname,
         phonenumber,
         city,
