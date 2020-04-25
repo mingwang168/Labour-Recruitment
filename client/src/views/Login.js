@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Redirect, Link } from 'react-router-dom';
-import FormValidator from '../utils/FormValidator';
+import * as FormValidator from '../utils/FormValidator';
 
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
@@ -34,8 +34,7 @@ const Login = () => {
         e.preventDefault();
         let errors = [];
 
-        // Check email
-        if(!FormValidator("email", email)) {
+        if(!FormValidator.email(email)) {
             errors.push("Invalid email entered.")
         }
 
