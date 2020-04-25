@@ -39,7 +39,8 @@ namespace labourRecruitment.Controllers
                 JobSkillId = ojs.JobSkillId,
                 JobId = ojs.JobId,
                 SkillId = ojs.SkillId,
-                NumberNeeded = ojs.NumberNeeded
+                NumberNeeded = ojs.NumberNeeded,
+                Skill = ojs.Skill
             } ).ToListAsync();
 
              if (job == null)
