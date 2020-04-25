@@ -36,7 +36,7 @@ const JobDetail = (props) => {
         fetchJobDetails(props.match.params.id)
     }, [props.match.params.id])
 
-    console.log(details)
+  
     return (
     <>
     {details && 
@@ -70,7 +70,7 @@ const JobDetail = (props) => {
                     <div className="card">
                         <div className="card-body">
                             <h1 className="font-26 mb-0">{details.title}</h1>
-                            <p>{details.clientName}</p>
+                            <p>{details.client.clientName}</p>
                         </div>
                         <div className="card-body border-top">
                             <p>{details.jobDescription}</p>
