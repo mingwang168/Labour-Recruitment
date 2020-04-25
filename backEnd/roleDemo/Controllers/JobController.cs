@@ -30,18 +30,23 @@ namespace labourRecruitment.Controllers
             return await _context.Job.ToListAsync();
         }
 
-        // GET: api/Skills/5
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<Job>> GetJob(int id)
+        public async Task<IActionResult> GetJob(int id)
         {
             var job = await _context.Job.FindAsync(id);
+            job.JobSkill = await _context.JobSkill.Where(js => js.JobId == id).Select(ojs =>  new JobSkill() {
+                JobSkillId = ojs.JobSkillId,
+                JobId = ojs.JobId,
+                SkillId = ojs.SkillId,
+                NumberNeeded = ojs.NumberNeeded
+            } ).ToListAsync();
 
-            if (job == null)
+             if (job == null)
             {
                 return NotFound();
             }
-
-            return job;
+            return new ObjectResult(job);
         }
 
         
