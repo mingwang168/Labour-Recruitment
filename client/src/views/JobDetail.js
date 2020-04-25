@@ -36,7 +36,7 @@ const JobDetail = (props) => {
         fetchJobDetails(props.match.params.id)
     }, [props.match.params.id])
 
-  
+    console.log(details)
     return (
     <>
     {details && 
@@ -98,7 +98,7 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Total Hired</h3>
-                            <p> labourers</p>
+                            <p>{details.totalHired} labourers</p>
                         </div>
                         {/* Display this only if the job owner is viewing this page */}
                         <div className="card-body border-top">
