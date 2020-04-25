@@ -9,15 +9,6 @@ const USER_EMAIL = "user_email";
 const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
-const bodyStyles = {
-    height: '100vh',
-    display: 'flex',
-    msFlexAlign: 'center',
-    alignItems: 'center',
-    paddingTop: '40px',
-    paddingBottom: '40px'
-}
-
 const Login = () => {
     
     useEffect(() => {
@@ -108,7 +99,7 @@ const Login = () => {
     return (
         <>
         { redirect ? getRedirectLocation() : null }
-        <div style={bodyStyles}>
+        <div className="splash-container-wrapper">
         <div className="splash-container">
         <div className="card">
         <div className="card-header">

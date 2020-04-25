@@ -5,15 +5,6 @@ import Select from 'react-select';
 import FormValidator from '../../utils/FormValidator';
 import PROVINCES from '../../utils/Provinces';
 
-const bodyStyles = {
-    height: '100vh',
-    display: 'flex',
-    msFlexAlign: 'center',
-    alignItems: 'center',
-    paddingTop: '40px',
-    paddingBottom: '40px'
-}
-
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
 const USER_NAME = "user_name";
@@ -28,18 +19,20 @@ const RegisterClient = (props) => {
     const [client, setClient] = useState({
         email: "",
         password: "",
-        role: "",
-        ClientName: "",
-        ClientPhoneNumber: "",
-        ClientCity: "",
-        ClientState: "",
-        ClientDescription: ""
+        companyname: "",
+        phonenumber: "",
+        city: "",
+        province: "",
+        companydescription: ""
     })
     const {
         email,
         password,
         confirmpassword,
+<<<<<<< HEAD
         role,
+=======
+>>>>>>> master
         companyname,
         phonenumber,
         city,
@@ -54,11 +47,11 @@ const RegisterClient = (props) => {
     }, [])
 
     const onChange = e => {
-        setClient({ ... client, [e.target.name]:e.target.value })
+        setClient({ ... client, [e.target.name]:e.target.value });
     }
 
     const onChangeProvince = e => {
-        setClient({ ... client, ClientState: e.label })
+        setClient({ ... client, province: e.label })
     }
 
     const validateForm = e => {
@@ -105,7 +98,14 @@ const RegisterClient = (props) => {
                         password,
                         role: "Client"
                     },
-                    Client: client
+                    Client: {
+                        ClientName: companyname,
+                        ClientEmail: email,
+                        ClientPhoneNumber: phonenumber,
+                        ClientCity: city,
+                        ClientState: province,
+                        ClientDescription: companydescription
+                    }
                 })
             });
 
@@ -134,7 +134,7 @@ const RegisterClient = (props) => {
     return (
         <>
         {redirect ? <Redirect to = {{pathname : '/dashboard'}} /> :  null }
-        <div style={bodyStyles}>
+        <div className="splash-container-wrapper">
             <form className="splash-container">
                 <div className="card">
                     <div className="card-header">

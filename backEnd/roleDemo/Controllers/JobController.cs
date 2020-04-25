@@ -30,34 +30,23 @@ namespace labourRecruitment.Controllers
             return await _context.Job.ToListAsync();
         }
 
-        // GET: api/Skills/5
+
         [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult GetJob(int id)
+        public async Task<IActionResult> GetJob(int id)
         {
-            var job = _context.Job.Where(j => j.JobId == id).FirstOrDefault();
-            if (job == null)
+            var job = await _context.Job.FindAsync(id);
+            job.JobSkill = await _context.JobSkill.Where(js => js.JobId == id).Select(ojs =>  new JobSkill() {
+                JobSkillId = ojs.JobSkillId,
+                JobId = ojs.JobId,
+                SkillId = ojs.SkillId,
+                NumberNeeded = ojs.NumberNeeded
+            } ).ToListAsync();
+
+             if (job == null)
             {
                 return NotFound();
             }
-
-            int clientId = job.ClientId;
-            var client = _context.Client.FirstOrDefault(c => c.ClientId == clientId);
-            JobVM responseObj = new JobVM
-            {
-                JobId = job.JobId,
-                Title = job.Title,
-                JobDescription = job.JobDescription,
-                StartDate = job.StartDate,
-                EndDate = job.EndDate,
-                InProgress = job.InProgress,
-                IsComplete = job.IsComplete,
-                Street = job.Street,
-                City = job.City,
-                State = job.State,
-                ClientName = client.ClientName
-            };
-            return new ObjectResult(responseObj);
+            return new ObjectResult(job);
         }
 
         
