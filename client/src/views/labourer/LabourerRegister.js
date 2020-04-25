@@ -2,18 +2,10 @@ import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 
-const bodyStyles = {
-    height: '100vh',
-    display: 'flex',
-    msFlexAlign: 'center',
-    alignItems: 'center',
-    paddingTop: '40px',
-    paddingBottom: '40px'
-}
-
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
 const USER_NAME = "user_name";
+const USER_EMAIL = "user_email";
 const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
@@ -123,7 +115,8 @@ const RegisterLabourer = (props) => {
         .then(json => {
             if (json.token !== "" && json.token != null) {
                 sessionStorage.setItem(AUTH_TOKEN, json["token"]);
-                sessionStorage.setItem(USER_NAME, json.email);
+                sessionStorage.setItem(USER_NAME, json.name);
+                sessionStorage.setItem(USER_EMAIL, json.email);
                 sessionStorage.setItem(USER_ROLE, json.role);
                 sessionStorage.setItem(USER_ID, json.id);
                 setRedirect(true)
@@ -138,10 +131,10 @@ const RegisterLabourer = (props) => {
     return (
     <>
     {redirect ? <Redirect to = {{
-        pathname : '/addjob',
+        pathname : '/profile/labourer',
     }} />:  null }
 
-    <div style={bodyStyles}>
+    <div className="splash-container-wrapper">
     <form className="splash-container" onSubmit={e => onSubmit(e)}>
     <div className="card">
         <div className="card-header">

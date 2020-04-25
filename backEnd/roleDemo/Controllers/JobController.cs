@@ -58,7 +58,7 @@ namespace labourRecruitment.Controllers
         {
             
             _context.Job.Add(jobSkill.Job);
-
+           
             foreach (JobSkill js in jobSkill.JobSkills) {
                 js.JobId = jobSkill.Job.JobId;
                 _context.JobSkill.Add(js);

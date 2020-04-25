@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
+import FormValidator from '../utils/FormValidator';
 
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
 const USER_NAME = "user_name";
+const USER_EMAIL = "user_email";
 const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
 const Login = () => {
+    
     useEffect(() => {
         if(sessionStorage.getItem(AUTH_TOKEN)) {
             setRedirect(true)
@@ -16,88 +19,134 @@ const Login = () => {
 
     const [redirect, setRedirect] = useState(false)
     const [user, setUser] = useState({
-        "email" : "",
-        "password" : ""
+        email: "",
+        password: ""
     })
-    const {email, password} = user
+    const [formErrors, setFormErrors] = useState([]);
+    const { email, password } = user;
 
     const onChange = (e) => {
         e.preventDefault();
         setUser({ ... user, [e.target.name]:e.target.value })
     }
 
-    const onSubmit = e => {
+    const validateForm = e => {
         e.preventDefault();
-        let newUser = {
-            email,
-            password
-        }
-       
-        fetch(BASE_URL + '/login', {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newUser)
-        })
-        .then(response => response.json())
-        .then(json => {
-            if (json.token !== "" && json.token != null) {
-                sessionStorage.setItem(AUTH_TOKEN, json["token"]);
-                sessionStorage.setItem(USER_NAME, json.email);
-                sessionStorage.setItem(USER_ROLE, json.role);
-                sessionStorage.setItem(USER_ID, json.id);
-                setRedirect(true)
-            }
-        })
-    } 
+        let errors = [];
 
-    function getLocation() {
-        if (sessionStorage.getItem(USER_ROLE) === 'Client') {
-            return <Redirect to = {{
-                pathname : '/dashboard',
-                
-            }} />
-        } else if (sessionStorage.getItem(USER_ROLE) === 'Labourer') {
-            return <Redirect to = {{
-                pathname : '/addjob',
-                
-            }} />
+        // Check email
+        if(!FormValidator("email", email)) {
+            errors.push("Invalid email entered.")
+        }
+
+        if(errors.length) {
+            setFormErrors(errors);
+        } else {
+            submitForm();
+        }
+    }
+    
+    const submitForm = async() => {
+        let loginData = { email, password };
+        
+        try {
+            const response = await fetch(BASE_URL + '/login', {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(loginData)
+            })
+
+            // Bad response
+            if(response.status !== 200) {
+                setFormErrors(["Login failed. Please try again later."]);
+                throw response;
+            }
+
+            // Success
+            let data = await response.json();
+            if(data.token && data.token !== "") {
+                sessionStorage.setItem(AUTH_TOKEN, data.token);
+                sessionStorage.setItem(USER_NAME, data.name);
+                sessionStorage.setItem(USER_EMAIL, data.email);
+                sessionStorage.setItem(USER_ROLE, data.role);
+                sessionStorage.setItem(USER_ID, data.id);
+                setRedirect(true);
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    const getRedirectLocation = _ => {
+        // Client redirect
+        if(sessionStorage.getItem(USER_ROLE) === 'Client') {
+            return <Redirect to={{pathname:'/dashboard'}} />;
+        // Labourer redirect
+        } else if(sessionStorage.getItem(USER_ROLE) === 'Labourer') {
+            return <Redirect to={{pathname:'/profile/labourer'}} />;
+        // Admin redirect
+        } else if(sessionStorage.getItem(USER_ROLE) === 'Admin') {
+            return <Redirect to={{pathname:'/incidents'}} />;
+        } else {
+            sessionStorage.clear();
+            return <Redirect to={{pathname:'/'}} />;
         }
     }
 
     return (
         <>
-        { redirect ? getLocation() : null }
-        <div>
-            <div className="container d-flex justify-content-center align-items-center " style={{ height: "100vh" }}>
-                <div className="pt-1 bg-primary" style={{ borderRadius: "10px" }}>
-                    <div className="container card bg-light px-0 py-2 mb-0" style={{ width: "25rem" }}>
-                        <div className="h4 text-center mt-3 text-dark">Sign In</div>
-                        <div className="py-4 px-4">
-                            <form onSubmit = {e => onSubmit(e)}>
-                                <div className="form-group">
-                                    <label htmlFor="email">Email / Username</label>
-                                    <input type="email" 
-                                           className="form-control" 
-                                           name="email" 
-                                           aria-describedby="emailid"
-                                           onChange = {e => onChange(e)}></input>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="password">Password</label>
-                                    <input type="password" 
-                                           className="form-control" 
-                                           name="password"
-                                           onChange = {e => onChange(e)}></input>
-                                </div>
-                                <button type="submit" className="btn btn-primary">Submit</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+        { redirect ? getRedirectLocation() : null }
+        <div className="splash-container-wrapper">
+        <div className="splash-container">
+        <div className="card">
+        <div className="card-header">
+            <h3 className="mb-1">Login</h3>
+            <p>Don't have an account yet? Create one <Link to="/register" className="text-primary">here.</Link></p>
+        </div>
+        <div className="card-body">
+        {/* Display form errors, if any */}
+        { formErrors.length > 0 &&
+        <div className="alert alert-danger">
+        <ul className="pl-3 mb-0">
+        { formErrors.map((error, i) => <li key={i}>{error}</li>) }
+        </ul>
+        </div>
+        }
+
+        <form onSubmit={validateForm}>
+            <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                    required
+                    type="email"
+                    name="email"
+                    className="form-control form-control-lg"
+                    onChange = {e => onChange(e)}
+                />
             </div>
+            <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                    required
+                    type="password"
+                    name="password"
+                    className="form-control form-control-lg"
+                    onChange = {e => onChange(e)}
+                />
+            </div>
+            <button
+                type="submit"
+                className="btn btn-primary btn-lg w-100"
+            >
+                Login
+            </button>
+        </form>
+        </div>
+        </div>
+        </div>
         </div>
         </>
     )

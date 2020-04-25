@@ -74,6 +74,7 @@ namespace labourRecruitment.Controllers
                 jsonResponse.role = sysUser.Role;
                 jsonResponse.email = sysUser.Email;
                 jsonResponse.id = client.ClientId;
+                jsonResponse.name = client.ClientName;
                 return Json(jsonResponse);
             }
 

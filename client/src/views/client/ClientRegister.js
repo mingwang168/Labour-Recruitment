@@ -2,21 +2,13 @@ import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 
-import FormValidator from '../../util/FormValidator';
-import PROVINCES from '../../util/Provinces';
-
-const bodyStyles = {
-    height: '100vh',
-    display: 'flex',
-    msFlexAlign: 'center',
-    alignItems: 'center',
-    paddingTop: '40px',
-    paddingBottom: '40px'
-}
+import FormValidator from '../../utils/FormValidator';
+import PROVINCES from '../../utils/Provinces';
 
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
 const USER_NAME = "user_name";
+const USER_EMAIL = "user_email";
 const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
@@ -27,19 +19,17 @@ const RegisterClient = (props) => {
     const [client, setClient] = useState({
         email: "",
         password: "",
-        role: "",
-        ClientName: "",
-        ClientPhoneNumber: "",
-        ClientCity: "",
-        ClientState: "",
-        ClientDescription: ""
+        companyname: "",
+        phonenumber: "",
+        city: "",
+        province: "",
+        companydescription: ""
     })
     const {
         email,
         password,
         confirmpassword,
-        role,
-        name,
+        companyname,
         phonenumber,
         city,
         province,
@@ -53,11 +43,11 @@ const RegisterClient = (props) => {
     }, [])
 
     const onChange = e => {
-        setClient({ ... client, [e.target.name]:e.target.value })
+        setClient({ ... client, [e.target.name]:e.target.value });
     }
 
     const onChangeProvince = e => {
-        setClient({ ... client, ClientState: e.label })
+        setClient({ ... client, province: e.label })
     }
 
     const validateForm = e => {
@@ -104,7 +94,14 @@ const RegisterClient = (props) => {
                         password,
                         role: "Client"
                     },
-                    Client: client
+                    Client: {
+                        ClientName: companyname,
+                        ClientEmail: email,
+                        ClientPhoneNumber: phonenumber,
+                        ClientCity: city,
+                        ClientState: province,
+                        ClientDescription: companydescription
+                    }
                 })
             });
 
@@ -118,7 +115,8 @@ const RegisterClient = (props) => {
             let data = await response.json();
             if(data.token && data.token !== "") {
                 sessionStorage.setItem(AUTH_TOKEN, data.token);
-                sessionStorage.setItem(USER_NAME, data.email);
+                sessionStorage.setItem(USER_EMAIL, data.email);
+                sessionStorage.setItem(USER_NAME, data.name);
                 sessionStorage.setItem(USER_ROLE, data.role);
                 sessionStorage.setItem(USER_ID, data.id);
                 setRedirect(true);
@@ -132,7 +130,7 @@ const RegisterClient = (props) => {
     return (
         <>
         {redirect ? <Redirect to = {{pathname : '/dashboard'}} /> :  null }
-        <div style={bodyStyles}>
+        <div className="splash-container-wrapper">
             <form className="splash-container">
                 <div className="card">
                     <div className="card-header">
