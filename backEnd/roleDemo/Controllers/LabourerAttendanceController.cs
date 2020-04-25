@@ -30,12 +30,6 @@ namespace labourRecruitment.Controllers
 
             if (labourerAttendances != null)
             {
-                //var labourattendanceList = labourerAttendances.Select(ola=> new LabourerAttendance()
-                //{
-                //    DailyQualityRating = ola.DailyQualityRating,
-                //    Date = ola.Date
-                //});
-
                 return new ObjectResult(labourerAttendances);
             }
             else
