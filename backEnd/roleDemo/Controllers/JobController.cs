@@ -48,7 +48,17 @@ namespace labourRecruitment.Controllers
             {
                 ClientName = c.ClientName
             }).FirstOrDefault();
-             if (job == null)
+            job.JobLabourer = await _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => new JobLabourer()
+            {
+                JobLabourerId = ojl.JobLabourerId,
+                JobId = ojl.JobId,
+                LabourerId = ojl.LabourerId,
+                ClientQualityRating = ojl.ClientQualityRating,
+                LabourerSafetyRating = ojl.LabourerSafetyRating,
+                Labourer = ojl.Labourer
+            }).ToListAsync();
+
+            if (job == null)
             {
                 return NotFound();
             }
