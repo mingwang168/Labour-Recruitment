@@ -90,7 +90,7 @@ const SelectWorkers = ({workers, setWorkers, jobSkills, setJobSkills}) => {
         : <p className="pt-1 font-12 text-secondary">No workers added yet.</p>}
 
         <div className="form-row">
-            <div className="col col-md-5 col-lg-2">
+            <div className="col col-md-5 col-lg-4 col-xl-4">
             <Select
                 options={
                     skills.map((skill, i) => {
@@ -100,7 +100,7 @@ const SelectWorkers = ({workers, setWorkers, jobSkills, setJobSkills}) => {
                 onChange={e => setSelectedSkill(e.label)}
             />
             </div>
-            <div className="col col-md-5 col-lg-1">
+            <div className="col col-md-5 col-lg-3 col-xl-2">
             <input
                 value={selectedNumWorkers}
                 onChange={e => setSelectedNumWorkers(e.target.value)}
