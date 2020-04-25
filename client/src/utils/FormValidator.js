@@ -1,22 +1,19 @@
-const FormValidator = (type, input) => {
-    let valid = false;
-    switch(type) {
-        case "email":
-            let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            valid = emailRegex.test(String(input).toLowerCase());
-            break;
-        case "phone":
-            let phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-            valid = phoneRegex.test(String(input));
-            break;
-        case "password":
-            let pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            valid = pwRegex.test(String(input));
-            break;
-        default:
-            break;
-    }
-    return valid;
+exports.email = (input) => {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(input).toLowerCase()) ? true : false;
 }
 
-export default FormValidator;
+exports.phone = (input) => {
+    let re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+    return re.test(String(input)) ? true : false;
+}
+
+exports.password = (input) => {
+    let re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return re.test(String(input)) ? true : false;
+}
+
+exports.name = (input) => {
+    let re = /^([a-zA-Z]+?)([-\s'][a-zA-Z]+)*?$/;
+    return re.test(String(input)) ? true : false;
+}

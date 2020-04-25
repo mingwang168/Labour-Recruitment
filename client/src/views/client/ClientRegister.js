@@ -2,7 +2,7 @@ import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 
-import FormValidator from '../../utils/FormValidator';
+import * as FormValidator from '../../utils/FormValidator';
 import PROVINCES from '../../utils/Provinces';
 
 const BASE_URL = "http://localhost:5001/api";
@@ -54,22 +54,17 @@ const RegisterClient = (props) => {
         e.preventDefault();
         let errors = [];
 
-        // Check email
-        if(!FormValidator("email", email)) {
+        if(!FormValidator.email(email)) {
             errors.push("Invalid email entered.")
         }
-
-        // Check password
         if(password === confirmpassword) {
-            if(!FormValidator("password", password)) {
+            if(!FormValidator.password(password)) {
                 errors.push("Password must contain at least 6 letters, and each of the following: one uppercase letter, one lowercase letter, one number, and one symbol.");
             }
         } else {
             errors.push("Passwords do not match.");
         }
-
-        // Check phone
-        if(!FormValidator("phone", phonenumber)) {
+        if(!FormValidator.phone(phonenumber)) {
             errors.push("Invalid phone number entered.");
         }
 
@@ -146,7 +141,6 @@ const RegisterClient = (props) => {
                         </ul>
                         </div>
                         }
-                        
                         <div className="form-group">
                             <label htmlFor="companyname">Company Name <span className="text-danger">*</span></label>
                             <input
