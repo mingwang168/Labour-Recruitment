@@ -14,5 +14,6 @@ namespace labourRecruitment.Models.LabourRecruitment
         public string IncidentTypeName { get; set; }
 
         public virtual ICollection<Incident> Incident { get; set; }
+        public int IncidentId { get; internal set; }
     }
 }
