@@ -265,57 +265,26 @@ const JobDetail = (props) => {
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Jane Smith</td>
-                                    <td>Painting</td>
-                                    <td>
-                                        <Ratings
-                                            rating={3}
-                                            widgetDimensions="14px"
-                                            changeRating={changeSafetyRating}
-                                        >
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        </Ratings>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>John Doe</td>
-                                    <td>Drywall</td>
-                                    <td>
-                                        <Ratings
-                                            rating={3}
-                                            widgetDimensions="14px"
-                                            changeRating={changeSafetyRating}
-                                        >
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        </Ratings>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Matthew Smith</td>
-                                    <td>Drywall</td>
-                                    <td>
-                                        <Ratings
-                                            rating={5}
-                                            widgetDimensions="14px"
-                                            changeRating={changeSafetyRating}
-                                        >
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        </Ratings>
-                                    </td>
-                                </tr>
+                            {details.jobLabourer.map((jl,i) => 
+                                <tr key = {i}>
+                                <td className ="text-capitalize">{jl.labourer.labourerFirstName} {jl.labourer.labourerLastName}</td>
+                                <td>Painting</td>
+                                <td>
+                                    <Ratings
+                                        rating={3}
+                                        widgetDimensions="14px"
+                                        changeRating={changeSafetyRating}
+                                    >
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    </Ratings>
+                                </td>
+                            </tr>
+
+                            )}
                             </tbody>
                             </table>
                         </div>

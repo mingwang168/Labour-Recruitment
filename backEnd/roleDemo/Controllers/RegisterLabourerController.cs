@@ -122,7 +122,7 @@ namespace roleDemo.Controllers
                 errorList.Add(error.Description);
             }
             jsonResponse.status = errorList[0];
-            jsonResponse.token = " ";
+            jsonResponse.token = "";
             return Json(jsonResponse);
 
         }
