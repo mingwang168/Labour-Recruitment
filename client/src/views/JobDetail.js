@@ -90,9 +90,9 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Labourers Hired</h3>
-                            {details.jobSkill.map((js, i) => 
+                            {details.jobSkill.map((jSkill, i) => 
                             <ul key = {i} className="list-unstyled mb-0">
-                                <li>{js.skill.skillName} ({js.numberNeeded})</li>
+                                <li>{jSkill.skill.skillName} ({jSkill.numberNeeded})</li>
                             </ul>
                             )}
                         </div>
@@ -265,9 +265,9 @@ const JobDetail = (props) => {
                             </tr>
                             </thead>
                             <tbody>
-                            {details.jobLabourer.map((jl,i) => 
+                            {details.jobLabourer.map((jLabourer,i) => 
                                 <tr key = {i}>
-                                <td className ="text-capitalize">{jl.labourer.labourerFirstName} {jl.labourer.labourerLastName}</td>
+                                <td className ="text-capitalize">{jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}</td>
                                 <td>Painting</td>
                                 <td>
                                     <Ratings
