@@ -1,6 +1,8 @@
 import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
+import * as FormValidator from '../../utils/FormValidator';
+import DAYS from '../../utils/Days';
 
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
@@ -9,124 +11,139 @@ const USER_EMAIL = "user_email";
 const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
-
 const RegisterLabourer = (props) => {
-    
-    const [skills, setSkills] = useState([{
-        "skillId" : "",
-        "skillName" : ""
-    }]);
-    const [user, setUser] = useState({
-        "email" : "",
-        "password" : "",
-        "role" : ""
-    })
-    const [labourer, setLabourer] = useState({
-         "LabourerFirstName" : "",
-         "LabourerLastName" : ""
-    })
-    const [selectedDays, setSelectedDays] = useState([])
-    const [selectedSkills, setSelectedSkills] = useState([]);
-    const [redirect, setRedirect] = useState(false)
 
-    const {email, password,confirmpassword} = user
-    const {fullname} = labourer
-    const availability = [
-        { value: 'monday', label: 'Monday' },
-        { value: 'tuesday', label: 'Tuesday' },
-        { value: 'wednesday', label: 'Wednesday' },
-        { value: 'thursday', label: 'Thursay' },
-        { value: 'friday', label: 'Friday' },
-        { value: 'saturday', label: 'Saturday' },
-        { value: 'sunday', label: 'Sunday' }   
-    ];
+    const [redirect, setRedirect] = useState(false);
+    const [formErrors, setFormErrors] = useState([]);
+    const [skillOptions, setSkillOptions] = useState([]);
+    const [labourer, setLabourer] = useState({
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
+        confirmpassword: ""
+    });
+    const {
+        firstname,
+        lastname,
+        email,
+        password,
+        confirmpassword
+    } = labourer;
+    const [selectedDays, setSelectedDays] = useState([]);
+    const [selectedSkills, setSelectedSkills] = useState([]);
     
-    const fetchSkills = async() => {
+    const fetchSkillOptions = async() => {
         try {
             const response = await fetch(BASE_URL + '/skills');
             let data = await response.json();
-            setSkills(data);
+            setSkillOptions(data);
         } catch (e) {
             console.error(e);
         }
     }
 
-    useEffect(() => {
-        fetchSkills()
-        if(sessionStorage.getItem(AUTH_TOKEN)) {
-            setRedirect(true)
-        }
-      }, [])
-
-        
     const onChange = e => {
         e.preventDefault();
-        setUser({ ...user, [e.target.name]: e.target.value });
-        setLabourer({ ...labourer, [e.target.name]: e.target.value })    
+        setLabourer({...labourer, [e.target.name]: e.target.value}); 
     }
 
-    //Set selected skills in dropdown
-    const setSkill = (skill) => {
-        skill.forEach(element => {
-            setSelectedSkills([ ... selectedSkills,element.value]);
-        });
+    const onChangeSkill = (skills) => {
+        if(skills) {
+            skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]));
+        }
     }
 
-    //Set selected days in dropdown
-    const setAvailability = (day) => {
-        day.forEach(element => {
-            setSelectedDays([ ... selectedDays,element.value]);
-        });
+    const onChangeAvailability = (days) => {
+        if(days) {
+            days.forEach(element => {
+                setSelectedDays([ ... selectedDays,element.value]);
+            });
+        }
     }
 
     const validateForm = (e) => {
         e.preventDefault();
-        alert("Form submitted!");
-    }
+        let errors = [];
 
-    const onSubmit = e => {
-        e.preventDefault();
-
-        if(password !== confirmpassword) {
-          console.log("Passwords do not match.");
-        } else {
-          const newUser = {
-            email,
-            password,
-            "role" : "Labourer"
+        if(!FormValidator.name(firstname)) {
+            errors.push("Invalid first name entered.");
         }
-        const LabourerFirstName = fullname.split(' ')[0]
-        const LabourerLastName = fullname.split(' ')[1]
-        const newLabourer = {
-        LabourerFirstName,
-        LabourerLastName
+        if(!FormValidator.name(lastname)) {
+            console.log(lastname)
+            errors.push("Invalid last name entered.");
         }
-
-        // Fetch
-        fetch(BASE_URL + "/RegisterLabourer", {
-        method: "POST",
-        headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({"User" : newUser, "Labourer" : newLabourer, "AvailableDays" : selectedDays, "Skills" : selectedSkills }),
-        })
-        .then(response => response.json())
-        .then(json => {
-            if (json.token !== "" && json.token != null) {
-                sessionStorage.setItem(AUTH_TOKEN, json["token"]);
-                sessionStorage.setItem(USER_NAME, json.name);
-                sessionStorage.setItem(USER_EMAIL, json.email);
-                sessionStorage.setItem(USER_ROLE, json.role);
-                sessionStorage.setItem(USER_ID, json.id);
-                setRedirect(true)
+        if(!FormValidator.email(email)) {
+            errors.push("Invalid email entered.");
+        }
+        if(password === confirmpassword) {
+            if(!FormValidator.password(password)) {
+                errors.push("Password must contain at least 8 characters, and each of the following: one uppercase letter, one lowercase letter, one number, and one symbol.");
             }
-          })
-          .catch(function (error) {
-            console.log("Server error. Please try again later.");
-          })
+        } else {
+            errors.push("Passwords do not match.");
+        }
+        if(!selectedSkills.length) {
+            errors.push("You must select at least one skill.")
+        }
+        if(!selectedDays.length) {
+            errors.push("You must select at least one available day.")
+        }
+        if(errors.length) {
+            setFormErrors(errors);
+        } else {
+            submitForm();
         }
     }
+
+    const submitForm = async() => {
+        try {
+            let response = await fetch(BASE_URL + "/RegisterLabourer", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    User: {
+                        email,
+                        password,
+                        role: "Labourer"
+                    },
+                    Labourer: { 
+                        LabourerFirstName: firstname,
+                        LabourerLastName: lastname
+                    },
+                    AvailableDays: selectedDays,
+                    Skills: selectedSkills
+                })
+            });
+
+            if(response.status !== 200) {
+                setFormErrors(["Registration failed. Please try again later."]);
+                throw response;
+            }
+
+            // Success
+            let data = await response.json();
+            if(data.token && data.token !== "") {
+                sessionStorage.setItem(AUTH_TOKEN, data.token);
+                sessionStorage.setItem(USER_NAME, data.name);
+                sessionStorage.setItem(USER_ROLE, data.role);
+                sessionStorage.setItem(USER_ID, data.id);
+                setRedirect(true);
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    useEffect(() => {
+        fetchSkillOptions();
+        if(sessionStorage.getItem(AUTH_TOKEN)) {
+            setRedirect(true)
+        }
+    }, [])
 
     return (
     <>
@@ -135,20 +152,39 @@ const RegisterLabourer = (props) => {
     }} />:  null }
 
     <div className="splash-container-wrapper">
-    <form className="splash-container" onSubmit={e => onSubmit(e)}>
+    <form className="splash-container" onSubmit={e => validateForm(e)}>
     <div className="card">
         <div className="card-header">
             <h3 className="mb-1">Create Labourer Account</h3>
             <p>Enter your user information.</p>
         </div>
         <div className="card-body">
+            {/* Display form errors, if any */}
+            { formErrors.length > 0 &&
+            <div className="alert alert-danger">
+            <ul className="pl-3 mb-0">
+            { formErrors.map((error, i) => <li key={i}>{error}</li>) }
+            </ul>
+            </div>
+            }
             <div className="form-group">
-                <label htmlFor="fullname">Full Name <span className="text-danger">*</span></label>
+                <label htmlFor="firstname">First Name <span className="text-danger">*</span></label>
                 <input
                     className="form-control form-control-lg"
-                    name="fullname"
+                    name="firstname"
                     type="text"
-                    placeholder="Enter full name"
+                    placeholder="Enter first name"
+                    required
+                    onChange={e => onChange(e)}
+                />
+            </div>
+            <div className="form-group">
+                <label htmlFor="lastname">Last Name <span className="text-danger">*</span></label>
+                <input
+                    className="form-control form-control-lg"
+                    name="lastname"
+                    type="text"
+                    placeholder="Enter last name"
                     required
                     onChange={e => onChange(e)}
                 />
@@ -174,6 +210,7 @@ const RegisterLabourer = (props) => {
                     required
                     onChange={e => onChange(e)}
                 />
+                <small className="form-text text-muted">Password should be a minimum of 8 characters and contain at least one uppercase letter, lowercase letter, number, and symbol.</small>
             </div>
             <div className="form-group">
                 <label htmlFor="confirmpassword">Confirm Password <span className="text-danger">*</span></label>
@@ -189,26 +226,23 @@ const RegisterLabourer = (props) => {
             <div className="form-group">
                 <label className="d-block" htmlFor="skills">Select Skills <span className="text-danger">*</span></label>
                 <Select 
-                    options={
-                        skills.map((skill, i) => {
-                        return { value: skill.skillId, label: skill.skillName } 
-                        }) 
+                    options={ skillOptions &&
+                        skillOptions.map(skill => {return {value: skill.skillId, label: skill.skillName}}) 
                     } 
-                    onChange = {setSkill} 
+                    onChange={onChangeSkill} 
                     isMulti 
                 />
             </div>
             <div className="form-group">
                 <label className="d-block" htmlFor="availability">Select Availability <span className="text-danger">*</span></label>
                 <Select 
-                    options={availability}
-                    onChange = {setAvailability} 
+                    options={DAYS}
+                    onChange = {onChangeAvailability} 
                     isMulti 
                 />
             </div>
             <div className="form-group pt-2">
                 <button
-                   // onClick={e => validateForm(e)}
                     className="btn btn-block btn-primary btn-lg"
                     type="submit"
                 >
