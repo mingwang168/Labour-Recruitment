@@ -36,7 +36,7 @@ const JobDetail = (props) => {
         fetchJobDetails(props.match.params.id)
     }, [props.match.params.id])
 
-
+    console.log(details)
     return (
     <>
     {details && 
@@ -90,22 +90,15 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Labourers Hired</h3>
-                            <ul className="list-unstyled mb-0">
-                                <li>General Labour (20)</li>
-                                <li>Electrical (20)</li>
-                                <li>Roofing (20)</li>
-                                <li>Drywall (20)</li>
-                                <li>Painting (10)</li>
-                                <li>Plumbing (10)</li>
+                            {details.jobSkill.map((js, i) => 
+                            <ul key = {i} className="list-unstyled mb-0">
+                                <li>{js.skill.skillName} ({js.numberNeeded})</li>
                             </ul>
+                            )}
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Total Hired</h3>
-                            <p>100 labourers</p>
-                        </div>
-                        <div className="card-body border-top">
-                            <h3 className="font-16">Base Pay</h3>
-                            <p>$21.85/hr</p>
+                            <p> labourers</p>
                         </div>
                         {/* Display this only if the job owner is viewing this page */}
                         <div className="card-body border-top">
