@@ -395,15 +395,19 @@ namespace labourRecruitment.Migrations
                     b.Property<double?>("LabourerSafetyRating")
                         .HasColumnName("labourer_safety_rating");
 
-                    b.Property<DateTime?>("SafetyMeetingDate")
-                        .HasColumnName("safety_meeting_date")
-                        .HasColumnType("datetime");
+                    b.Property<bool?>("SafetyMeetingCompleted")
+                        .HasColumnName("safety_meeting_completed");
+
+                    b.Property<int?>("SkillId")
+                        .HasColumnName("skill_id");
 
                     b.HasKey("JobLabourerId");
 
                     b.HasIndex("JobId");
 
                     b.HasIndex("LabourerId");
+
+                    b.HasIndex("SkillId");
 
                     b.ToTable("JobLabourer");
                 });
@@ -672,6 +676,11 @@ namespace labourRecruitment.Migrations
                         .WithMany("JobLabourer")
                         .HasForeignKey("LabourerId")
                         .HasConstraintName("FK__JobLabour__labou__49C3F6B7");
+
+                    b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
+                        .WithMany("JobLabourer")
+                        .HasForeignKey("SkillId")
+                        .HasConstraintName("FK__JobLabour__skill__5535A963");
                 });
 
             modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.JobSkill", b =>
