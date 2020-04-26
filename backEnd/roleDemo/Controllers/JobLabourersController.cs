@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace labourRecruitment.Controllers
 {
@@ -26,8 +27,31 @@ namespace labourRecruitment.Controllers
         public async Task<IActionResult> GetLabourerByJobId(int id)
         {
             List<Labourer> labourers = _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => ojl.Labourer).ToList();
+
+
             return new ObjectResult(labourers);
         }
+
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetJobAndJobLabourers(int id)
+        //{
+        //    var job = await _context.Job.FindAsync(id);
+        //    job.JobLabourer = await _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => new JobLabourer()
+        //    {
+        //        JobLabourerId = ojl.JobLabourerId,
+        //        JobId = ojl.JobId,
+        //        LabourerId = ojl.LabourerId,
+        //        ClientQualityRating = ojl.ClientQualityRating,
+        //        LabourerSafetyRating = ojl.LabourerSafetyRating
+        //    }).ToListAsync();
+
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return new ObjectResult(job);
+        //}
+
 
     }
 }

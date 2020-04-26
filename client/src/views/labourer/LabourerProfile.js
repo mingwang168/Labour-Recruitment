@@ -51,32 +51,35 @@ const LabourerProfile = () => {
 			<ul className="list-group list-group-flush">
 				<li className="p-3 list-group-item">
 					<table>
-					<tr>
-						<td className="text-muted d-block pl-4 pr-4 pb-3">
-						<strong className="text-muted d-block">
-							Email:
-						</strong>
-						</td>
-						<td className="pl-4 pr-4 pb-3">
-							info@construction.ca
-						</td>
-					</tr>
-					<tr>
-						<td className="text-muted d-block pl-4 pr-4 pb-3">
-						<strong className="text-muted d-block">
-							Availability:
-						</strong>
-						</td>
-						<td className="pl-4 pr-4 pb-3">
-							Monday<br />
-							Wednesday<br />
-                            Friday
-						</td>
-					</tr>
+						<tbody>
+						<tr>
+							<td className="text-muted d-block pl-4 pr-4 pb-3">
+							<strong className="text-muted d-block">
+								Email:
+							</strong>
+							</td>
+							<td className="pl-4 pr-4 pb-3">
+								info@construction.ca
+							</td>
+						</tr>
+						<tr>
+							<td className="text-muted d-block pl-4 pr-4 pb-3">
+							<strong className="text-muted d-block">
+								Availability:
+							</strong>
+							</td>
+							<td className="pl-4 pr-4 pb-3">
+								Monday<br />
+								Wednesday<br />
+								Friday
+							</td>
+						</tr>
+						</tbody>
 					</table>
 				</li>
 				<li className="p-3 pb-4 list-group-item">
 				<table className="pl-4">
+					<tbody>
 					<tr>
 						<td>
 						<strong className="text-muted d-block">
@@ -85,24 +88,25 @@ const LabourerProfile = () => {
 						</td>
 						<td>
 						<span className="pl-4 pb-3">
-						<i class="fas fa-star mr-2"></i>
+						<i className="fas fa-star mr-2"></i>
 							4.91 (18 ratings)
-					    </span>
+						</span>
 						</td>
 					</tr>
 					<tr>
-					    <td>
+						<td>
 						<strong className="text-muted d-block">
 							Average Quality Rating
 						</strong>
 						</td>
 						<td>
 							<span className="pl-4 pb-3">
-							<i class="fas fa-star mr-2"></i>
+							<i className="fas fa-star mr-2"></i>
 							4.91 (18 ratings)
 							</span>
 						</td>
 					</tr>
+					</tbody>
 				</table>
 				</li>
 			</ul>

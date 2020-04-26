@@ -84,7 +84,7 @@ namespace labourRecruitment.Controllers
             }
 
             jsonResponse.status = errorList[0];
-            jsonResponse.token = " ";
+            jsonResponse.token = "";
             return Json(jsonResponse);
         }
     }
