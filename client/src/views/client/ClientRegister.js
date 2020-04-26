@@ -1,7 +1,7 @@
 import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
-
+import * as Auth from '../../utils/Auth';
 import * as FormValidator from '../../utils/FormValidator';
 import PROVINCES from '../../utils/Provinces';
 
@@ -14,7 +14,6 @@ const USER_ROLE = "user_role";
 
 const RegisterClient = (props) => {
 
-    const [redirect, setRedirect] = useState(false);
     const [formErrors, setFormErrors] = useState([]);
     const [client, setClient] = useState({
         email: "",
@@ -36,12 +35,6 @@ const RegisterClient = (props) => {
         province,
         companydescription
     } = client;
-
-    useEffect(() => {
-        if(sessionStorage.getItem(AUTH_TOKEN)) {
-            setRedirect(true)
-        }
-    }, [])
 
     const onChange = e => {
         setClient({ ... client, [e.target.name]:e.target.value });
@@ -106,16 +99,22 @@ const RegisterClient = (props) => {
                 setFormErrors(["Registration failed. Please try again later."]);
                 throw response;
             }
+            // if(response.status !== 403) {
+            //     setFormErrors(["Email address '" + email + "' is already taken."]);
+            //     throw response;
+            // }
 
             // Success
             let data = await response.json();
-            if(data.token && data.token !== "") {
+            if(data.token && data.token !== " " && data.token !== "") {
                 sessionStorage.setItem(AUTH_TOKEN, data.token);
                 sessionStorage.setItem(USER_EMAIL, data.email);
                 sessionStorage.setItem(USER_NAME, data.name);
                 sessionStorage.setItem(USER_ROLE, data.role);
                 sessionStorage.setItem(USER_ID, data.id);
-                setRedirect(true);
+                window.location.reload();
+            } else {
+                setFormErrors(["Email address '" + email + "' is already taken."]);
             }
         } catch(e) {
             console.error(e);
@@ -123,9 +122,8 @@ const RegisterClient = (props) => {
         }
     }
 
-    return (
-        <>
-        {redirect ? <Redirect to = {{pathname : '/dashboard'}} /> :  null }
+    return Auth.authenticateUser() ? <Redirect to={{pathname:'/dashboard'}} /> :
+    (
         <div className="splash-container-wrapper">
             <form className="splash-container">
                 <div className="card">
@@ -244,7 +242,6 @@ const RegisterClient = (props) => {
                 </div>
             </form>
         </div >
-        </>
     )
 }
 
