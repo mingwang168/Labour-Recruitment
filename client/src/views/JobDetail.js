@@ -268,7 +268,7 @@ const JobDetail = (props) => {
                             {details.jobLabourer.map((jLabourer,i) => 
                                 <tr key = {i}>
                                 <td className ="text-capitalize">{jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}</td>
-                                <td>Painting</td>
+                                <td>{jLabourer.skill.skillName}</td>
                                 <td>
                                     <Ratings
                                         rating={3}
