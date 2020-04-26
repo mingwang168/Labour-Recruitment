@@ -39,26 +39,26 @@ namespace labourRecruitment.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetLabourerSafetyRating([FromBody] JobLabourerRating jlr)
+        public IActionResult GetLabourerSafetyRating([FromBody] JobLabourer jlr)
         {
             var jobLabourer = _context.JobLabourer.SingleOrDefault(jl => jl.LabourerId == jlr.LabourerId && jl.JobId == jlr.JobId);
 
             if (jobLabourer != null)
             {
-                return  new ObjectResult(jobLabourer.LabourerSafetyRating);
+                return new ObjectResult(jobLabourer.LabourerSafetyRating);
             }
             else
             {
                 return NotFound();
             }
         }
-   
 
 
-    [HttpPut]
-    [Route("ClientQuality")]
+
+        [HttpPut]
+        [Route("ClientQuality")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> PutClientQualityRating([FromBody] JobLabourerRating jlr)
+        public IActionResult PutClientQualityRating([FromBody] JobLabourer jlr)
         {
             var jobLabourer = _context.JobLabourer.SingleOrDefault(jl => jl.LabourerId == jlr.LabourerId && jl.JobId == jlr.JobId);
 
@@ -86,7 +86,7 @@ namespace labourRecruitment.Controllers
         [HttpPut]
         [Route("LabourerSafety")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> PutLabourerSafetyRating([FromBody] JobLabourerRating jlr)
+        public IActionResult PutLabourerSafetyRating([FromBody] JobLabourer jlr)
         {
             var jobLabourer = _context.JobLabourer.SingleOrDefault(jl => jl.LabourerId == jlr.LabourerId && jl.JobId == jlr.JobId);
 
@@ -114,11 +114,4 @@ namespace labourRecruitment.Controllers
 
     }
 
-    public class JobLabourerRating
-    {
-        public int? JobId { get; set; }
-        public int? LabourerId { get; set; }
-        public double? ClientQualityRating { get; set; }
-        public double? LabourerSafetyRating { get; set; }
-    }
 }
