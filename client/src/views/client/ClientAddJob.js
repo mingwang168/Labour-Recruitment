@@ -4,11 +4,7 @@ import { Link } from 'react-router-dom';
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
 import SelectWorkers from './components/SelectWorkers';
-<<<<<<< HEAD
-import {forceLogout} from '../../utils/Auth';
-=======
 import * as Auth from '../../utils/Auth'
->>>>>>> master
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -40,7 +36,13 @@ const ClientAddJob = (props) => {
     const validateForm = _ => {
         console.log("Validating form...")
     }
-
+    const getTotal = () => {
+        let total = 0
+        jobSkills.forEach(e => {
+            total = parseInt(e.NumberNeeded) + total
+        })
+        return total 
+    }
     const onSubmit = async(e) => {
         e.preventDefault()
         let token = sessionStorage.getItem("auth_token")
@@ -62,7 +64,8 @@ const ClientAddJob = (props) => {
             "IsComplete" :  false, 
             "street" : address,
             city,
-            "state" : province
+            "state" : province,
+            "TotalHired" : getTotal()
         }
         
         try {
@@ -76,9 +79,9 @@ const ClientAddJob = (props) => {
                 body : JSON.stringify({"Job" : newJob, "JobSkills" : jobSkills}) 
             })
 
-            let data = response.json();
+            let data = await response.json();
             if (data) {
-                props.history.push('/job' + data);
+                props.history.push('/job/' + data.jobId);
                 window.location.reload();
             }
 

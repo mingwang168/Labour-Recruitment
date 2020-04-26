@@ -36,7 +36,7 @@ const JobDetail = (props) => {
         fetchJobDetails(props.match.params.id)
     }, [props.match.params.id])
 
-
+    console.log(details)
     return (
     <>
     {details && 
@@ -70,7 +70,7 @@ const JobDetail = (props) => {
                     <div className="card">
                         <div className="card-body">
                             <h1 className="font-26 mb-0">{details.title}</h1>
-                            <p>{details.clientName}</p>
+                            <p>{details.client.clientName}</p>
                         </div>
                         <div className="card-body border-top">
                             <p>{details.jobDescription}</p>
@@ -90,22 +90,15 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Labourers Hired</h3>
-                            <ul className="list-unstyled mb-0">
-                                <li>General Labour (20)</li>
-                                <li>Electrical (20)</li>
-                                <li>Roofing (20)</li>
-                                <li>Drywall (20)</li>
-                                <li>Painting (10)</li>
-                                <li>Plumbing (10)</li>
+                            {details.jobSkill.map((jSkill, i) => 
+                            <ul key = {i} className="list-unstyled mb-0">
+                                <li>{jSkill.skill.skillName} ({jSkill.numberNeeded})</li>
                             </ul>
+                            )}
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Total Hired</h3>
-                            <p>100 labourers</p>
-                        </div>
-                        <div className="card-body border-top">
-                            <h3 className="font-16">Base Pay</h3>
-                            <p>$21.85/hr</p>
+                            <p>{details.totalHired} labourers</p>
                         </div>
                         {/* Display this only if the job owner is viewing this page */}
                         <div className="card-body border-top">
@@ -272,57 +265,26 @@ const JobDetail = (props) => {
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Jane Smith</td>
-                                    <td>Painting</td>
-                                    <td>
-                                        <Ratings
-                                            rating={3}
-                                            widgetDimensions="14px"
-                                            changeRating={changeSafetyRating}
-                                        >
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        </Ratings>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>John Doe</td>
-                                    <td>Drywall</td>
-                                    <td>
-                                        <Ratings
-                                            rating={3}
-                                            widgetDimensions="14px"
-                                            changeRating={changeSafetyRating}
-                                        >
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        </Ratings>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Matthew Smith</td>
-                                    <td>Drywall</td>
-                                    <td>
-                                        <Ratings
-                                            rating={5}
-                                            widgetDimensions="14px"
-                                            changeRating={changeSafetyRating}
-                                        >
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                        </Ratings>
-                                    </td>
-                                </tr>
+                            {details.jobLabourer.map((jLabourer,i) => 
+                                <tr key = {i}>
+                                <td className ="text-capitalize">{jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}</td>
+                                <td>Painting</td>
+                                <td>
+                                    <Ratings
+                                        rating={3}
+                                        widgetDimensions="14px"
+                                        changeRating={changeSafetyRating}
+                                    >
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
+                                    </Ratings>
+                                </td>
+                            </tr>
+
+                            )}
                             </tbody>
                             </table>
                         </div>

@@ -133,6 +133,7 @@ const RegisterLabourer = (props) => {
                 sessionStorage.setItem(USER_ID, data.id);
                 setRedirect(true);
             }
+            console.log(data)
         } catch(e) {
             console.error(e);
         }

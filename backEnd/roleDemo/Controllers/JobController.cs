@@ -34,23 +34,36 @@ namespace labourRecruitment.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetJob(int id)
         {
+           
             var job = await _context.Job.FindAsync(id);
-            job.JobSkill = await _context.JobSkill.Where(js => js.JobId == id).Select(ojs =>  new JobSkill() {
+            job.JobSkill = await _context.JobSkill.Where(js => js.JobId == id).Select(ojs => new JobSkill()
+            {
                 JobSkillId = ojs.JobSkillId,
                 JobId = ojs.JobId,
                 SkillId = ojs.SkillId,
                 NumberNeeded = ojs.NumberNeeded,
                 Skill = ojs.Skill
-            } ).ToListAsync();
+            }).ToListAsync();
+            job.Client = _context.Client.Where(c => c.ClientId == job.ClientId).Select(c => new Client()
+            {
+                ClientName = c.ClientName
+            }).FirstOrDefault();
+            job.JobLabourer = await _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => new JobLabourer()
+            {
+                JobLabourerId = ojl.JobLabourerId,
+                JobId = ojl.JobId,
+                LabourerId = ojl.LabourerId,
+                ClientQualityRating = ojl.ClientQualityRating,
+                LabourerSafetyRating = ojl.LabourerSafetyRating,
+                Labourer = ojl.Labourer
+            }).ToListAsync();
 
-             if (job == null)
+            if (job == null)
             {
                 return NotFound();
             }
             return new ObjectResult(job);
         }
-
-        
 
         // POST: api/Job
         [HttpPost]

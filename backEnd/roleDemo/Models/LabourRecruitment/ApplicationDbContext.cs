@@ -30,7 +30,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public virtual DbSet<Skill> Skill { get; set; }
         public virtual DbSet<SystemUser> SystemUser { get; set; }
 
-        
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -205,6 +205,8 @@ namespace labourRecruitment.Models.LabourRecruitment
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
+                entity.Property(e => e.TotalHired).HasColumnName("total_hired");
+
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Job)
                     .HasForeignKey(d => d.ClientId)
@@ -222,6 +224,10 @@ namespace labourRecruitment.Models.LabourRecruitment
                 entity.Property(e => e.LabourerId).HasColumnName("labourer_id");
 
                 entity.Property(e => e.LabourerSafetyRating).HasColumnName("labourer_safety_rating");
+
+                entity.Property(e => e.SafetyMeetingDate)
+                    .HasColumnName("safety_meeting_date")
+                    .HasColumnType("datetime");
 
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.JobLabourer)

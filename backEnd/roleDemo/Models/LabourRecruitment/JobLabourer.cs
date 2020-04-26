@@ -10,6 +10,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public int? LabourerId { get; set; }
         public double? ClientQualityRating { get; set; }
         public double? LabourerSafetyRating { get; set; }
+        public DateTime? SafetyMeetingDate { get; set; }
 
         public virtual Job Job { get; set; }
         public virtual Labourer Labourer { get; set; }
