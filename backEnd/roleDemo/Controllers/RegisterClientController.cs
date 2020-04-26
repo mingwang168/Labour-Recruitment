@@ -51,7 +51,7 @@ namespace labourRecruitment.Controllers
                 SystemUser sysUser = new SystemUser()
                 {
                     Email = input.User.Email,
-                    Role = input.User.Role
+                    Role = "Client"
                 };
 
                 Client client = new Client
@@ -71,7 +71,7 @@ namespace labourRecruitment.Controllers
                 var tokenString = registerRepo.GenerateJSONWebToken(user);
                 jsonResponse.token = tokenString;
                 jsonResponse.status = "OK";
-                jsonResponse.role = sysUser.Role;
+                jsonResponse.role = "Client";
                 jsonResponse.email = sysUser.Email;
                 jsonResponse.id = client.ClientId;
                 jsonResponse.name = client.ClientName;

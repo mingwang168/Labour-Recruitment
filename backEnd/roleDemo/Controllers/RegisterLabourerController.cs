@@ -50,7 +50,7 @@ namespace roleDemo.Controllers
                 SystemUser sysUser = new SystemUser()
                 {
                     Email = input.User.Email,
-                    Role = input.User.Role
+                    Role = "Labourer"
                 };
 
                 Labourer labourer = new Labourer
@@ -109,7 +109,7 @@ namespace roleDemo.Controllers
                 var tokenString = registerRepo.GenerateJSONWebToken(user);
                 jsonResponse.token = tokenString;
                 jsonResponse.status = "OK";
-                jsonResponse.role = sysUser.Role;
+                jsonResponse.role = "Labourer";
                 jsonResponse.email = sysUser.Email;
                 jsonResponse.id = labourer.LabourerId;
                 jsonResponse.name = labourer.LabourerFirstName + ' ' + labourer.LabourerLastName;

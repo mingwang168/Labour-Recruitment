@@ -80,6 +80,7 @@ const ClientAddJob = (props) => {
             })
 
             let data = await response.json();
+
             if (data) {
                 props.history.push('/job/' + data.jobId);
                 window.location.reload();
