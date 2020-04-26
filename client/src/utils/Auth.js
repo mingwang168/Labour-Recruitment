@@ -10,7 +10,14 @@ exports.authenticateUser = _ => {
     ) &&
     sessionStorage.getItem("user_name") &&
     sessionStorage.getItem("user_id") ? true : false;
+    if(!authenticated) {
+        sessionStorage.clear();
+    }
     return authenticated;
+}
+
+exports.getToken = _ => {
+    return sessionStorage.getItem("auth_token");
 }
 
 exports.getID = _ => {
