@@ -35,7 +35,7 @@ const Login = () => {
         let errors = [];
 
         // Check email
-        // if(!FormValidator("email", email)) {
+        // if(!FormValidator.email(email)) {
         //     errors.push("Invalid email entered.")
         // }
 
