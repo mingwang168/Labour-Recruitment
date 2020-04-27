@@ -2,10 +2,10 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 import Table from '../../components/Table';
-import { LABOURERS_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
-import { LABOURERS_JOBS_DATA } from '../JobsDummyData';
+import { CLIENT_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+import { CLIENT_JOBS_DATA } from '../JobsDummyData';
 
-const LabourDashboard = (props) => {
+const ClientDashboard = (props) => {
     return (
     <>
     <div className="row">
@@ -23,7 +23,7 @@ const LabourDashboard = (props) => {
                     <Link to="/dashboard" className="breadcrumb-link">Dashboard</Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
-                    Labourer Dashboard
+                    Client Dashboard
                 </li>
             </ol>
             </nav>
@@ -36,8 +36,8 @@ const LabourDashboard = (props) => {
 	        <div className="card">
 	        <div className="card-body">
                 <div className="d-inline-block">
-                    <h5 className="text-muted">Completed Jobs</h5>
-                    <h2 className="mb-0">22</h2>
+                    <h5 className="text-muted">Active Jobs</h5>
+                    <h2 className="mb-0">5</h2>
                 </div>
                 <div className="float-right icon-circle-medium icon-box-lg bg-info-light mt-1">
                     <i className="material-icons text-info">work</i>
@@ -50,8 +50,8 @@ const LabourDashboard = (props) => {
 	        <div className="card">
 	        <div className="card-body">
                 <div className="d-inline-block">
-                    <h5 className="text-muted">Ranking</h5>
-                    <h2 className="mb-0">Top 2%</h2>
+                    <h5 className="text-muted">Labourers Hired</h5>
+                    <h2 className="mb-0">295</h2>
                 </div>
                 <div className="float-right icon-circle-medium icon-box-lg bg-success-light mt-1">
                     <i className="material-icons text-success">accessibility</i>
@@ -64,8 +64,8 @@ const LabourDashboard = (props) => {
 	        <div className="card">
 	        <div className="card-body">
                 <div className="d-inline-block">
-                    <h5 className="text-muted">Total Earnings</h5>
-                    <h2 className="mb-0">$14,600</h2>
+                    <h5 className="text-muted">Hiring Costs</h5>
+                    <h2 className="mb-0">$24,800</h2>
                 </div>
                 <div className="float-right icon-circle-medium icon-box-lg bg-secondary-light mt-1">
                     <i className="material-icons text-secondary">monetization_on</i>
@@ -78,8 +78,8 @@ const LabourDashboard = (props) => {
 	        <div className="card">
 	        <div className="card-body">
                 <div className="d-inline-block">
-                    <h5 className="text-muted">Overall Rating</h5>
-                    <h2 className="mb-0">75%</h2>
+                    <h5 className="text-muted">Company Rating</h5>
+                    <h2 className="mb-0">75.4%</h2>
                 </div>
                 <div className="float-right icon-circle-medium icon-box-lg bg-brand-light mt-1">
                     <i className="material-icons text-brand">thumb_up</i>
@@ -96,8 +96,8 @@ const LabourDashboard = (props) => {
         <h5 className="card-header">All Jobs</h5>
         <div className="card-body">
             <Table
-                columns={LABOURERS_JOBS_TABLE_COLUMNS}
-                data={LABOURERS_JOBS_DATA}
+                columns={CLIENT_JOBS_TABLE_COLUMNS}
+                data={CLIENT_JOBS_DATA}
                 {...props}
             />
         </div>
@@ -111,4 +111,4 @@ const LabourDashboard = (props) => {
     )
 }
 
-export default LabourDashboard;
+export default ClientDashboard;

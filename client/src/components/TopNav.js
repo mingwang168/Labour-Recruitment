@@ -8,10 +8,8 @@ import placeholder from '../assets/images/avatars/placeholder.jpg';
 const TopNav = () => {
 
     useEffect(() => {
-        if(Auth.authenticateUser()) {
-            setUsername(sessionStorage.getItem("user_name"));
-            setIsAdministrator(Auth.authenticateAdmin());
-        }
+        setUsername(Auth.getName());
+        setIsAdministrator(Auth.authenticateAdmin());
     }, [])
 
     const [username, setUsername] = useState();

@@ -1,6 +1,7 @@
 exports.authenticateUser = _ => {
     let authenticated =
     sessionStorage.getItem("auth_token") &&
+    sessionStorage.getItem("auth_token") !== "" &&
     sessionStorage.getItem("user_role") &&
     (
         sessionStorage.getItem("user_role") === "Admin" ||
@@ -9,16 +10,26 @@ exports.authenticateUser = _ => {
     ) &&
     sessionStorage.getItem("user_name") &&
     sessionStorage.getItem("user_id") ? true : false;
-
     if(!authenticated) {
-        this.forceLogout();
+        sessionStorage.clear();
     }
-
     return authenticated;
+}
+
+exports.getToken = _ => {
+    return sessionStorage.getItem("auth_token");
+}
+
+exports.getID = _ => {
+    return sessionStorage.getItem("user_id");
 }
 
 exports.getRole = _ => {
     return sessionStorage.getItem("user_role");
+}
+
+exports.getName = _ => {
+    return sessionStorage.getItem("user_name");
 }
 
 exports.authenticateClient = _ => {
@@ -35,6 +46,6 @@ exports.authenticateAdmin = _ => {
 
 exports.forceLogout = _ => {
     sessionStorage.clear();
-    window.location.reload();
+    window.location.replace("/");
     alert("Something went wrong. Please sign in again.");
 }
