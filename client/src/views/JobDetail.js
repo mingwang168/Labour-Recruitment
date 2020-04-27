@@ -13,7 +13,7 @@ const JobDetail = (props) => {
     const fetchJobDetails = async(id) => {
         let token = sessionStorage.getItem("auth_token")
         try {
-            const response = await fetch(BASE_URL + '/job/' + id , {
+            const response = await fetch(BASE_URL + '/job/getJob/' + id , {
                 method : 'GET',
                 headers: {
                     "Accept": "application/json",
