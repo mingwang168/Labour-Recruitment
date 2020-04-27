@@ -81,7 +81,6 @@ const RegisterClient = (props) => {
                     User: {
                         email,
                         password,
-                        role: "Client"
                     },
                     Client: {
                         ClientName: companyname,

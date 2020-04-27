@@ -107,8 +107,7 @@ const RegisterLabourer = (props) => {
                 body: JSON.stringify({
                     User: {
                         email,
-                        password,
-                        role: "Labourer"
+                        password
                     },
                     Labourer: { 
                         LabourerFirstName: firstname,

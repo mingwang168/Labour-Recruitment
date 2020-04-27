@@ -72,7 +72,8 @@ namespace labourRecruitment.Controllers
                 errorList.Add(error.Description);
             }
 
-            jsonResponse.status = errorList;
+            jsonResponse.status = 422;
+            jsonResponse.description = errorList[0];
             jsonResponse.token = "";
             return Json(jsonResponse);
         }

@@ -55,7 +55,8 @@ namespace labourRecruitment.Controllers
                 LabourerId = ojl.LabourerId,
                 ClientQualityRating = ojl.ClientQualityRating,
                 LabourerSafetyRating = ojl.LabourerSafetyRating,
-                Labourer = ojl.Labourer
+                Labourer = ojl.Labourer,
+                Skill = ojl.Skill
             }).ToListAsync();
 
             if (job == null)

@@ -113,10 +113,12 @@ const ClientAddJob = (props) => {
                 body: JSON.stringify({"Job": newJob, "JobSkills": requiredLabourers})
             })
 
+
             // Bad response
             if(response.status !== 200) {
                 setFormErrors(["Failed to post job. Please try again later."]);
                 throw response;
+
             }
 
             // Success

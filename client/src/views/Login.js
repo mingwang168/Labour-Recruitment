@@ -37,6 +37,8 @@ const Login = () => {
             errors.push("Invalid email entered.")
         }
 
+      
+
         if(errors.length) {
             setFormErrors(errors);
         } else {

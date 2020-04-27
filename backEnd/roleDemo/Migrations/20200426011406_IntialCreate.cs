@@ -273,7 +273,8 @@ namespace labourRecruitment.Migrations
                     street = table.Column<string>(unicode: false, maxLength: 50, nullable: true),
                     city = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
                     state = table.Column<string>(unicode: false, maxLength: 10, nullable: true),
-                    postal_code = table.Column<string>(unicode: false, maxLength: 20, nullable: true)
+                    postal_code = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
+                    total_hired = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -383,7 +384,9 @@ namespace labourRecruitment.Migrations
                     job_id = table.Column<int>(nullable: true),
                     labourer_id = table.Column<int>(nullable: true),
                     client_quality_rating = table.Column<double>(nullable: true),
-                    labourer_safety_rating = table.Column<double>(nullable: true)
+                    labourer_safety_rating = table.Column<double>(nullable: true),
+                    skill_id = table.Column<int>(nullable: true),
+                    safety_meeting_completed = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -399,6 +402,12 @@ namespace labourRecruitment.Migrations
                         column: x => x.labourer_id,
                         principalTable: "Labourer",
                         principalColumn: "labourer_id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK__JobLabour__skill__5535A963",
+                        column: x => x.skill_id,
+                        principalTable: "Skill",
+                        principalColumn: "skill_id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -538,6 +547,11 @@ namespace labourRecruitment.Migrations
                 name: "IX_JobLabourer_labourer_id",
                 table: "JobLabourer",
                 column: "labourer_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobLabourer_skill_id",
+                table: "JobLabourer",
+                column: "skill_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_JobSkill_job_id",
