@@ -1,16 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Ratings from 'react-ratings-declarative';
 
 const BASE_URL = "http://localhost:5001/api";
 const RateWorkers = (props) => {
+    const [rating, setRating] = useState(props.rating)
 
     const changeSafetyRating = async(newRating) => {
         let token = sessionStorage.getItem("auth_token")
-        let newBody = {
-            JobId : props.jobId,
-            LabourerId : props.labourerId,
-            LabourerSafetyRating : newRating
-        }
         try{
             const response = await fetch(BASE_URL + '/JobHistory/LabourerSafety', {
                 method : 'PUT',
@@ -27,7 +23,7 @@ const RateWorkers = (props) => {
             })
             const data = await response.json()
             if (data) {
-                window.location.reload();
+                setRating(data.labourerSafetyRating)
             }
         } catch (err) {
             console.error(err);
@@ -36,7 +32,7 @@ const RateWorkers = (props) => {
 
     return (
         <Ratings
-            rating={props.rating}
+            rating={rating}
             widgetDimensions="14px"
             name = "rating"
             changeRating = { 
