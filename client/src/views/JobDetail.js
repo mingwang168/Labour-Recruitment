@@ -83,7 +83,7 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Location</h3>
-                            <p>{details.street}<br/><span className="text-capitalize">{details.city}</span>,<span className="text-uppercase">{details.state}</span></p>
+                            <p>{details.street}<br/><span className="text-capitalize">{details.city}</span>,<span>{details.state}</span></p>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Labourers Hired</h3>

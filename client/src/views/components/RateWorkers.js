@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import Ratings from 'react-ratings-declarative';
-import {forceLogout} from '../../utils/Auth'
+import * as Auth from '../../utils/Auth';
 
 const BASE_URL = "http://localhost:5001/api";
 const RateWorkers = (props) => {
     const [rating, setRating] = useState(props.rating)
 
     const changeSafetyRating = async(newRating) => {
-        let token = sessionStorage.getItem("auth_token")
+        let token = Auth.getToken()
         if (token == null) {
-            forceLogout()
+            Auth.forceLogout()
         }
         try{
             const response = await fetch(BASE_URL + '/JobHistory/LabourerSafety', {
@@ -40,7 +40,7 @@ const RateWorkers = (props) => {
             widgetDimensions="14px"
             name = "rating"
             changeRating = { 
-                props.clientName === sessionStorage.getItem("user_name") &&
+                props.clientName === Auth.getName() &&
                 changeSafetyRating
             }
         >
