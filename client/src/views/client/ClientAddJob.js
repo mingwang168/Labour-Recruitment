@@ -1,99 +1,136 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Redirect, Link } from 'react-router-dom';
+import Select from 'react-select';
+
+import * as Auth from '../../utils/Auth';
+import * as DayCalculator from '../../utils/DayCalculator';
+import PROVINCES from '../../utils/Provinces';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
 import SelectWorkers from './components/SelectWorkers';
-import * as Auth from '../../utils/Auth'
+
 
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientAddJob = (props) => {
 
+    const [formErrors, setFormErrors] = useState([]);
     const [job, setJob] = useState({
-        "ClientId" : 0,
-        "Title" : "",
-        "JobDescription" : "",
-        "StartDate" : "",
-        "EndDate" : "",
-        "InProgress" : true , 
-		"IsComplete" :  false, 
-        "Street" : "",
-        "City" : "",
-        "State" : "",
+        title: "",
+        startdate: "",
+        enddate: "",
+        jobdescription: "",
+        address: "",
+        province: "",
+        city: "",
+        duration: ""
     })
-
-    const [workers, setWorkers] = useState([]);
-    const [jobSkills, setJobSkills] = useState([])
-  
-    const {title,startdate,enddate,description,address,province,city} = job
+    const { title, startdate, enddate, jobdescription, address, province, city, duration } = job;
+    const [requiredLabourers, setRequiredLabourers] = useState([]);
 
     const onChange = e => {
-        e.preventDefault()
-        setJob({ ... job, [e.target.name]:e.target.value })
+        e.preventDefault();
+
+        setJob({ ...job, [e.target.name]: e.target.value });
+
+        // Set duration field (number of days)
+        if(e.target.name === "enddate" && startdate) {
+            let sDate = DayCalculator.convert(startdate);
+            let eDate = DayCalculator.convert(e.target.value);
+
+            if(eDate < sDate) {
+                setJob({...job, [e.target.name]: e.target.value, duration: "Invalid dates entered."});
+            } else {
+                setJob({...job, [e.target.name]: e.target.value, duration: DayCalculator.difference(sDate, eDate)});
+            }
+        } else if (e.target.name === "startdate" && enddate) {
+            let sDate = DayCalculator.convert(e.target.value);
+            let eDate = DayCalculator.convert(startdate);
+
+            if(eDate < sDate) {
+                setJob({...job, [e.target.name]: e.target.value, duration: "Invalid dates entered."});
+            } else {
+                setJob({...job, [e.target.name]: e.target.value, duration: DayCalculator.difference(sDate, eDate)});
+            }
+        }
     }
 
-    const validateForm = _ => {
-        console.log("Validating form...")
+    const onChangeProvince = e => {
+        setJob({ ...job, province: e.label })
     }
-    const getTotal = () => {
-        let total = 0
-        jobSkills.forEach(e => {
-            total = parseInt(e.NumberNeeded) + total
-        })
-        return total 
-    }
-    const onSubmit = async(e) => {
-        e.preventDefault()
-        let token = sessionStorage.getItem("auth_token")
-        let id
-        if(sessionStorage.getItem("user_id") && sessionStorage.getItem("user_role") !== 'Labourer') {
-            id = sessionStorage.getItem("user_id")
-        } else {
-            Auth.forceLogout();
-            return
+
+    const validateForm = e => {
+        e.preventDefault();
+        console.log("Validating form...");
+        
+        let errors = [];
+
+        if(DayCalculator.convert(enddate) < DayCalculator.convert(startdate)) {
+            errors.push("Invalid end date entered. End date must be after the start date, or on the same day.");
         }
+        if(!requiredLabourers.length) {
+            errors.push("Labourers are required.")
+        }
+        if(province === "") {
+            errors.push("Province is required.");
+        }
+
+        if(errors.length) {
+            setFormErrors(errors);
+        } else {
+            submitForm();
+        } 
+    }
+
+    const submitForm = async() => {
+        let token = Auth.getToken();
+        let id = Auth.getID();
+        let today = new Date();
+        let inProgress = (DayCalculator.convert(startdate) < today) || (DayCalculator.convert(startdate).getTime() === today.getTime()) ? true : false;
 
         let newJob = {
-            "ClientId" : id,
-            title,
-            "jobDescription" : description,
-            startdate,
-            enddate,
-            "InProgress" : true , 
-            "IsComplete" :  false, 
-            "street" : address,
-            city,
-            "state" : province,
-            "TotalHired" : getTotal()
+            ClientId: id,
+            Title: title,
+            JobDescription: jobdescription,
+            StartDate: startdate,
+            EndDate: enddate,
+            Street: address,
+            City: city,
+            State: province,
+            InProgress: inProgress,
+            IsComplete: false
         }
-        
+
         try {
-            let response = await fetch(BASE_URL + '/job', {
-                method : 'POST',
+            let response = await fetch(BASE_URL + "/job", {
+                method: "POST",
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    'Authorization': `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`
                 },
-                body : JSON.stringify({"Job" : newJob, "JobSkills" : jobSkills}) 
+                body: JSON.stringify({"Job": newJob, "JobSkills": requiredLabourers})
             })
 
-            let data = await response.json();
-            console.log(data)
 
-            if (data) {
-                props.history.push('/job/' + data);
-                window.location.reload();
+            // Bad response
+            if(response.status !== 200) {
+                setFormErrors(["Failed to post job. Please try again later."]);
+                throw response;
+
             }
 
+            // Success
+            let data = await response.json();
+            props.history.push('/job/' + data);
         } catch(e) {
             console.error(e);
         }
-      
     }
 
-    return (
+    return !Auth.authenticateClient() ? <Redirect to={{pathname: '/dashboard'}} /> :
+    (
         <div className="dashboard-main-wrapper">
         <TopNav />
         <SideNav />
@@ -121,11 +158,20 @@ const ClientAddJob = (props) => {
             {/* Form */}
             <div className="card">
             <div className="card-body">
-            <form className="client-add-job-form" onSubmit={(e) => onSubmit(e)}>
+            {/* Display form errors, if any */}
+            { formErrors.length > 0 &&
+            <div className="alert alert-danger">
+            <ul className="pl-3 mb-0">
+            { formErrors.map((error, i) => <li key={i}>{error}</li>) }
+            </ul>
+            </div>
+            }
+            <form className="client-add-job-form" onSubmit={e => validateForm(e)}>
                 <div className="form-group mb-4">
                     <label htmlFor="title">Job Title <span className="text-danger">*</span></label>
                     <input
                         required
+                        maxLength="60"
                         name="title"
                         type="text"
                         placeholder="Enter job title"
@@ -155,21 +201,21 @@ const ClientAddJob = (props) => {
                         />
                     </div>
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                        {/* <label htmlFor="payrate">Base Pay (per hour) <span className="text-danger">*</span></label>
+                        <label htmlFor="duration">Duration</label>
                         <input
-                            required
-                            name="payrate"
-                            type="number"
-                            placeholder="0.00"
-                            step="any"
+                            readOnly="readonly"
+                            value={duration}
+                            type="text"
+                            name="duration"
                             className="form-control form-control-lg"
-                        /> */}
+                        />
                     </div>
                 </div>
                 <div className="form-group mb-4">
                     <label htmlFor="description">Job Description</label>
                     <textarea
-                        name="description"
+                        maxLength="200"
+                        name="jobdescription"
                         type="text"
                         placeholder="Enter job description"
                         rows="3"
@@ -182,6 +228,7 @@ const ClientAddJob = (props) => {
                         <label htmlFor="address">Address <span className="text-danger">*</span></label>
                         <input
                             required
+                            maxLength="50"
                             name="address"
                             type="text"
                             placeholder="Enter address"
@@ -190,51 +237,46 @@ const ClientAddJob = (props) => {
                         />
                     </div>
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                        <label htmlFor="province">Province <span className="text-danger">*</span></label>
-                        <select
+                        <label htmlFor="city">City <span className="text-danger">*</span></label>
+                        <input
                             required
-                            name="province"
+                            maxLength="30"
+                            name="city"
+                            type="text"
+                            placeholder="Enter city"
                             className="form-control form-control-lg"
                             onChange={e => onChange(e)}
-                        >
-                            <option defaultValue="" disabled>Select province</option>
-                            <option value="alberta">Alberta</option>
-                            <option value="bc">British Columbia</option>
-                            <option value="manitoba">Manitoba</option>
-                            <option value="newbrunswick">New Brunswick</option>
-                            <option value="newfoundland">Newfoundland</option>
-                            <option value="labrador">Labrador</option>
-                            <option value="novascotia">Nova Scotia</option>
-                            <option value="ontario">Ontario</option>
-                            <option value="pei">Prince Edward Island</option>
-                            <option value="quebec">Quebec</option>
-                            <option value="saskatchewan">Saskatchewan</option>
-                        </select>
+                        />
                     </div>
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                        <label htmlFor="city">City <span className="text-danger">*</span></label>
-                        <select
+                        <label htmlFor="province">Province <span className="text-danger">*</span></label>
+                        <Select
+                            options={PROVINCES}
+                            onChange={e => onChangeProvince(e)}
                             required
-                            name="city"
-                            className="form-control form-control-lg"
-                            onChange={e => onChange(e)}
-                        >
-                            <option defaultValue="" disabled>Select city</option>
-                            <option value="toronto">Toronto</option>
-                            <option value="montreal">Montreal</option>
-                            <option value="vancouver">Vancouver</option>
-                            <option value="ottawa">Ottawa</option>
-                            <option value="calgary">Calgary</option>
-                        </select>
+                        />
                     </div>
                 </div>
 
-                <SelectWorkers workers={workers} setWorkers={setWorkers}  jobSkills={jobSkills} setJobSkills={setJobSkills}/>
+                <SelectWorkers
+                    requiredLabourers={requiredLabourers}
+                    setRequiredLabourers={setRequiredLabourers}
+                />
                
                 <div className="form-group row text-right mt-4">
                 <div className="col col-lg-12">
-                    <Link to="/dashboard" className="btn btn-space btn-light btn-lg">Cancel</Link>
-                    <button onClick={() => validateForm()} className="btn btn-space btn-primary btn-lg">Create New Job</button>
+                    <Link
+                        to="/dashboard"
+                        className="btn btn-space btn-light btn-lg"
+                    >
+                        Cancel
+                    </Link>
+                    <button
+                        type="submit"
+                        className="btn btn-space btn-primary btn-lg"
+                    >
+                        Create New Job
+                    </button>
                 </div>
                 </div>
   
