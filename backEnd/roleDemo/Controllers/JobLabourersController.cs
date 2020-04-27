@@ -22,35 +22,35 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        //[HttpGet("{id}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<IActionResult> GetLabourerByJobId(int id)
-        //{
-        //    List<Labourer> labourers = _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => ojl.Labourer).ToList();
-
-
-        //    return new ObjectResult(labourers);
-        //}
-
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetJobAndJobLabourers(int id)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetLabourerByJobId(int id)
         {
-            var job = await _context.Job.FindAsync(id);
-            job.JobLabourer = await _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => new JobLabourer()
-            {
-                JobLabourerId = ojl.JobLabourerId,
-                JobId = ojl.JobId,
-                LabourerId = ojl.LabourerId,
-                ClientQualityRating = ojl.ClientQualityRating,
-                LabourerSafetyRating = ojl.LabourerSafetyRating
-            }).ToListAsync();
+            List<Labourer> labourers = _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => ojl.Labourer).ToList();
 
-            if (job == null)
-            {
-                return NotFound();
-            }
-            return new ObjectResult(job);
+
+            return new ObjectResult(labourers);
         }
+
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetJobAndJobLabourers(int id)
+        //{
+        //    var job = await _context.Job.FindAsync(id);
+        //    job.JobLabourer = await _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => new JobLabourer()
+        //    {
+        //        JobLabourerId = ojl.JobLabourerId,
+        //        JobId = ojl.JobId,
+        //        LabourerId = ojl.LabourerId,
+        //        ClientQualityRating = ojl.ClientQualityRating,
+        //        LabourerSafetyRating = ojl.LabourerSafetyRating
+        //    }).ToListAsync();
+
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return new ObjectResult(job);
+        //}
 
 
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Redirect, Link } from 'react-router-dom';
-import FormValidator from '../utils/FormValidator';
+import * as FormValidator from '../utils/FormValidator';
+import * as Auth from '../utils/Auth';
 
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
@@ -10,14 +11,7 @@ const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
 const Login = () => {
-    
-    useEffect(() => {
-        if(sessionStorage.getItem(AUTH_TOKEN)) {
-            setRedirect(true)
-        }
-      }, [])
 
-    const [redirect, setRedirect] = useState(false)
     const [user, setUser] = useState({
         email: "",
         password: ""
@@ -34,10 +28,11 @@ const Login = () => {
         e.preventDefault();
         let errors = [];
 
-        // Check email
-        if(!FormValidator("email", email)) {
+        if(!FormValidator.email(email)) {
             errors.push("Invalid email entered.")
         }
+
+      
 
         if(errors.length) {
             setFormErrors(errors);
@@ -73,32 +68,16 @@ const Login = () => {
                 sessionStorage.setItem(USER_EMAIL, data.email);
                 sessionStorage.setItem(USER_ROLE, data.role);
                 sessionStorage.setItem(USER_ID, data.id);
-                setRedirect(true);
             }
+            window.location.reload();
         } catch(e) {
             console.error(e);
         }
     }
 
-    const getRedirectLocation = _ => {
-        // Client redirect
-        if(sessionStorage.getItem(USER_ROLE) === 'Client') {
-            return <Redirect to={{pathname:'/dashboard'}} />;
-        // Labourer redirect
-        } else if(sessionStorage.getItem(USER_ROLE) === 'Labourer') {
-            return <Redirect to={{pathname:'/profile/labourer'}} />;
-        // Admin redirect
-        } else if(sessionStorage.getItem(USER_ROLE) === 'Admin') {
-            return <Redirect to={{pathname:'/incidents'}} />;
-        } else {
-            sessionStorage.clear();
-            return <Redirect to={{pathname:'/'}} />;
-        }
-    }
-
-    return (
+    return Auth.authenticateUser() ? <Redirect to={{pathname:'/dashboard'}} /> :
+    (
         <>
-        { redirect ? getRedirectLocation() : null }
         <div className="splash-container-wrapper">
         <div className="splash-container">
         <div className="card">

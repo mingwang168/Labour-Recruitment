@@ -8,16 +8,13 @@ namespace labourRecruitment.ViewModels
 {
     public class JobVM
     {
-        public int JobId { get; set; }
-        public string Title { get; set; }
-        public string JobDescription { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public bool? InProgress { get; set; }
-        public bool? IsComplete { get; set; }
-        public string Street { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string ClientName { get; set; }
+        public int JobSkillId { get; set; }
+        public int? JobId { get; set; }
+        public int? SkillId { get; set; }
+        public int? NumberNeeded { get; set; }
+
+        public virtual Job Job { get; set; }
+        public virtual Skill Skill { get; set; }
+
     }
 }

@@ -1,16 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
+import Select from 'react-select';
 
+const LABOURERS_LIST = [
+    { value: 'Labourer One', label: 'Labourer One' },
+    { value: 'Labourer Two', label: 'Labourer Two' },
+    { value: 'Labourer Three', label: 'Labourer Three' },
+    { value: 'Labourer Four', label: 'Labourer Four' },
+];
+
+const BASE_URL = "http://localhost:5001/api";
 
 const ClientAddIncident = () => {
     const [workers, setWorkers] = useState([]);
+    const [skillOptions, setSkillOptions] = useState([]);
+    const [selectedSkills, setSelectedSkills] = useState([]);
+    const [selectedLabourers, setselectedLabourers] = useState([]);
 
     const validateForm = _ => {
         console.log("Validating form...")
     }
+
+    const fetchskillOptions = async () => {
+        try {
+            const response = await fetch(BASE_URL + '/skills');
+            let data = await response.json();
+            setSkillOptions(data);
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const onChangeSkill = (skills) => {
+        if (skills) {
+            skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]))
+        }
+    }
+
+    const onChangeLabourer = (labourers) => {
+        if (labourers) {
+            labourers.forEach(labourer => setselectedLabourers([...selectedLabourers, labourer.value]))
+        }
+    }
+
+
+    useEffect(() => {
+        fetchskillOptions();
+    }, []);
+
     return (
         <div className="dashboard-main-wrapper">
             <TopNav />
@@ -39,7 +79,7 @@ const ClientAddIncident = () => {
                     {/* Form */}
                     <div className="card">
                         <div className="card-body">
-                            <form className="client-add-job-form">
+                            <form className="client-add-incident-form">
 
                                 <div className="form-row mb-4">
                                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
@@ -61,50 +101,34 @@ const ClientAddIncident = () => {
                                             className="form-control form-control-lg"
                                         />
                                     </div>
-                                    <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                                        <label htmlFor="Incident Type">Incident Type<span className="text-danger">*</span></label>
-                                        <select
-                                            required
-                                            name="Incident Type"
-                                            className="form-control form-control-lg"
-                                        >
-                                            <option defaultValue="" disabled>Select Labourers</option>
-                                            <option value="Sierra Brooks">Masonry</option>
-                                            <option value="Labourer Two">Carpentry</option>
-                                            <option value="Labourer Three">Painting</option>
-                                            <option value="Labourer Four">Drywall</option>
-                                            <option value="Labourer Five">Plumbing</option>
-                                            <option value="Labourer Six">Building site supervision</option>
-                                            <option value="Labourer Seven">Concrete</option>
-                                            <option value="Labourer Eight">Roofing</option>
-                                            <option value="Labourer Eight">Sheet metal work</option>
-                                            <option value="Labourer Eight">Demolition</option>
-                                        </select>
-                                    </div>
 
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-4">
-                                        <label htmlFor="injuredLabourers">Injured Labourers<span className="text-danger">*</span></label>
-                                        <select
+                                    <div className=" col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
+                                        <label className="d-block" htmlFor="incidentType">Select incident type<span className="text-danger">*</span></label>
+                                        <Select
                                             required
-                                            name="injuredLabourers"
-                                            className="form-control form-control-lg" multiple
-                                        >
-                                            <option defaultValue="" disabled>Select Labourers</option>
-                                            <option value="Sierra Brooks">Sierra Brooks</option>
-                                            <option value="Labourer Two">John Bill</option>
-                                            <option value="Labourer Three">Labourer Three</option>
-                                            <option value="Labourer Four">Labourer Four</option>
-                                            <option value="Labourer Five">Labourer Five</option>
-                                            <option value="Labourer Six">Labourer Six</option>
-                                            <option value="Labourer Seven">Labourer Six</option>
-                                            <option value="Labourer Eight">Labourer Seven</option>
-                                        </select>
+                                            name="incidenttype"
+                                            options={skillOptions &&
+                                                skillOptions.map(skill => {
+                                                    return {
+                                                        value: skill.skillId, label: skill.skillName
+                                                    }
+                                                })
+                                            }
+                                            onChange={onChangeSkill}
+                                            isMulti
+                                        />
                                     </div>
                                 </div>
-
+                                <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-4 px-0">
+                                    <label className="d-block" htmlFor="injuredLabourers">Injured Labourers<span className="text-danger">*</span></label>
+                                    <Select
+                                        required
+                                        name="injuredLabourers"
+                                        options={LABOURERS_LIST}
+                                        onChangeSkill={onChangeLabourer}
+                                        isMulti
+                                    />
+                                </div>
 
                                 <div className="form-group mb-4">
                                     <label htmlFor="incidentsummary">Summary of Incident</label>
@@ -116,8 +140,6 @@ const ClientAddIncident = () => {
                                         className="form-control form-control-lg"
                                     />
                                 </div>
-
-
 
                                 <div className="form-group row text-right mt-4">
                                     <div className="col col-lg-12">

@@ -107,8 +107,7 @@ const RegisterLabourer = (props) => {
                 body: JSON.stringify({
                     User: {
                         email,
-                        password,
-                        role: "Labourer"
+                        password
                     },
                     Labourer: { 
                         LabourerFirstName: firstname,
@@ -133,6 +132,7 @@ const RegisterLabourer = (props) => {
                 sessionStorage.setItem(USER_ID, data.id);
                 setRedirect(true);
             }
+            console.log(data)
         } catch(e) {
             console.error(e);
         }

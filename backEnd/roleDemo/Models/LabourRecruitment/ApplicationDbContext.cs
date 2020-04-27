@@ -205,6 +205,8 @@ namespace labourRecruitment.Models.LabourRecruitment
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
+                entity.Property(e => e.TotalHired).HasColumnName("total_hired");
+
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Job)
                     .HasForeignKey(d => d.ClientId)
@@ -223,6 +225,10 @@ namespace labourRecruitment.Models.LabourRecruitment
 
                 entity.Property(e => e.LabourerSafetyRating).HasColumnName("labourer_safety_rating");
 
+                entity.Property(e => e.SafetyMeetingCompleted).HasColumnName("safety_meeting_completed");
+
+                entity.Property(e => e.SkillId).HasColumnName("skill_id");
+
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.JobLabourer)
                     .HasForeignKey(d => d.JobId)
@@ -232,6 +238,11 @@ namespace labourRecruitment.Models.LabourRecruitment
                     .WithMany(p => p.JobLabourer)
                     .HasForeignKey(d => d.LabourerId)
                     .HasConstraintName("FK__JobLabour__labou__49C3F6B7");
+
+                entity.HasOne(d => d.Skill)
+                    .WithMany(p => p.JobLabourer)
+                    .HasForeignKey(d => d.SkillId)
+                    .HasConstraintName("FK__JobLabour__skill__5535A963");
             });
 
             modelBuilder.Entity<JobSkill>(entity =>
