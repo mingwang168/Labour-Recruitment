@@ -62,7 +62,7 @@ namespace labourRecruitment.Controllers
         {
             var jobLabourer = _context.JobLabourer.SingleOrDefault(jl => jl.LabourerId == jlr.LabourerId && jl.JobId == jlr.JobId);
 
-            if (jobLabourer != null) 
+            if (jobLabourer != null)
             {
                 jobLabourer.ClientQualityRating = jlr.ClientQualityRating;
             }
@@ -109,8 +109,6 @@ namespace labourRecruitment.Controllers
             }
             return new ObjectResult(jobLabourer);
         }
-
-
 
     }
 

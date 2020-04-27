@@ -103,8 +103,8 @@ const ClientAddJob = (props) => {
         }
 
         try {
-            let response = await fetch(BASE_URL + "/job", {
-                method: "POST",
+            let response = await fetch(BASE_URL + '/job/PostJob', {
+                method : 'POST',
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace labourRecruitment.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class JobController : ControllerBase
     {
@@ -31,7 +31,8 @@ namespace labourRecruitment.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetJob")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetJob(int id)
         {
            
@@ -64,6 +65,13 @@ namespace labourRecruitment.Controllers
                 return NotFound();
             }
             return new ObjectResult(job);
+        }
+
+        [HttpGet("{clientId}", Name = "GetJobByClientId")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<IEnumerable<Job>>> GetJobByClientId(int clientId)
+        {
+            return await _context.Job.Where(j => j.ClientId == clientId).ToListAsync();
         }
 
         // POST: api/Job
