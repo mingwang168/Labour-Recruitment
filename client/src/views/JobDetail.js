@@ -4,18 +4,41 @@ import Ratings from 'react-ratings-declarative';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
+import RateWorkers from './components/RateWorkers'
 
 const BASE_URL = "http://localhost:5001/api";
 
 const JobDetail = (props) => {
+    const [token,setToken] = useState(sessionStorage.getItem("auth_token"))
     const [details,setDetails] = useState()
 
-    const changeSafetyRating = () => {
-        console.log("Changing safety rating...");
+
+    function setLabourerId (id) {
+      
+        // let newBody = {
+        //     JobId : details.jobId,
+        //     LabourerId : id, 
+        //     LabourerSafetyRating : rating
+        // }
+        // console.log(newBody)
+        // try {
+        //     let response = await fetch(BASE_URL, '/JobHistory/LabourerSafety' , {
+        //        method : 'PUT', 
+        //        headers: {
+        //         "Accept": "application/json",
+        //         "Content-Type": "application/json",
+        //         'Authorization': `Bearer ${token}`
+        //         },
+        //         body : JSON.stringify(newBody) 
+        //    })
+        //    let data = await response.json()
+        //    console.log(data)
+        // } catch(e) {
+        //     console.error(e);
+        // }
     }
 
     const fetchJobDetails = async(id) => {
-        let token = sessionStorage.getItem("auth_token")
         try {
             const response = await fetch(BASE_URL + '/job/' + id , {
                 method : 'GET',
@@ -31,12 +54,13 @@ const JobDetail = (props) => {
             console.error(err);
         }
     }
-
+    console.log(details)
+    
     useEffect(() => {
         fetchJobDetails(props.match.params.id)
     }, [props.match.params.id])
 
-    console.log(details)
+    
     return (
     <>
     {details && 
@@ -270,17 +294,8 @@ const JobDetail = (props) => {
                                 <td className ="text-capitalize">{jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}</td>
                                 <td>{jLabourer.skill.skillName}</td>
                                 <td>
-                                    <Ratings
-                                        rating={3}
-                                        widgetDimensions="14px"
-                                        changeRating={changeSafetyRating}
-                                    >
-                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                    <Ratings.Widget widgetHoverColor="#6d7a82"/>
-                                    </Ratings>
+                                    <RateWorkers jobId = {details.jobId} rating = {jLabourer.labourerSafetyRating} 
+                                                    labourerId = {jLabourer.labourerId} clientName = {details.client.clientName} />
                                 </td>
                             </tr>
 
