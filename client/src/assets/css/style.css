@@ -6866,3 +6866,8 @@ Media Query
     0%   { opacity: 0; }
     100% { opacity: 1; }
 }
+
+.table-pagination-btn:disabled {
+    background: #5969ff;
+    border: 1px solid #5969ff;
+}
