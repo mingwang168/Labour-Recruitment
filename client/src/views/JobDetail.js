@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Ratings from 'react-ratings-declarative';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
@@ -9,36 +8,10 @@ import RateWorkers from './components/RateWorkers'
 const BASE_URL = "http://localhost:5001/api";
 
 const JobDetail = (props) => {
-    const [token,setToken] = useState(sessionStorage.getItem("auth_token"))
     const [details,setDetails] = useState()
 
-
-    function setLabourerId (id) {
-      
-        // let newBody = {
-        //     JobId : details.jobId,
-        //     LabourerId : id, 
-        //     LabourerSafetyRating : rating
-        // }
-        // console.log(newBody)
-        // try {
-        //     let response = await fetch(BASE_URL, '/JobHistory/LabourerSafety' , {
-        //        method : 'PUT', 
-        //        headers: {
-        //         "Accept": "application/json",
-        //         "Content-Type": "application/json",
-        //         'Authorization': `Bearer ${token}`
-        //         },
-        //         body : JSON.stringify(newBody) 
-        //    })
-        //    let data = await response.json()
-        //    console.log(data)
-        // } catch(e) {
-        //     console.error(e);
-        // }
-    }
-
     const fetchJobDetails = async(id) => {
+        let token = sessionStorage.getItem("auth_token")
         try {
             const response = await fetch(BASE_URL + '/job/' + id , {
                 method : 'GET',
@@ -54,7 +27,7 @@ const JobDetail = (props) => {
             console.error(err);
         }
     }
-    console.log(details)
+
     
     useEffect(() => {
         fetchJobDetails(props.match.params.id)
@@ -298,7 +271,6 @@ const JobDetail = (props) => {
                                                     labourerId = {jLabourer.labourerId} clientName = {details.client.clientName} />
                                 </td>
                             </tr>
-
                             )}
                             </tbody>
                             </table>
