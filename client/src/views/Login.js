@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Redirect, Link } from 'react-router-dom';
-import FormValidator from '../utils/FormValidator';
+import * as FormValidator from '../utils/FormValidator';
+import * as Auth from '../utils/Auth';
 
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
@@ -12,10 +13,8 @@ const USER_ROLE = "user_role";
 const Login = () => {
     
     useEffect(() => {
-        if(sessionStorage.getItem(AUTH_TOKEN)) {
-            setRedirect(true)
-        }
-      }, [])
+        setRedirect(Auth.authenticateUser());
+    }, [])
 
     const [redirect, setRedirect] = useState(false)
     const [user, setUser] = useState({
@@ -34,10 +33,11 @@ const Login = () => {
         e.preventDefault();
         let errors = [];
 
-        // Check email
-        // if(!FormValidator.email(email)) {
-        //     errors.push("Invalid email entered.")
-        // }
+        if(!FormValidator.email(email)) {
+            errors.push("Invalid email entered.")
+        }
+
+      
 
         if(errors.length) {
             setFormErrors(errors);

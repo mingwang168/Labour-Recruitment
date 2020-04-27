@@ -1,82 +1,78 @@
-import React , {Component} from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Redirect,
+} from "react-router-dom";
+import * as Auth from "./utils/Auth";
 
-import Home from './views/Home';
-import Login from './views/Login';
-import RegisterStart from './views/RegisterStart';
-import PageNotFound from './views/PageNotFound';
+import Home from "./views/Home";
+import Login from "./views/Login";
+import RegisterStart from "./views/RegisterStart";
+import PageNotFound from "./views/PageNotFound";
 
-// Shared Components
-import Dashboard from './views/Dashboard';
-import Incidents from './views/Indicents';
-import JobDetail from './views/JobDetail';
-import IncidentDetail from './views/IncidentDetail';
-
-// Client Components
-import ClientRegister from './views/client/ClientRegister';
-import ClientProfile from './views/client/ClientProfile';
-import ClientAddJob from './views/client/ClientAddJob';
-import ClientAddIncident from './views/client/ClientAddIncident';
-
-// Labourer Components
-import LabourerRegister from './views/labourer/LabourerRegister';
-import LabourerProfile from './views/labourer/LabourerProfile';
-import LabourerDashboard from './views/labourer/LabourerDashboard';
+import Dashboard from "./views/Dashboard";
+import Incidents from "./views/Indicents";
+import JobDetail from "./views/JobDetail";
+import IncidentDetail from "./views/IncidentDetail";
+import ClientRegister from "./views/client/ClientRegister";
+import ClientProfile from "./views/client/ClientProfile";
+import ClientAddJob from "./views/client/ClientAddJob";
+import ClientAddIncident from "./views/client/ClientAddIncident";
+import LabourerRegister from "./views/labourer/LabourerRegister";
+import LabourerProfile from "./views/labourer/LabourerProfile";
+import LabourerDashboard from "./views/labourer/LabourerDashboard";
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
-    return (
-      <Route
-        path={path}
-        {...rest}
-        render={(props) => {
-          return sessionStorage.getItem("auth_token") !== null ? (
-            <Comp {...props} />
-            ) : (
-              <Redirect
-                to={{
-                  pathname: "/login",
-                }}
-              />
-            );
-        }}
-      />
-    );
+	return (
+		<Route
+			path={path}
+			{...rest}
+			render={(props) => {
+				return Auth.authenticateUser() ? (
+					<Comp {...props} />
+				) : (
+					<Redirect to={{ pathname: "/login" }} />
+				);
+			}}
+		/>
+	);
 };
 
 class App extends Component {
-    
-    render() {
-    return (
-    <>
-    <Router>
-    <Switch>
-        <Route path='/' exact render={props => <Home {...props} />} />
-        <Route path='/login' exact render={props => <Login {...props} />} />
-        <Route path='/register' exact render={props => <RegisterStart {...props} />} />
-        <Route path='/register/client' exact render={props => <ClientRegister {...props} />} />
-        <Route path='/register/labourer' exact render={props => <LabourerRegister {...props} />} />
+	render() {
+	return (
+	<>
+	<Router>
+	<Switch>
+		{/* Public Views */}
+		<Route exact path="/" render={(props) => <Home {...props} />} />
+		<Route exact path='/login' render={props => <Login {...props} />} />
+		<Route exact path='/register' render={props => <RegisterStart {...props} />} />
+		<Route exact path='/register/client' render={props => <ClientRegister {...props} />} />
+        <Route exact path='/register/labourer' render={props => <LabourerRegister {...props} />} />
 
-        {/* Shared Views */}
-        <ProtectedRoute  path='/dashboard' exact component={Dashboard} />
-        <ProtectedRoute  path='/incidents' exact component={Incidents} />
-        <ProtectedRoute  path='/job/:id' exact component={JobDetail} />
-        <ProtectedRoute  path='/incident' exact component={IncidentDetail} />
-      
-        {/* Client Views */}
-        <ProtectedRoute  path='/profile/client' exact component={ClientProfile} />
-        <ProtectedRoute  path='/addjob' exact component={ClientAddJob} />
-        <ProtectedRoute  path='/addincident' exact component={ClientAddIncident} />
-              
+		{/* Private Views */}
+		<ProtectedRoute exact path='/dashboard' component={Dashboard} />
+        <ProtectedRoute exact path='/incidents' component={Incidents} />
+        <ProtectedRoute exact path='/job/:id' component={JobDetail} />
+        <ProtectedRoute exact path='/incident' component={IncidentDetail} />
 
-        {/* Labourer Views */}
-        <ProtectedRoute  path='/profile/labourer' exact component={LabourerProfile} />
+		{/* Client Only Views */}
+		<ProtectedRoute exact path='/profile/client' component={ClientProfile} />
+        <ProtectedRoute exact path='/addjob' component={ClientAddJob} />
+        <ProtectedRoute exact path='/addincident' act component={ClientAddIncident} />
 
-        <Route component={PageNotFound} />
-    </Switch>
-    </Router>
-    </>
-    );
-    }
+		{/* Labourer Views */}
+        <ProtectedRoute exact path='/profile/labourer' component={LabourerProfile} />
+
+		<Route component={PageNotFound} />
+	</Switch>
+	</Router>
+	</>
+	);
+	}
 }
 
 export default App;

@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import * as Auth from '../utils/Auth';
 
 const RegisterStart = (props) => {
-    return (
+    return Auth.authenticateUser() ? <Redirect to={{pathname:'/dashboard'}} /> :
+    (
     <div className="splash-container-wrapper">
     <form className="splash-container">
     <div className="card">
