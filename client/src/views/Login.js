@@ -11,12 +11,7 @@ const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
 const Login = () => {
-    
-    useEffect(() => {
-        setRedirect(Auth.authenticateUser());
-    }, [])
 
-    const [redirect, setRedirect] = useState(false)
     const [user, setUser] = useState({
         email: "",
         password: ""
@@ -73,32 +68,16 @@ const Login = () => {
                 sessionStorage.setItem(USER_EMAIL, data.email);
                 sessionStorage.setItem(USER_ROLE, data.role);
                 sessionStorage.setItem(USER_ID, data.id);
-                setRedirect(true);
             }
+            window.location.reload();
         } catch(e) {
             console.error(e);
         }
     }
 
-    const getRedirectLocation = _ => {
-        // Client redirect
-        if(sessionStorage.getItem(USER_ROLE) === 'Client') {
-            return <Redirect to={{pathname:'/dashboard'}} />;
-        // Labourer redirect
-        } else if(sessionStorage.getItem(USER_ROLE) === 'Labourer') {
-            return <Redirect to={{pathname:'/profile/labourer'}} />;
-        // Admin redirect
-        } else if(sessionStorage.getItem(USER_ROLE) === 'Admin') {
-            return <Redirect to={{pathname:'/incidents'}} />;
-        } else {
-            sessionStorage.clear();
-            return <Redirect to={{pathname:'/'}} />;
-        }
-    }
-
-    return (
+    return Auth.authenticateUser() ? <Redirect to={{pathname:'/dashboard'}} /> :
+    (
         <>
-        { redirect ? getRedirectLocation() : null }
         <div className="splash-container-wrapper">
         <div className="splash-container">
         <div className="card">
