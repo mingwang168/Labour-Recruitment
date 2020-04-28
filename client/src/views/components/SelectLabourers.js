@@ -3,7 +3,7 @@ import Select from 'react-select';
 
 const BASE_URL = "http://localhost:5001/api";
 
-const SelectWorkers = ({requiredLabourers, setRequiredLabourers}) => {
+const SelectLabourers = ({requiredLabourers, setRequiredLabourers}) => {
 
     const [skills, setSkills] = useState([])
     const [selectedSkill, setSelectedSkill] = useState();
@@ -61,9 +61,13 @@ const SelectWorkers = ({requiredLabourers, setRequiredLabourers}) => {
         return id;
     }
 
+    const preventSubmit = e => {
+        if(e.keyCode || e.which === 13) e.preventDefault();
+    }
+
     return (
     <div className="form-group">
-        <label htmlFor="workers">Select workers <span className="text-danger">*</span></label>
+        <label htmlFor="workers">Select labourers <span className="text-danger">*</span></label>
             
         { requiredLabourers.length ?
         <div className="row m-2">
@@ -79,7 +83,7 @@ const SelectWorkers = ({requiredLabourers, setRequiredLabourers}) => {
         </tbody>
         </table>
         </div>
-        : <p className="pt-1 font-12 text-secondary">No workers added yet.</p>}
+        : <p className="pt-1 font-12 text-secondary">No labourers added yet.</p>}
 
         <div className="form-row">
             <div className="col col-md-5 col-lg-4 col-xl-4">
@@ -95,6 +99,7 @@ const SelectWorkers = ({requiredLabourers, setRequiredLabourers}) => {
             <div className="col col-md-5 col-lg-3 col-xl-2">
             <input
                 value={selectedNumWorkers}
+                onKeyPress={e => preventSubmit(e)}
                 onChange={e => setSelectedNumWorkers(e.target.value)}
                 type="number"
                 min="0"
@@ -117,4 +122,4 @@ const SelectWorkers = ({requiredLabourers, setRequiredLabourers}) => {
     )
 }
 
-export default SelectWorkers;
+export default SelectLabourers;

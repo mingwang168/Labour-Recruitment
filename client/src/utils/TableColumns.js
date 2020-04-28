@@ -1,7 +1,7 @@
 exports.CLIENT_JOBS_TABLE_COLUMNS = [
     {
         Header: 'Job Title',
-        accessor: 'jobTitle',
+        accessor: 'title',
     },
     {
         Header: 'Start Date',
@@ -13,7 +13,7 @@ exports.CLIENT_JOBS_TABLE_COLUMNS = [
     },
     {
         Header: '# Hired',
-        accessor: 'numberHired',
+        accessor: 'totalHired',
     },
     {
         Header: 'Status',

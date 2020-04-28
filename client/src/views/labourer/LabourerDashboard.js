@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-import Table from '../../components/Table';
+import Table from '../components/Table';
 import { LABOURERS_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
 import { LABOURERS_JOBS_DATA } from '../JobsDummyData';
 

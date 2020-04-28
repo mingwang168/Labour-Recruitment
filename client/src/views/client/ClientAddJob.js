@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import Select from 'react-select';
 
 import * as Auth from '../../utils/Auth';
 import * as DayCalculator from '../../utils/DayCalculator';
-import PROVINCES from '../../utils/Provinces';
+import PROVINCES from '../../utils/staticdata/Provinces';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
-import SelectWorkers from './components/SelectWorkers';
-import ClientUpdateJobDetails from "./ClientUpdateJobDetails";
-
+import SelectLabourers from '../components/SelectLabourers';
 
 const BASE_URL = "http://localhost:5001/api";
 
-const ClientAddJob = (props) => {
+const ClientAddJob = ({ history }) => {
 
     const [formErrors, setFormErrors] = useState([]);
     const [job, setJob] = useState({
@@ -63,8 +61,6 @@ const ClientAddJob = (props) => {
 
     const validateForm = e => {
         e.preventDefault();
-        console.log("Validating form...");
-        
         let errors = [];
 
         if(DayCalculator.convert(enddate) < DayCalculator.convert(startdate)) {
@@ -76,12 +72,11 @@ const ClientAddJob = (props) => {
         if(province === "") {
             errors.push("Province is required.");
         }
-
         if(errors.length) {
             setFormErrors(errors);
         } else {
             submitForm();
-        } 
+        }
     }
     console.log(requiredLabourers)
     const submitForm = async() => {
@@ -119,12 +114,11 @@ const ClientAddJob = (props) => {
             if(response.status !== 200) {
                 setFormErrors(["Failed to post job. Please try again later."]);
                 throw response;
-
             }
 
             // Success
             let data = await response.json();
-            props.history.push('/job/' + data);
+            history.push('/job/' + data);
         } catch(e) {
             console.error(e);
         }
@@ -167,7 +161,7 @@ const ClientAddJob = (props) => {
             </ul>
             </div>
             }
-            <form className="client-add-job-form" onSubmit={e => validateForm(e)}>
+            <form className="client-add-job-form">
                 <div className="form-group mb-4">
                     <label htmlFor="title">Job Title <span className="text-danger">*</span></label>
                     <input
@@ -259,7 +253,7 @@ const ClientAddJob = (props) => {
                     </div>
                 </div>
 
-                <SelectWorkers
+                <SelectLabourers
                     requiredLabourers={requiredLabourers}
                     setRequiredLabourers={setRequiredLabourers}
                 />
@@ -273,7 +267,7 @@ const ClientAddJob = (props) => {
                         Cancel
                     </Link>
                     <button
-                        type="submit"
+                        onClick={validateForm}
                         className="btn btn-space btn-primary btn-lg"
                     >
                         Create New Job

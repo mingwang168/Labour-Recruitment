@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
-import DAYS from '../../utils/Days';
+import DAYS from '../../utils/staticdata/Days';
 import Select from 'react-select';
 
 
