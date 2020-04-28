@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import TopNav from '../../components/TopNav';
-import SideNav from '../../components/SideNav';
-import SelectWorkers from './components/SelectWorkers';
+import TopNav from '../components/TopNav';
+import SideNav from '../components/SideNav';
+import SelectWorkers from '../components/SelectLabourers';
 import * as Auth from '../../utils/Auth';
 import Select from 'react-select';
 import PROVINCES from '../../utils/staticdata/Provinces';
@@ -13,7 +13,6 @@ const BASE_URL = "http://localhost:5001/api";
 const ClientUpdateJobDetails = (props) => {
 
     const [job, setJob] = useState({
-        "ClientId" : 0,
         "Title" : "",
         "JobDescription" : "",
         "StartDate" : "",
@@ -25,7 +24,7 @@ const ClientUpdateJobDetails = (props) => {
         "State" : "",
     })
 
-    const [workers, setWorkers] = useState([]);
+    
     const [jobSkills, setJobSkills] = useState([])
   
     const {title,startdate,enddate,description,address,province,city} = job
@@ -34,16 +33,6 @@ const ClientUpdateJobDetails = (props) => {
         e.preventDefault();
         setJob( {...job , [e.target.name]: e.target.value})
     }
-
-
-    const getTotal = () => {
-        let total = 0
-        jobSkills.forEach(e => {
-            total = parseInt(e.NumberNeeded) + total
-        })
-        return total 
-    }
-
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -66,8 +55,7 @@ const ClientUpdateJobDetails = (props) => {
             "IsComplete" :  false, 
             "street" : address,
             city,
-            "state" : province,
-            "TotalHired" : getTotal()
+            "state" : province
         }
 
         try {
@@ -211,7 +199,7 @@ const ClientUpdateJobDetails = (props) => {
                     </div>
                 </div>
 
-                <SelectWorkers workers={workers} setWorkers={setWorkers}  jobSkills={jobSkills} setJobSkills={setJobSkills}/>
+                
                
                 <div className="form-group row text-right mt-4">
                 <div className="col col-lg-12">

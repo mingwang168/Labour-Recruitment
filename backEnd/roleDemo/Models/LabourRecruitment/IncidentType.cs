@@ -7,12 +7,12 @@ namespace labourRecruitment.Models.LabourRecruitment
     {
         public IncidentType()
         {
-            Incident = new HashSet<Incident>();
+            IncidentReport = new HashSet<IncidentReport>();
         }
 
         public int IncidentTypeId { get; set; }
         public string IncidentTypeName { get; set; }
 
-        public virtual ICollection<Incident> Incident { get; set; }
+        public virtual ICollection<IncidentReport> IncidentReport { get; set; }
     }
 }

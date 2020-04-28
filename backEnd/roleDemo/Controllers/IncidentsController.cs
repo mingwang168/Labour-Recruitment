@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using labourRecruitment.Models.LabourRecruitment;
 using labourRecruitment.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace labourRecruitment.Controllers
 {
@@ -23,85 +25,86 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Incidents
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Incident>>> GetIncident()
+        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncident()
         {
-            return await _context.Incident.ToListAsync();
+            var reports = await _context.IncidentReport.ToListAsync();
+            foreach (IncidentReport report in reports)
+            {
+                report.LabourerIncidentReport = _context.LabourerIncidentReport.Where(lr => lr.IncidentReportId == report.IncidentReportId).
+                    Select(r => new LabourerIncidentReport
+                    {
+                        Labourer = r.Labourer
+                    }).ToList();
+
+                report.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == report.IncidentTypeId).Select(i=> new IncidentType
+                {
+                    IncidentTypeName = i.IncidentTypeName
+                }).FirstOrDefault();
+                report.Job = _context.Job.Where(j => j.JobId == report.JobId).Select(j => new Job
+                {
+                    Title = j.Title
+                }).FirstOrDefault();
+            }
+            return reports;
         }
 
         // GET: api/Incidents/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Incident>> GetIncident(int id)
+        public async Task<ActionResult<IncidentReport>> GetIncident(int id)
         {
-            var incident = await _context.Incident.FindAsync(id);
+            var incident = await _context.IncidentReport.FindAsync(id);
 
             if (incident == null)
             {
                 return NotFound();
             }
 
+            incident.Job = _context.Job.Where(j => j.JobId == incident.JobId).Select(j => new Job
+            {
+                Title = j.Title,
+                Street = j.Street,
+                City = j.City,
+                State = j.State,
+                Client = j.Client,
+                JobLabourer =j.JobLabourer.Select(jl => new JobLabourer
+                {
+                    Labourer = jl.Labourer,
+                    Skill = jl.Skill
+                }).ToList()
+
+            }).FirstOrDefault();
+            incident.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == incident.IncidentTypeId).Select(i => new IncidentType
+            {
+                IncidentTypeName = i.IncidentTypeName
+            }).FirstOrDefault();
+            incident.LabourerIncidentReport = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == incident.IncidentReportId).
+                Select(l => new LabourerIncidentReport
+                {
+                    Labourer = l.Labourer
+                }).ToList();
+
             return incident;
         }
 
-        // PUT: api/Incidents/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutIncident(int id, Incident incident)
-        {
-            if (id != incident.IncidentId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(incident).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!IncidentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Incidents
+        
+        //// POST: api/Incidents
         [HttpPost]
-        public async Task<ActionResult<Incident>> PostIncident(Incident incident)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult PostIncident(IncidentReportVM report)
         {
-            _context.Incident.Add(incident);
-            await _context.SaveChangesAsync();
+            _context.IncidentReport.Add(report.IncidentReport);
 
-            return CreatedAtAction("GetIncident", new { id = incident.IncidentId }, incident);
-        }
-
-
-        // DELETE: api/Incidents/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Incident>> DeleteIncident(int id)
-        {
-            var incident = await _context.Incident.FindAsync(id);
-            if (incident == null)
+            foreach (LabourerIncidentReport labourerReport in report.LabourerReports)
             {
-                return NotFound();
+                labourerReport.IncidentReportId = report.IncidentReport.IncidentReportId;
+                _context.LabourerIncidentReport.Add(labourerReport);
+
             }
-
-            _context.Incident.Remove(incident);
-            await _context.SaveChangesAsync();
-
-            return incident;
+            _context.SaveChanges();
+            return new ObjectResult(report);
         }
 
-        private bool IncidentExists(int id)
-        {
-            return _context.Incident.Any(e => e.IncidentId == id);
-        }
+
+        
     }
 }

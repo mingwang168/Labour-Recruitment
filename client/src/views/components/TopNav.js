@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import * as Auth from '../utils/Auth';
+import * as Auth from '../../utils/Auth';
 
 import NotificationsTab from './NotificationsTab';
-import placeholder from '../assets/images/avatars/placeholder.jpg';
+import placeholder from '../../assets/images/avatars/placeholder.jpg';
 
 const TopNav = () => {
 

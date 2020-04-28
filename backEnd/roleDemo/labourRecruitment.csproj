@@ -15,6 +15,10 @@
     <Compile Remove="Migrations\20200425060859_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20200426005625_AddedSkillId.cs" />
     <Compile Remove="Migrations\20200426005625_AddedSkillId.Designer.cs" />
+    <Compile Remove="Migrations\20200426011406_IntialCreate.cs" />
+    <Compile Remove="Migrations\20200426011406_IntialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200428042154_IntialCreate.cs" />
+    <Compile Remove="Migrations\20200428042154_IntialCreate.Designer.cs" />
   </ItemGroup>
 
 

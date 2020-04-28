@@ -6,8 +6,8 @@ import * as Auth from '../../utils/Auth';
 import * as DayCalculator from '../../utils/DayCalculator';
 import PROVINCES from '../../utils/staticdata/Provinces';
 
-import TopNav from '../../components/TopNav';
-import SideNav from '../../components/SideNav';
+import TopNav from '../components/TopNav';
+import SideNav from '../components/SideNav';
 import SelectLabourers from '../components/SelectLabourers';
 
 const BASE_URL = "http://localhost:5001/api";
@@ -78,7 +78,7 @@ const ClientAddJob = ({ history }) => {
             submitForm();
         }
     }
-
+    console.log(requiredLabourers)
     const submitForm = async() => {
         let token = Auth.getToken();
         let id = Auth.getID();

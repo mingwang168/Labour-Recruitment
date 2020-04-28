@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FormatDateString } from '../utils/DataSanitizer';
 
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
+import TopNav from './components/TopNav';
+import SideNav from './components/SideNav';
 import RateWorkers from './components/RateWorkers'
+import * as Auth from '../utils/Auth';
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -13,7 +14,7 @@ const JobDetail = (props) => {
     const [details, setDetails] = useState()
 
     const fetchJobDetails = async(id) => {
-        let token = sessionStorage.getItem("auth_token")
+        let token = Auth.getToken()
         try {
             const response = await fetch(BASE_URL + '/job/getJob/' + id , {
                 method : 'GET',
@@ -117,7 +118,7 @@ const JobDetail = (props) => {
                         </div>
                         {/* Display this only if the job owner is viewing this page */}
                         <div className="card-body border-top">
-                            <Link to="/editjob" className="btn btn-light">Edit Job Details</Link>
+                            <Link to={`/editjob/${details.jobId}`} className="btn btn-light">Edit Job Details</Link>
                         </div>
                     </div>
 

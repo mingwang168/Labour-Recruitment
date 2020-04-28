@@ -1,10 +1,40 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
+import { Link } from 'react-router-dom';
 
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
+import TopNav from './components/TopNav';
+import SideNav from './components/SideNav';
+import * as Auth from '../utils/Auth'
+
+const BASE_URL = "http://localhost:5001/api";
 
 const Incidents = () => {
+    const [incidents, setIncidents] = useState()
+
+    const fetchIncidents = async() => {
+        let token = Auth.getToken()
+        try {
+            let response = await fetch(BASE_URL + "/incidents" , {
+                method : "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            let data = await response.json()
+            setIncidents(data)
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    useEffect(() => {
+        fetchIncidents()
+    }, [])
+
     return (
+    <>
+    {incidents && 
     <div className="dashboard-main-wrapper">
         <TopNav />
         <SideNav />
@@ -48,22 +78,17 @@ const Incidents = () => {
                     </tr>
                     </thead>
                     <tbody> 
-                        <tr>
-                            <td><time>Aug 8, 2020</time></td>
-                            <td>Burn</td>
-                            <td>2</td>
-                            <td>CF Richmond Centre Remodel</td>
-                            <td><span className="badge badge-danger">Required</span></td>
-                            <td><a href="/incident">View Details</a></td>
-                        </tr>
-                        <tr>
-                            <td><time>Mar 3, 2020</time></td>
-                            <td>Fall</td>
-                            <td>1</td>
-                            <td>Crescent Court Homes</td>
-                            <td><span className="badge badge-danger">Required</span></td>
-                            <td><a href="/incident">View Details</a></td>
-                        </tr>
+                        {incidents.map((incident, i) => (
+                            <tr key={i}>
+                                <td><time>{incident.incidentReportDate.split('T')[0]}</time></td>
+                                <td>{incident.incidentType.incidentTypeName}</td>
+                                <td>{incident.labourerIncidentReport.length}</td>
+                                <td>{incident.job.title}</td>
+                                <td><span className="badge badge-danger">Required</span></td>
+                                <td><Link to={`/incident/${incident.incidentReportId}`}>View Details</Link></td>
+                            </tr>
+                         ))   
+                        }
                     </tbody>
                 </table>
                 </div>
@@ -71,10 +96,11 @@ const Incidents = () => {
             </div>
             </div>
             </div>
-
         </div>
         </div>
     </div>
+    }
+    </>
     )
 }
 

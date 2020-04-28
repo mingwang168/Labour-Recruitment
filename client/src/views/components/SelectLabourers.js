@@ -31,7 +31,7 @@ const SelectLabourers = ({requiredLabourers, setRequiredLabourers}) => {
                     skillUpdated[indexOfExistingSkill].NumberNeeded = selectedNumWorkers;
                     setRequiredLabourers(skillUpdated)
                 } else {
-                    setRequiredLabourers(requiredLabourers => [ ...requiredLabourers, {SkillName: selectedSkill, skillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumWorkers}])
+                    setRequiredLabourers(requiredLabourers => [ ...requiredLabourers, {SkillName: selectedSkill, SkillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumWorkers}])
                 }
             } else {
                 setRequiredLabourers(requiredLabourers => [ ...requiredLabourers, {SkillName: selectedSkill, SkillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumWorkers}])
