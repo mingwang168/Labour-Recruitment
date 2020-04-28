@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using labourRecruitment.Models.LabourRecruitment;
 using labourRecruitment.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace labourRecruitment.Controllers
 {
@@ -28,19 +30,15 @@ namespace labourRecruitment.Controllers
             return await _context.Incident.ToListAsync();
         }
 
-        // GET: api/Incidents/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Incident>> GetIncident(int id)
+        
+        [HttpGet("{jobId}", Name = "GetIncidentsByJobId")]
+
+        public async Task<ActionResult<IEnumerable<Incident>>> GetIncidentsByJobId(int jobId)
         {
-            var incident = await _context.Incident.FindAsync(id);
-
-            if (incident == null)
-            {
-                return NotFound();
-            }
-
-            return incident;
+            return await _context.Incident.Where(j => j.JobId == jobId).ToListAsync();
         }
+
+
 
         // PUT: api/Incidents/5
         [HttpPut("{id}")]
