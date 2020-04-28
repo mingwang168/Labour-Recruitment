@@ -12,28 +12,34 @@ const IncidentDetail = (props) => {
 
     const fetchIncidentDetails = async(id) => {
         let token = Auth.getToken()
-        console.log(token)
-        // try {
-        //     const response = await fetch(BASE_URL+'/incidents'+ id , {
-        //         method = 'GET',
-        //         headers: {
-        //             "Accept": "application/json",
-        //             "Content-Type": "application/json",
-        //             "Authorization": `Bearer ${token}`
-        //         }
-        //     })
-        //     const data = await response.json()
-        //     console.log(data)
+        try {
+            const response = await fetch(BASE_URL + "/incidents/"+ id , {
+                method : "GET", 
+                headers : {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            const data = await response.json()
+            
+            if (data) {
+                setDetails(data)
+            }
 
-        // } catch (e) {
-        //     console.error(e);
-        // }
+        } catch (e) {
+            console.error(e);
+        }
     }
     
     useEffect(() =>{
         fetchIncidentDetails(props.match.params.id)
     }, [])
+
+    console.log(details)
     return (
+        <>
+        {details && 
         <div className="dashboard-main-wrapper">
             <TopNav />
             <SideNav />
@@ -65,32 +71,34 @@ const IncidentDetail = (props) => {
                         <div className="col col-md-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <h1 className="font-26 mb-0">Crescent Court Homes</h1>
-                                    <p>Turner Construction</p>
-                                    <p>8725 University Crescent<br/>Burnaby, BC V5A4X9</p>
+                                    <h1 className="font-26 mb-0">{details.job.title}</h1>
+                                    <p>{details.job.client.clientName}</p>
+                                    <p>{details.job.street}<br/>{details.job.city}, {details.job.state}</p>
                                 </div>
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Date of Incident</h3>
-                                    <time>Feb 20, 2020</time>
+                                    <time>{details.incidentReportDate.split('T')[0]}</time>
                                 </div>
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Affected labourer names</h3>
-                                    <ul className="list-unstyled mb-0">
-                                        <li>John Doe</li>
-                                        <li>Sierra Brooks</li>
-                                    </ul>
+                                    {details.labourerIncidentReport.map((r, i) => (
+                                        <ul key={i} className="list-unstyled mb-0">
+                                            <li>{r.labourer.labourerFirstName} {r.labourer.labourerLastName} ()</li>
+                                        </ul>
+                                    ))
+                                    }
                                 </div>
-                                <div className="card-body border-top">
+                                {/* <div className="card-body border-top">
                                     <h3 className="font-16">Job title</h3>
                                     <p>Drywall</p>
-                                </div>
+                                </div> */}
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Incident type</h3>
-                                    <p>Partial Collapse of a Slab during Construction</p>
+                                    <p>{details.incidentType.incidentTypeName}</p>
                                 </div>
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Incident description</h3>
-                                    <p>At approximately 5:00 a.m., a partial collapse of the second level slab occurred during construction of the 159-room.At the time of the collapse, the northwest section of the second level was being placed with fresh concrete over the formwork.Two employees were injured</p>
+                                    <p>{details.incidentReportDescription}</p>
                                 </div>
                                 
                                 <div className="card-body border-top">
@@ -111,6 +119,8 @@ const IncidentDetail = (props) => {
                 </div>
             </div>
         </div>
+        }
+    </>
     )
 }
 
