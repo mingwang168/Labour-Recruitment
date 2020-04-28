@@ -71,7 +71,16 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetJobByClientId(int clientId)
         {
-            return await _context.Job.Where(j => j.ClientId == clientId).ToListAsync();
+            return await _context.Job.Where(j => j.ClientId == clientId).Select(j => new Job
+            {
+                JobId = j.JobId,
+                Title = j.Title,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
+                InProgress = j.InProgress,
+                IsComplete = j.IsComplete,
+                JobLabourer = j.JobLabourer
+            }).ToListAsync();
         }
 
         // POST: api/Job
