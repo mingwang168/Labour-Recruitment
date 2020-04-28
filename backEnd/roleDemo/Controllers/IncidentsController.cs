@@ -54,7 +54,7 @@ namespace labourRecruitment.Controllers
         public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncidentsByJobId(int jobId)
         {
 
-            return await _context.Incident.Where(j => j.JobId == jobId).ToListAsync();
+            return await _context.IncidentReport.Where(j => j.JobId == jobId).ToListAsync();
         }
 
 
