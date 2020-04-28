@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import * as Auth from '../../utils/Auth';
+import * as DataSanitizer from '../../utils/DataSanitizer';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
@@ -15,7 +17,7 @@ const LABOURERS_LIST = [
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientAddIncident = () => {
-    const [workers, setWorkers] = useState([]);
+    const [jobs, setJobs] = useState([]);
     const [skillOptions, setSkillOptions] = useState([]);
     const [selectedSkills, setSelectedSkills] = useState([]);
     const [selectedLabourers, setselectedLabourers] = useState([]);
@@ -24,7 +26,22 @@ const ClientAddIncident = () => {
         console.log("Validating form...")
     }
 
-    const fetchskillOptions = async () => {
+    const fetchAllJobs = async () => {
+        try {
+            const response = await fetch(BASE_URL + `/Job/GetJobByClientId/${Auth.getID()}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            });
+
+            let data = await response.json();
+            setJobs(DataSanitizer.ClientJobs(data))
+        } catch (e) {
+            console.error(e)
+        }
+    }
+    const fetchIncidentOptions = async () => {
         try {
             const response = await fetch(BASE_URL + '/skills');
             let data = await response.json();
@@ -48,9 +65,11 @@ const ClientAddIncident = () => {
 
 
     useEffect(() => {
-        fetchskillOptions();
+        fetchAllJobs();
+        //fetchIncidentOptions();
     }, []);
 
+    console.log(jobs)
     return (
         <div className="dashboard-main-wrapper">
             <TopNav />
@@ -119,17 +138,29 @@ const ClientAddIncident = () => {
                                         />
                                     </div>
                                 </div>
-                                <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-4 px-0">
-                                    <label className="d-block" htmlFor="injuredLabourers">Injured Labourers<span className="text-danger">*</span></label>
-                                    <Select
-                                        required
-                                        name="injuredLabourers"
-                                        options={LABOURERS_LIST}
-                                        onChangeSkill={onChangeLabourer}
-                                        isMulti
-                                    />
+                                <div className="form-row mb-4">
+                                    <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
+                                        <label className="d-block" htmlFor="job">Select Job<span className="text-danger">*</span></label>
+                                        <Select
+                                            required
+                                            name="job"
+                                            options={ jobs &&
+                                                jobs.map(job => {return {value: job.jobId, label: job.title}}) 
+                                            } 
+                                            onChangeSkill={onChangeLabourer}
+                                        />
+                                    </div>
+                                    <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
+                                        <label className="d-block" htmlFor="injuredLabourers">Injured Labourers<span className="text-danger">*</span></label>
+                                        <Select
+                                            required
+                                            name="injuredLabourers"
+                                            options={LABOURERS_LIST}
+                                            onChangeSkill={onChangeLabourer}
+                                            isMulti
+                                        />
+                                    </div>
                                 </div>
-
                                 <div className="form-group mb-4">
                                     <label htmlFor="incidentsummary">Summary of Incident</label>
                                     <textarea
