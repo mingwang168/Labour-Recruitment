@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Footer = () => {
-    const year = (new Date).getFullYear();
+    const year = new Date().getFullYear();
 
     return (
     <div className="footer">
@@ -18,7 +18,7 @@ const Footer = () => {
     </div>
     </div>
     </div>
-    )
+    );
 }
 
 export default Footer;

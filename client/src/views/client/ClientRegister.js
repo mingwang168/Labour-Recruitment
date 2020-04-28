@@ -1,18 +1,15 @@
-import React , {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import Select from 'react-select';
 import * as Auth from '../../utils/Auth';
 import * as FormValidator from '../../utils/FormValidator';
-import PROVINCES from '../../utils/Provinces';
+
+import Select from 'react-select';
+import FormErrors from '../../components/FormErrors';
+import PROVINCES from '../../utils/staticdata/Provinces';
 
 const BASE_URL = "http://localhost:5001/api";
-const AUTH_TOKEN = "auth_token";
-const USER_NAME = "user_name";
-const USER_EMAIL = "user_email";
-const USER_ID = "user_id";
-const USER_ROLE = "user_role";
 
-const RegisterClient = (props) => {
+const RegisterClient = ({ history }) => {
 
     const [formErrors, setFormErrors] = useState([]);
     const [client, setClient] = useState({
@@ -28,7 +25,6 @@ const RegisterClient = (props) => {
         email,
         password,
         confirmpassword,
-        role,
         companyname,
         phonenumber,
         city,
@@ -37,11 +33,11 @@ const RegisterClient = (props) => {
     } = client;
 
     const onChange = e => {
-        setClient({ ... client, [e.target.name]:e.target.value });
+        setClient({ ...client, [e.target.name]:e.target.value });
     }
 
     const onChangeProvince = e => {
-        setClient({ ... client, province: e.label })
+        setClient({ ...client, province: e.label })
     }
 
     const validateForm = e => {
@@ -106,14 +102,9 @@ const RegisterClient = (props) => {
             // Success
             let data = await response.json();
             if(data.token && data.token !== " " && data.token !== "") {
-                sessionStorage.setItem(AUTH_TOKEN, data.token);
-                sessionStorage.setItem(USER_EMAIL, data.email);
-                sessionStorage.setItem(USER_NAME, data.name);
-                sessionStorage.setItem(USER_ROLE, data.role);
-                sessionStorage.setItem(USER_ID, data.id);
-                window.location.reload();
+                Auth.setSessionData(data, history);
             } else {
-                setFormErrors(["Email address '" + email + "' is already taken."]);
+                setFormErrors(["Registration failed. Please try again later."]);
             }
         } catch(e) {
             console.error(e);
@@ -131,14 +122,8 @@ const RegisterClient = (props) => {
                         <p>Enter your user information.</p>
                     </div>
                     <div className="card-body">
-                        {/* Display form errors, if any */}
-                        { formErrors.length > 0 &&
-                        <div className="alert alert-danger">
-                        <ul className="pl-3 mb-0">
-                        { formErrors.map((error, i) => <li key={i}>{error}</li>) }
-                        </ul>
-                        </div>
-                        }
+                        { formErrors.length > 0 && <FormErrors errors={formErrors} /> }
+
                         <div className="form-group">
                             <label htmlFor="companyname">Company Name <span className="text-danger">*</span></label>
                             <input

@@ -1,27 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Redirect, Link } from 'react-router-dom';
 import * as FormValidator from '../utils/FormValidator';
 import * as Auth from '../utils/Auth';
+import FormErrors from '../components/FormErrors';
 
 const BASE_URL = "http://localhost:5001/api";
-const AUTH_TOKEN = "auth_token";
-const USER_NAME = "user_name";
-const USER_EMAIL = "user_email";
-const USER_ID = "user_id";
-const USER_ROLE = "user_role";
 
-const Login = () => {
+const Login = ({ history }) => {
 
     const [user, setUser] = useState({
         email: "",
         password: ""
     })
+
     const [formErrors, setFormErrors] = useState([]);
     const { email, password } = user;
 
     const onChange = (e) => {
         e.preventDefault();
-        setUser({ ... user, [e.target.name]:e.target.value })
+        setUser({ ...user, [e.target.name]:e.target.value })
     }
 
     const validateForm = e => {
@@ -31,9 +28,6 @@ const Login = () => {
         if(!FormValidator.email(email)) {
             errors.push("Invalid email entered.")
         }
-
-      
-
         if(errors.length) {
             setFormErrors(errors);
         } else {
@@ -63,14 +57,12 @@ const Login = () => {
             // Success
             let data = await response.json();
             if(data.token && data.token !== "") {
-                sessionStorage.setItem(AUTH_TOKEN, data.token);
-                sessionStorage.setItem(USER_NAME, data.name);
-                sessionStorage.setItem(USER_EMAIL, data.email);
-                sessionStorage.setItem(USER_ROLE, data.role);
-                sessionStorage.setItem(USER_ID, data.id);
+                Auth.setSessionData(data, history);
+            } else {
+                setFormErrors(["Invalid login information entered."]);
             }
-            window.location.reload();
         } catch(e) {
+            setFormErrors(["Login failed. Please try again later."]);
             console.error(e);
         }
     }
@@ -86,14 +78,7 @@ const Login = () => {
             <p>Don't have an account yet? Create one <Link to="/register" className="text-primary">here.</Link></p>
         </div>
         <div className="card-body">
-        {/* Display form errors, if any */}
-        { formErrors.length > 0 &&
-        <div className="alert alert-danger">
-        <ul className="pl-3 mb-0">
-        { formErrors.map((error, i) => <li key={i}>{error}</li>) }
-        </ul>
-        </div>
-        }
+        { formErrors.length > 0 && <FormErrors errors={formErrors} /> }
 
         <form onSubmit={validateForm}>
             <div className="form-group">

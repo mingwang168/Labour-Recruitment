@@ -16,13 +16,14 @@ import Dashboard from "./views/Dashboard";
 import Incidents from "./views/Indicents";
 import JobDetail from "./views/JobDetail";
 import IncidentDetail from "./views/IncidentDetail";
+
 import ClientRegister from "./views/client/ClientRegister";
 import ClientProfile from "./views/client/ClientProfile";
 import ClientAddJob from "./views/client/ClientAddJob";
 import ClientAddIncident from "./views/client/ClientAddIncident";
+
 import LabourerRegister from "./views/labourer/LabourerRegister";
 import LabourerProfile from "./views/labourer/LabourerProfile";
-import LabourerDashboard from "./views/labourer/LabourerDashboard";
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 	return (
@@ -30,11 +31,17 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 			path={path}
 			{...rest}
 			render={(props) => {
-				return Auth.authenticateUser() ? (
-					<Comp {...props} />
-				) : (
-					<Redirect to={{ pathname: "/login" }} />
-				);
+				if(Auth.authenticateUser()) {
+					if(Auth.validateToken()) {
+						return <Comp {...props} />;
+					} else {
+						sessionStorage.clear();
+						alert("Your session has expired. Please login again.");
+						return <Redirect to={{ pathname: "/login" }} />;
+					}
+				} else {
+					return <Redirect to={{ pathname: "/login" }} />;
+				}
 			}}
 		/>
 	);

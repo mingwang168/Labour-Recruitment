@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FormatDateString } from '../utils/DataSanitizer';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
@@ -8,7 +9,8 @@ import RateWorkers from './components/RateWorkers'
 const BASE_URL = "http://localhost:5001/api";
 
 const JobDetail = (props) => {
-    const [details,setDetails] = useState()
+
+    const [details, setDetails] = useState()
 
     const fetchJobDetails = async(id) => {
         let token = sessionStorage.getItem("auth_token")
@@ -22,18 +24,28 @@ const JobDetail = (props) => {
                 }
             })
             let data = await response.json();
-            setDetails(data)
+            setDetails(data);
         } catch (err) {
             console.error(err);
         }
     }
 
+    const calculateTotalHired = _ => {
+        let total = 0;
+        if(details.jobSkill.length) {
+            details.jobSkill.forEach(i => {
+                if(i.numberNeeded) {
+                    total += i.numberNeeded;
+                }
+            });
+        }
+        return total;
+    }
     
     useEffect(() => {
-        fetchJobDetails(props.match.params.id)
+        fetchJobDetails(props.match.params.id);
     }, [props.match.params.id])
 
-    
     return (
     <>
     {details && 
@@ -52,8 +64,12 @@ const JobDetail = (props) => {
                 <div className="page-breadcrumb">
                 <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/dashboard" className="breadcrumb-link">Dashboard</a></li>
-                    <li className="breadcrumb-item active" aria-current="page">{details.title}</li>
+                    <li className="breadcrumb-item">
+                        <Link to="/dashboard" className="breadcrumb-link">Dashboard</Link>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">
+                        {details.title}
+                    </li>
                 </ol>
                 </nav>
                 </div>
@@ -66,7 +82,7 @@ const JobDetail = (props) => {
                 <div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div className="card">
                         <div className="card-body">
-                            <h1 className="font-26 mb-0">{details.title}</h1>
+                            <h1 className="font-26 mb-2">{details.title}</h1>
                             <p>{details.client.clientName}</p>
                         </div>
                         <div className="card-body border-top">
@@ -74,16 +90,18 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Status</h3>
-                            {details.inProgress && <span className="badge badge-primary">In Progress</span> }
-                            {details.isComplete && <span className="badge badge-success">Complete</span> }
+                            {details.isComplete ? <span className="badge badge-success">Complete</span> : <span className="badge badge-primary">In Progress</span> }
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Dates</h3>
-                            <time>{details.startDate.split('T')[0]}</time> to <time>{details.endDate.split('T')[0]}</time>
+                            <time>{FormatDateString(details.startDate)}</time> to <time>{FormatDateString(details.endDate)}</time>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Location</h3>
-                            <p>{details.street}<br/><span className="text-capitalize">{details.city}</span>,<span className="text-uppercase">{details.state}</span></p>
+                            <address className="mb-0">
+                                {details.street}<br />
+                                {details.city}, {details.state}
+                            </address>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Labourers Hired</h3>
@@ -95,7 +113,7 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Total Hired</h3>
-                            <p>{details.totalHired} labourers</p>
+                            <p>{`${calculateTotalHired()} labourer(s) hired`}</p>
                         </div>
                         {/* Display this only if the job owner is viewing this page */}
                         <div className="card-body border-top">
@@ -267,8 +285,12 @@ const JobDetail = (props) => {
                                 <td className ="text-capitalize">{jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}</td>
                                 <td>{jLabourer.skill.skillName}</td>
                                 <td>
-                                    <RateWorkers jobId = {details.jobId} rating = {jLabourer.labourerSafetyRating} 
-                                                    labourerId = {jLabourer.labourerId} clientName = {details.client.clientName} />
+                                    <RateWorkers
+                                        jobId = {details.jobId}
+                                        rating = {jLabourer.labourerSafetyRating} 
+                                        labourerId = {jLabourer.labourerId}
+                                        clientName = {details.client.clientName}
+                                    />
                                 </td>
                             </tr>
                             )}
