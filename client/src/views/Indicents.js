@@ -1,8 +1,8 @@
 import React , {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
+import TopNav from './components/TopNav';
+import SideNav from './components/SideNav';
 import * as Auth from '../utils/Auth'
 
 const BASE_URL = "http://localhost:5001/api";

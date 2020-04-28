@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FormatDateString } from '../utils/DataSanitizer';
 
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
+import TopNav from './components/TopNav';
+import SideNav from './components/SideNav';
 import RateWorkers from './components/RateWorkers'
 import * as Auth from '../utils/Auth';
 

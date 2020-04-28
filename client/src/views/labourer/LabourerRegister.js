@@ -4,7 +4,7 @@ import * as FormValidator from '../../utils/FormValidator';
 import * as Auth from '../../utils/Auth';
 
 import Select from 'react-select';
-import FormErrors from '../../components/FormErrors';
+import FormErrors from '../components/FormErrors';
 import DAYS from '../../utils/staticdata/Days';
 
 const BASE_URL = "http://localhost:5001/api";

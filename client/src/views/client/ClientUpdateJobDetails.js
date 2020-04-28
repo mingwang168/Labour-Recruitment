@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import TopNav from '../../components/TopNav';
-import SideNav from '../../components/SideNav';
-import SelectWorkers from './components/SelectWorkers';
+import TopNav from '../components/TopNav';
+import SideNav from '../components/SideNav';
+import SelectWorkers from '../components/SelectLabourers';
 import * as Auth from '../../utils/Auth';
 import Select from 'react-select';
 import PROVINCES from '../../utils/staticdata/Provinces';
@@ -24,7 +24,7 @@ const ClientUpdateJobDetails = (props) => {
         "State" : "",
     })
 
-    const [workers, setWorkers] = useState([]);
+    
     const [jobSkills, setJobSkills] = useState([])
   
     const {title,startdate,enddate,description,address,province,city} = job

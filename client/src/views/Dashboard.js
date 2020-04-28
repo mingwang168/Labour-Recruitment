@@ -5,9 +5,9 @@ import ClientDashboard from './client/ClientDashboard';
 import LabourerDashboard from './labourer/LabourerDashboard';
 import AdminDashboard from './admin/AdminDashboard';
 
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
-import Footer from '../components/Footer';
+import TopNav from './components/TopNav';
+import SideNav from './components/SideNav';
+import Footer from './components/Footer';
 
 const Dashboard = (props) => {
 

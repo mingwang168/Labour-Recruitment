@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
-import Table from '../../components/Table';
+import Table from '../components/Table';
 import { CLIENT_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
