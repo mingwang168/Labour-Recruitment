@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using labourRecruitment.Models.LabourRecruitment;
 using labourRecruitment.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace labourRecruitment.Controllers
 {
@@ -74,39 +76,10 @@ namespace labourRecruitment.Controllers
             return incident;
         }
 
-        //// PUT: api/Incidents/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutIncident(int id, Incident incident)
-        //{
-        //    if (id != incident.IncidentId)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(incident).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!IncidentExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
+        
         //// POST: api/Incidents
         [HttpPost]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostIncident(IncidentReportVM report)
         {
             _context.IncidentReport.Add(report.IncidentReport);
@@ -122,25 +95,6 @@ namespace labourRecruitment.Controllers
         }
 
 
-        //// DELETE: api/Incidents/5
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<Incident>> DeleteIncident(int id)
-        //{
-        //    var incident = await _context.Incident.FindAsync(id);
-        //    if (incident == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Incident.Remove(incident);
-        //    await _context.SaveChangesAsync();
-
-        //    return incident;
-        //}
-
-        //private bool IncidentExists(int id)
-        //{
-        //    return _context.Incident.Any(e => e.IncidentId == id);
-        //}
+        
     }
 }
