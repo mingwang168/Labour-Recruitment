@@ -8,7 +8,7 @@ import PROVINCES from '../../utils/staticdata/Provinces';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
-import SelectWorkers from './components/SelectWorkers';
+import SelectLabourers from '../components/SelectLabourers';
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -253,7 +253,7 @@ const ClientAddJob = ({ history }) => {
                     </div>
                 </div>
 
-                <SelectWorkers
+                <SelectLabourers
                     requiredLabourers={requiredLabourers}
                     setRequiredLabourers={setRequiredLabourers}
                 />
