@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import Select from 'react-select';
 
@@ -10,10 +10,9 @@ import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
 import SelectWorkers from './components/SelectWorkers';
 
-
 const BASE_URL = "http://localhost:5001/api";
 
-const ClientAddJob = (props) => {
+const ClientAddJob = ({ history }) => {
 
     const [formErrors, setFormErrors] = useState([]);
     const [job, setJob] = useState({
@@ -62,8 +61,6 @@ const ClientAddJob = (props) => {
 
     const validateForm = e => {
         e.preventDefault();
-        console.log("Validating form...");
-        
         let errors = [];
 
         if(DayCalculator.convert(enddate) < DayCalculator.convert(startdate)) {
@@ -75,12 +72,11 @@ const ClientAddJob = (props) => {
         if(province === "") {
             errors.push("Province is required.");
         }
-
         if(errors.length) {
             setFormErrors(errors);
         } else {
             submitForm();
-        } 
+        }
     }
 
     const submitForm = async() => {
@@ -123,7 +119,7 @@ const ClientAddJob = (props) => {
 
             // Success
             let data = await response.json();
-            props.history.push('/job/' + data);
+            history.push('/job/' + data);
         } catch(e) {
             console.error(e);
         }

@@ -10,7 +10,7 @@ const USER_EMAIL = "user_email";
 const USER_ID = "user_id";
 const USER_ROLE = "user_role";
 
-const Login = () => {
+const Login = ({ history }) => {
 
     const [user, setUser] = useState({
         email: "",
@@ -31,9 +31,6 @@ const Login = () => {
         if(!FormValidator.email(email)) {
             errors.push("Invalid email entered.")
         }
-
-      
-
         if(errors.length) {
             setFormErrors(errors);
         } else {
@@ -68,8 +65,8 @@ const Login = () => {
                 sessionStorage.setItem(USER_EMAIL, data.email);
                 sessionStorage.setItem(USER_ROLE, data.role);
                 sessionStorage.setItem(USER_ID, data.id);
+                history.push("/dashboard");
             }
-            window.location.reload();
         } catch(e) {
             console.error(e);
         }
