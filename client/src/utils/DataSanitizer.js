@@ -61,5 +61,5 @@ exports.FormatDateString = (date) => {
         'December'
     ];
     
-    return `${months[d.getMonth()]} ${d.getDay()}, ${d.getFullYear()}`;
+    return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }
