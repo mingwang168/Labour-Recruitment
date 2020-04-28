@@ -21,12 +21,30 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        //// GET: api/Incidents
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Incident>>> GetIncident()
-        //{
-        //    return await _context.Incident.ToListAsync();
-        //}
+        // GET: api/Incidents
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncident()
+        {
+            var reports = await _context.IncidentReport.ToListAsync();
+            foreach (IncidentReport report in reports)
+            {
+                report.LabourerIncidentReport = _context.LabourerIncidentReport.Where(lr => lr.IncidentReportId == report.IncidentReportId).
+                    Select(r => new LabourerIncidentReport
+                    {
+                        Labourer = r.Labourer
+                    }).ToList();
+
+                report.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == report.IncidentTypeId).Select(i=> new IncidentType
+                {
+                    IncidentTypeName = i.IncidentTypeName
+                }).FirstOrDefault();
+                report.Job = _context.Job.Where(j => j.JobId == report.JobId).Select(j => new Job
+                {
+                    Title = j.Title
+                }).FirstOrDefault();
+            }
+            return reports;
+        }
 
         //// GET: api/Incidents/5
         //[HttpGet("{id}")]
