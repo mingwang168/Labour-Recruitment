@@ -9,6 +9,7 @@ import PROVINCES from '../../utils/Provinces';
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
 import SelectWorkers from './components/SelectWorkers';
+import ClientUpdateJobDetails from "./ClientUpdateJobDetails";
 
 
 const BASE_URL = "http://localhost:5001/api";

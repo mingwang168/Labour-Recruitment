@@ -98,10 +98,10 @@ const RegisterClient = (props) => {
                 setFormErrors(["Registration failed. Please try again later."]);
                 throw response;
             }
-            // if(response.status !== 403) {
-            //     setFormErrors(["Email address '" + email + "' is already taken."]);
-            //     throw response;
-            // }
+            if(response.status !== 403) {
+                setFormErrors(["Email address '" + email + "' is already taken."]);
+                throw response;
+            }
 
             // Success
             let data = await response.json();
