@@ -1,11 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-
+import * as Auth from '../../utils/Auth';
+import * as DataSanitizer from '../../utils/DataSanitizer';
 import Table from '../../components/Table';
 import { CLIENT_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
-import { CLIENT_JOBS_DATA } from '../JobsDummyData';
+
+const BASE_URL = "http://localhost:5001/api";
 
 const ClientDashboard = (props) => {
+
+    const [jobs, setJobs] = useState([]);
+
+    const fetchJobs = async() => {
+        try {
+            let response = await fetch(BASE_URL + `/Job/GetJobByClientId/${Auth.getID()}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            });
+
+            let data = await response.json();
+            if(data.length) {
+                setJobs(DataSanitizer.ClientJobs(data));
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    useEffect(() => {
+        fetchJobs();
+    }, [])
+
     return (
     <>
     <div className="row">
@@ -95,11 +122,15 @@ const ClientDashboard = (props) => {
         <div className="card">
         <h5 className="card-header">All Jobs</h5>
         <div className="card-body">
+            { jobs.length ?
             <Table
                 columns={CLIENT_JOBS_TABLE_COLUMNS}
-                data={CLIENT_JOBS_DATA}
+                data={jobs}
                 {...props}
             />
+            :
+            <p className="lead">No jobs to display.</p>
+            }
         </div>
         </div>
         </div>
