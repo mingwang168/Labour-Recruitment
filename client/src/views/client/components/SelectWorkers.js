@@ -61,6 +61,10 @@ const SelectWorkers = ({requiredLabourers, setRequiredLabourers}) => {
         return id;
     }
 
+    const preventSubmit = e => {
+        if(e.keyCode || e.which === 13) e.preventDefault();
+    }
+
     return (
     <div className="form-group">
         <label htmlFor="workers">Select workers <span className="text-danger">*</span></label>
@@ -95,6 +99,7 @@ const SelectWorkers = ({requiredLabourers, setRequiredLabourers}) => {
             <div className="col col-md-5 col-lg-3 col-xl-2">
             <input
                 value={selectedNumWorkers}
+                onKeyPress={e => preventSubmit(e)}
                 onChange={e => setSelectedNumWorkers(e.target.value)}
                 type="number"
                 min="0"
