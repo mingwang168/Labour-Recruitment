@@ -1,19 +1,16 @@
 import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import Select from 'react-select';
 import * as FormValidator from '../../utils/FormValidator';
+import * as Auth from '../../utils/Auth';
+
+import Select from 'react-select';
+import FormErrors from '../../components/FormErrors';
 import DAYS from '../../utils/staticdata/Days';
 
 const BASE_URL = "http://localhost:5001/api";
-const AUTH_TOKEN = "auth_token";
-const USER_NAME = "user_name";
-const USER_EMAIL = "user_email";
-const USER_ID = "user_id";
-const USER_ROLE = "user_role";
 
-const RegisterLabourer = (props) => {
+const RegisterLabourer = ({ history }) => {
 
-    const [redirect, setRedirect] = useState(false);
     const [formErrors, setFormErrors] = useState([]);
     const [skillOptions, setSkillOptions] = useState([]);
     const [labourer, setLabourer] = useState({
@@ -45,7 +42,7 @@ const RegisterLabourer = (props) => {
 
     const onChange = e => {
         e.preventDefault();
-        setLabourer({...labourer, [e.target.name]: e.target.value}); 
+        setLabourer({ ...labourer, [e.target.name]: e.target.value }); 
     }
 
     const onChangeSkill = (skills) => {
@@ -57,7 +54,7 @@ const RegisterLabourer = (props) => {
     const onChangeAvailability = (days) => {
         if(days) {
             days.forEach(element => {
-                setSelectedDays([ ... selectedDays,element.value]);
+                setSelectedDays([ ...selectedDays,element.value]);
             });
         }
     }
@@ -126,31 +123,23 @@ const RegisterLabourer = (props) => {
             // Success
             let data = await response.json();
             if(data.token && data.token !== "") {
-                sessionStorage.setItem(AUTH_TOKEN, data.token);
-                sessionStorage.setItem(USER_NAME, data.name);
-                sessionStorage.setItem(USER_ROLE, data.role);
-                sessionStorage.setItem(USER_ID, data.id);
-                setRedirect(true);
+                Auth.setSessionData(data, history);
+            } else {
+                setFormErrors(["Registration failed. Please try again later."]);
             }
-            console.log(data)
         } catch(e) {
             console.error(e);
+            setFormErrors(["Registration failed. Please try again later."]);
         }
     }
 
     useEffect(() => {
         fetchSkillOptions();
-        if(sessionStorage.getItem(AUTH_TOKEN)) {
-            setRedirect(true)
-        }
     }, [])
 
-    return (
+    return Auth.authenticateUser() ? <Redirect to={{pathname:'/dashboard'}} /> :
+    (
     <>
-    {redirect ? <Redirect to = {{
-        pathname : '/profile/labourer',
-    }} />:  null }
-
     <div className="splash-container-wrapper">
     <form className="splash-container" onSubmit={e => validateForm(e)}>
     <div className="card">
@@ -159,14 +148,8 @@ const RegisterLabourer = (props) => {
             <p>Enter your user information.</p>
         </div>
         <div className="card-body">
-            {/* Display form errors, if any */}
-            { formErrors.length > 0 &&
-            <div className="alert alert-danger">
-            <ul className="pl-3 mb-0">
-            { formErrors.map((error, i) => <li key={i}>{error}</li>) }
-            </ul>
-            </div>
-            }
+            { formErrors.length > 0 && <FormErrors errors={formErrors} /> }
+            
             <div className="form-group">
                 <label htmlFor="firstname">First Name <span className="text-danger">*</span></label>
                 <input
