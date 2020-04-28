@@ -19,7 +19,8 @@ namespace labourRecruitment.Models.LabourRecruitment
         public virtual DbSet<Availability> Availability { get; set; }
         public virtual DbSet<AvailabilityLabourer> AvailabilityLabourer { get; set; }
         public virtual DbSet<Client> Client { get; set; }
-        public virtual DbSet<Incident> Incident { get; set; }
+        public virtual DbSet<IncidentReport> IncidentReport { get; set; }
+        public virtual DbSet<IncidentReportDetail> IncidentReportDetail { get; set; }
         public virtual DbSet<IncidentType> IncidentType { get; set; }
         public virtual DbSet<Job> Job { get; set; }
         public virtual DbSet<JobLabourer> JobLabourer { get; set; }
@@ -30,7 +31,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public virtual DbSet<Skill> Skill { get; set; }
         public virtual DbSet<SystemUser> SystemUser { get; set; }
 
-        
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -49,7 +50,7 @@ namespace labourRecruitment.Models.LabourRecruitment
             modelBuilder.Entity<AvailabilityLabourer>(entity =>
             {
                 entity.HasKey(e => e.AvailabilityLobourerId)
-                    .HasName("PK__Availabi__786BC5121ECA2D32");
+                    .HasName("PK__Availabi__786BC5125E8125A5");
 
                 entity.Property(e => e.AvailabilityLobourerId).HasColumnName("availabilityLobourer_id");
 
@@ -79,7 +80,8 @@ namespace labourRecruitment.Models.LabourRecruitment
 
                 entity.Property(e => e.ClientDescription)
                     .HasColumnName("client_description")
-                    .HasColumnType("text");
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ClientEmail)
                     .HasColumnName("client_email")
@@ -109,43 +111,48 @@ namespace labourRecruitment.Models.LabourRecruitment
                     .HasConstraintName("FK__Client__user_id__267ABA7A");
             });
 
-            modelBuilder.Entity<Incident>(entity =>
+            modelBuilder.Entity<IncidentReport>(entity =>
             {
-                entity.Property(e => e.IncidentId).HasColumnName("incident_id");
+                entity.Property(e => e.IncidentReportId).HasColumnName("incident_report_id");
 
-                entity.Property(e => e.IncidentDate)
-                    .HasColumnName("incident_date")
+                entity.Property(e => e.IncidentReportDate)
+                    .HasColumnName("incident_report_date")
                     .HasColumnType("date");
 
-                entity.Property(e => e.IncidentDescription)
-                    .HasColumnName("incident_description")
+                entity.Property(e => e.IncidentReportDescription)
+                    .HasColumnName("incident_report_description")
                     .HasColumnType("text");
 
-                entity.Property(e => e.IncidentFile)
-                    .HasColumnName("incident_file")
+                entity.Property(e => e.IncidentReportFile)
+                    .HasColumnName("incident_report_file")
                     .HasMaxLength(150)
                     .IsUnicode(false);
 
                 entity.Property(e => e.IncidentTypeId).HasColumnName("incident_type_id");
 
-                entity.Property(e => e.JobId).HasColumnName("job_id");
-
-                entity.Property(e => e.LabourerId).HasColumnName("labourer_id");
-
                 entity.HasOne(d => d.IncidentType)
-                    .WithMany(p => p.Incident)
+                    .WithMany(p => p.IncidentReport)
                     .HasForeignKey(d => d.IncidentTypeId)
-                    .HasConstraintName("FK__Incident__incide__3E52440B");
+                    .HasConstraintName("FK__IncidentR__incid__3C69FB99");
+            });
 
-                entity.HasOne(d => d.Job)
-                    .WithMany(p => p.Incident)
-                    .HasForeignKey(d => d.JobId)
-                    .HasConstraintName("FK__Incident__job_id__3C69FB99");
+            modelBuilder.Entity<IncidentReportDetail>(entity =>
+            {
+                entity.Property(e => e.IncidentReportDetailId).HasColumnName("incident_report_detail_id");
 
-                entity.HasOne(d => d.Labourer)
-                    .WithMany(p => p.Incident)
-                    .HasForeignKey(d => d.LabourerId)
-                    .HasConstraintName("FK__Incident__labour__3D5E1FD2");
+                entity.Property(e => e.IncidentReportId).HasColumnName("incident_report_id");
+
+                entity.Property(e => e.JobLabourerId).HasColumnName("job_labourer_id");
+
+                entity.HasOne(d => d.IncidentReport)
+                    .WithMany(p => p.IncidentReportDetail)
+                    .HasForeignKey(d => d.IncidentReportId)
+                    .HasConstraintName("FK__IncidentR__incid__4CA06362");
+
+                entity.HasOne(d => d.JobLabourer)
+                    .WithMany(p => p.IncidentReportDetail)
+                    .HasForeignKey(d => d.JobLabourerId)
+                    .HasConstraintName("FK__IncidentR__job_l__4BAC3F29");
             });
 
             modelBuilder.Entity<IncidentType>(entity =>
@@ -205,8 +212,6 @@ namespace labourRecruitment.Models.LabourRecruitment
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TotalHired).HasColumnName("total_hired");
-
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Job)
                     .HasForeignKey(d => d.ClientId)
@@ -232,17 +237,17 @@ namespace labourRecruitment.Models.LabourRecruitment
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.JobLabourer)
                     .HasForeignKey(d => d.JobId)
-                    .HasConstraintName("FK__JobLabour__job_i__48CFD27E");
+                    .HasConstraintName("FK__JobLabour__job_i__46E78A0C");
 
                 entity.HasOne(d => d.Labourer)
                     .WithMany(p => p.JobLabourer)
                     .HasForeignKey(d => d.LabourerId)
-                    .HasConstraintName("FK__JobLabour__labou__49C3F6B7");
+                    .HasConstraintName("FK__JobLabour__labou__47DBAE45");
 
                 entity.HasOne(d => d.Skill)
                     .WithMany(p => p.JobLabourer)
                     .HasForeignKey(d => d.SkillId)
-                    .HasConstraintName("FK__JobLabour__skill__5535A963");
+                    .HasConstraintName("FK__JobLabour__skill__48CFD27E");
             });
 
             modelBuilder.Entity<JobSkill>(entity =>
@@ -258,12 +263,12 @@ namespace labourRecruitment.Models.LabourRecruitment
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.JobSkill)
                     .HasForeignKey(d => d.JobId)
-                    .HasConstraintName("FK__JobSkill__job_id__412EB0B6");
+                    .HasConstraintName("FK__JobSkill__job_id__3F466844");
 
                 entity.HasOne(d => d.Skill)
                     .WithMany(p => p.JobSkill)
                     .HasForeignKey(d => d.SkillId)
-                    .HasConstraintName("FK__JobSkill__skill___4222D4EF");
+                    .HasConstraintName("FK__JobSkill__skill___403A8C7D");
             });
 
             modelBuilder.Entity<Labourer>(entity =>
@@ -301,8 +306,6 @@ namespace labourRecruitment.Models.LabourRecruitment
             {
                 entity.Property(e => e.LabourerAttendanceId).HasColumnName("labourer_attendance_id");
 
-                entity.Property(e => e.DailyQualityRating).HasColumnName("daily_quality_rating");
-
                 entity.Property(e => e.Date)
                     .HasColumnName("date")
                     .HasColumnType("date");
@@ -333,12 +336,12 @@ namespace labourRecruitment.Models.LabourRecruitment
                 entity.HasOne(d => d.Labourer)
                     .WithMany(p => p.LabourerSkill)
                     .HasForeignKey(d => d.LabourerId)
-                    .HasConstraintName("FK__LabourerS__labou__44FF419A");
+                    .HasConstraintName("FK__LabourerS__labou__4316F928");
 
                 entity.HasOne(d => d.Skill)
                     .WithMany(p => p.LabourerSkill)
                     .HasForeignKey(d => d.SkillId)
-                    .HasConstraintName("FK__LabourerS__skill__45F365D3");
+                    .HasConstraintName("FK__LabourerS__skill__440B1D61");
             });
 
             modelBuilder.Entity<Skill>(entity =>
@@ -362,7 +365,7 @@ namespace labourRecruitment.Models.LabourRecruitment
             modelBuilder.Entity<SystemUser>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK__SystemUs__B9BE370FB1BB96B6");
+                    .HasName("PK__SystemUs__B9BE370F579D9C76");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 

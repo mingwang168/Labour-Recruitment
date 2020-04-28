@@ -8,7 +8,7 @@ namespace labourRecruitment.ViewModels
 {
     public class IncidentTypeVM
     {
-        public Incident Incident { get; set; }
+        //public Incident Incident { get; set; }
         public IEnumerable<IncidentType> IncidentTypes { get; set; }
 
     }

@@ -206,7 +206,7 @@ namespace labourRecruitment.Migrations
                         .HasColumnName("labourer_id");
 
                     b.HasKey("AvailabilityLobourerId")
-                        .HasName("PK__Availabi__786BC5121ECA2D32");
+                        .HasName("PK__Availabi__786BC5125E8125A5");
 
                     b.HasIndex("AvailabilityId");
 
@@ -228,7 +228,8 @@ namespace labourRecruitment.Migrations
 
                     b.Property<string>("ClientDescription")
                         .HasColumnName("client_description")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
                     b.Property<string>("ClientEmail")
                         .HasColumnName("client_email")
@@ -260,43 +261,54 @@ namespace labourRecruitment.Migrations
                     b.ToTable("Client");
                 });
 
-            modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.Incident", b =>
+            modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.IncidentReport", b =>
                 {
-                    b.Property<int>("IncidentId")
+                    b.Property<int>("IncidentReportId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("incident_id");
+                        .HasColumnName("incident_report_id");
 
-                    b.Property<DateTime?>("IncidentDate")
-                        .HasColumnName("incident_date")
+                    b.Property<DateTime?>("IncidentReportDate")
+                        .HasColumnName("incident_report_date")
                         .HasColumnType("date");
 
-                    b.Property<string>("IncidentDescription")
-                        .HasColumnName("incident_description")
+                    b.Property<string>("IncidentReportDescription")
+                        .HasColumnName("incident_report_description")
                         .HasColumnType("text");
 
-                    b.Property<string>("IncidentFile")
-                        .HasColumnName("incident_file")
+                    b.Property<string>("IncidentReportFile")
+                        .HasColumnName("incident_report_file")
                         .HasMaxLength(150)
                         .IsUnicode(false);
 
                     b.Property<int?>("IncidentTypeId")
                         .HasColumnName("incident_type_id");
 
-                    b.Property<int?>("JobId")
-                        .HasColumnName("job_id");
-
-                    b.Property<int?>("LabourerId")
-                        .HasColumnName("labourer_id");
-
-                    b.HasKey("IncidentId");
+                    b.HasKey("IncidentReportId");
 
                     b.HasIndex("IncidentTypeId");
 
-                    b.HasIndex("JobId");
+                    b.ToTable("IncidentReport");
+                });
 
-                    b.HasIndex("LabourerId");
+            modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.IncidentReportDetail", b =>
+                {
+                    b.Property<int>("IncidentReportDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("incident_report_detail_id");
 
-                    b.ToTable("Incident");
+                    b.Property<int?>("IncidentReportId")
+                        .HasColumnName("incident_report_id");
+
+                    b.Property<int?>("JobLabourerId")
+                        .HasColumnName("job_labourer_id");
+
+                    b.HasKey("IncidentReportDetailId");
+
+                    b.HasIndex("IncidentReportId");
+
+                    b.HasIndex("JobLabourerId");
+
+                    b.ToTable("IncidentReportDetail");
                 });
 
             modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.IncidentType", b =>
@@ -366,9 +378,6 @@ namespace labourRecruitment.Migrations
                         .HasColumnName("title")
                         .HasMaxLength(30)
                         .IsUnicode(false);
-
-                    b.Property<int?>("TotalHired")
-                        .HasColumnName("total_hired");
 
                     b.HasKey("JobId");
 
@@ -479,8 +488,7 @@ namespace labourRecruitment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("labourer_attendance_id");
 
-                    b.Property<double?>("DailyQualityRating")
-                        .HasColumnName("daily_quality_rating");
+                    b.Property<double?>("DailyQualityRating");
 
                     b.Property<DateTime?>("Date")
                         .HasColumnName("date")
@@ -568,7 +576,7 @@ namespace labourRecruitment.Migrations
                         .IsUnicode(false);
 
                     b.HasKey("UserId")
-                        .HasName("PK__SystemUs__B9BE370FB1BB96B6");
+                        .HasName("PK__SystemUs__B9BE370F579D9C76");
 
                     b.ToTable("SystemUser");
                 });
@@ -639,22 +647,25 @@ namespace labourRecruitment.Migrations
                         .HasConstraintName("FK__Client__user_id__267ABA7A");
                 });
 
-            modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.Incident", b =>
+            modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.IncidentReport", b =>
                 {
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.IncidentType", "IncidentType")
-                        .WithMany("Incident")
+                        .WithMany("IncidentReport")
                         .HasForeignKey("IncidentTypeId")
-                        .HasConstraintName("FK__Incident__incide__3E52440B");
+                        .HasConstraintName("FK__IncidentR__incid__3C69FB99");
+                });
 
-                    b.HasOne("labourRecruitment.Models.LabourRecruitment.Job", "Job")
-                        .WithMany("Incident")
-                        .HasForeignKey("JobId")
-                        .HasConstraintName("FK__Incident__job_id__3C69FB99");
+            modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.IncidentReportDetail", b =>
+                {
+                    b.HasOne("labourRecruitment.Models.LabourRecruitment.IncidentReport", "IncidentReport")
+                        .WithMany("IncidentReportDetail")
+                        .HasForeignKey("IncidentReportId")
+                        .HasConstraintName("FK__IncidentR__incid__4CA06362");
 
-                    b.HasOne("labourRecruitment.Models.LabourRecruitment.Labourer", "Labourer")
-                        .WithMany("Incident")
-                        .HasForeignKey("LabourerId")
-                        .HasConstraintName("FK__Incident__labour__3D5E1FD2");
+                    b.HasOne("labourRecruitment.Models.LabourRecruitment.JobLabourer", "JobLabourer")
+                        .WithMany("IncidentReportDetail")
+                        .HasForeignKey("JobLabourerId")
+                        .HasConstraintName("FK__IncidentR__job_l__4BAC3F29");
                 });
 
             modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.Job", b =>
@@ -670,17 +681,17 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Job", "Job")
                         .WithMany("JobLabourer")
                         .HasForeignKey("JobId")
-                        .HasConstraintName("FK__JobLabour__job_i__48CFD27E");
+                        .HasConstraintName("FK__JobLabour__job_i__46E78A0C");
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Labourer", "Labourer")
                         .WithMany("JobLabourer")
                         .HasForeignKey("LabourerId")
-                        .HasConstraintName("FK__JobLabour__labou__49C3F6B7");
+                        .HasConstraintName("FK__JobLabour__labou__47DBAE45");
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
                         .WithMany("JobLabourer")
                         .HasForeignKey("SkillId")
-                        .HasConstraintName("FK__JobLabour__skill__5535A963");
+                        .HasConstraintName("FK__JobLabour__skill__48CFD27E");
                 });
 
             modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.JobSkill", b =>
@@ -688,12 +699,12 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Job", "Job")
                         .WithMany("JobSkill")
                         .HasForeignKey("JobId")
-                        .HasConstraintName("FK__JobSkill__job_id__412EB0B6");
+                        .HasConstraintName("FK__JobSkill__job_id__3F466844");
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
                         .WithMany("JobSkill")
                         .HasForeignKey("SkillId")
-                        .HasConstraintName("FK__JobSkill__skill___4222D4EF");
+                        .HasConstraintName("FK__JobSkill__skill___403A8C7D");
                 });
 
             modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.Labourer", b =>
@@ -722,12 +733,12 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Labourer", "Labourer")
                         .WithMany("LabourerSkill")
                         .HasForeignKey("LabourerId")
-                        .HasConstraintName("FK__LabourerS__labou__44FF419A");
+                        .HasConstraintName("FK__LabourerS__labou__4316F928");
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
                         .WithMany("LabourerSkill")
                         .HasForeignKey("SkillId")
-                        .HasConstraintName("FK__LabourerS__skill__45F365D3");
+                        .HasConstraintName("FK__LabourerS__skill__440B1D61");
                 });
 #pragma warning restore 612, 618
         }

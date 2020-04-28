@@ -1,9 +1,38 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
+import * as Auth from '../utils/Auth'
+
+const BASE_URL = "http://localhost:5001/api";
 
 const Incidents = () => {
+    const [incidents, setIncidents] = useState()
+
+    const fetchIncidents = async() => {
+        let token = Auth.getToken()
+        try {
+            let response = await fetch(BASE_URL + '/incidents' , {
+                method : 'GET',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            let data = await response.json()
+            setIncidents(data)
+        } catch (e) {
+            console.error(e);
+        }
+        
+    }
+
+    useEffect(() => {
+        fetchIncidents()
+    }, [])
+
+    console.log(incidents)
     return (
     <div className="dashboard-main-wrapper">
         <TopNav />

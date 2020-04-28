@@ -99,7 +99,7 @@ namespace labourRecruitment.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__SystemUs__B9BE370FB1BB96B6", x => x.user_id);
+                    table.PrimaryKey("PK__SystemUs__B9BE370F579D9C76", x => x.user_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,6 +209,28 @@ namespace labourRecruitment.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IncidentReport",
+                columns: table => new
+                {
+                    incident_report_id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    incident_type_id = table.Column<int>(nullable: true),
+                    incident_report_date = table.Column<DateTime>(type: "date", nullable: true),
+                    incident_report_description = table.Column<string>(type: "text", nullable: true),
+                    incident_report_file = table.Column<string>(unicode: false, maxLength: 150, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IncidentReport", x => x.incident_report_id);
+                    table.ForeignKey(
+                        name: "FK__IncidentR__incid__3C69FB99",
+                        column: x => x.incident_type_id,
+                        principalTable: "IncidentType",
+                        principalColumn: "incident_type_id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Client",
                 columns: table => new
                 {
@@ -220,7 +242,7 @@ namespace labourRecruitment.Migrations
                     client_phone_number = table.Column<string>(unicode: false, maxLength: 30, nullable: true),
                     client_city = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
                     client_state = table.Column<string>(unicode: false, maxLength: 10, nullable: true),
-                    client_description = table.Column<string>(type: "text", nullable: true)
+                    client_description = table.Column<string>(unicode: false, maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -273,8 +295,7 @@ namespace labourRecruitment.Migrations
                     street = table.Column<string>(unicode: false, maxLength: 50, nullable: true),
                     city = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
                     state = table.Column<string>(unicode: false, maxLength: 10, nullable: true),
-                    postal_code = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
-                    total_hired = table.Column<int>(nullable: true)
+                    postal_code = table.Column<string>(unicode: false, maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -298,7 +319,7 @@ namespace labourRecruitment.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Availabi__786BC5121ECA2D32", x => x.availabilityLobourer_id);
+                    table.PrimaryKey("PK__Availabi__786BC5125E8125A5", x => x.availabilityLobourer_id);
                     table.ForeignKey(
                         name: "FK__Availabil__avail__2F10007B",
                         column: x => x.availability_id,
@@ -326,52 +347,16 @@ namespace labourRecruitment.Migrations
                 {
                     table.PrimaryKey("PK_LabourerSkill", x => x.labourer_skill_id);
                     table.ForeignKey(
-                        name: "FK__LabourerS__labou__44FF419A",
+                        name: "FK__LabourerS__labou__4316F928",
                         column: x => x.labourer_id,
                         principalTable: "Labourer",
                         principalColumn: "labourer_id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK__LabourerS__skill__45F365D3",
+                        name: "FK__LabourerS__skill__440B1D61",
                         column: x => x.skill_id,
                         principalTable: "Skill",
                         principalColumn: "skill_id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Incident",
-                columns: table => new
-                {
-                    incident_id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    job_id = table.Column<int>(nullable: true),
-                    labourer_id = table.Column<int>(nullable: true),
-                    incident_type_id = table.Column<int>(nullable: true),
-                    incident_date = table.Column<DateTime>(type: "date", nullable: true),
-                    incident_description = table.Column<string>(type: "text", nullable: true),
-                    incident_file = table.Column<string>(unicode: false, maxLength: 150, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Incident", x => x.incident_id);
-                    table.ForeignKey(
-                        name: "FK__Incident__incide__3E52440B",
-                        column: x => x.incident_type_id,
-                        principalTable: "IncidentType",
-                        principalColumn: "incident_type_id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK__Incident__job_id__3C69FB99",
-                        column: x => x.job_id,
-                        principalTable: "Job",
-                        principalColumn: "job_id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK__Incident__labour__3D5E1FD2",
-                        column: x => x.labourer_id,
-                        principalTable: "Labourer",
-                        principalColumn: "labourer_id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -382,29 +367,29 @@ namespace labourRecruitment.Migrations
                     job_labourer_id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     job_id = table.Column<int>(nullable: true),
+                    skill_id = table.Column<int>(nullable: true),
                     labourer_id = table.Column<int>(nullable: true),
                     client_quality_rating = table.Column<double>(nullable: true),
                     labourer_safety_rating = table.Column<double>(nullable: true),
-                    skill_id = table.Column<int>(nullable: true),
                     safety_meeting_completed = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_JobLabourer", x => x.job_labourer_id);
                     table.ForeignKey(
-                        name: "FK__JobLabour__job_i__48CFD27E",
+                        name: "FK__JobLabour__job_i__46E78A0C",
                         column: x => x.job_id,
                         principalTable: "Job",
                         principalColumn: "job_id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK__JobLabour__labou__49C3F6B7",
+                        name: "FK__JobLabour__labou__47DBAE45",
                         column: x => x.labourer_id,
                         principalTable: "Labourer",
                         principalColumn: "labourer_id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK__JobLabour__skill__5535A963",
+                        name: "FK__JobLabour__skill__48CFD27E",
                         column: x => x.skill_id,
                         principalTable: "Skill",
                         principalColumn: "skill_id",
@@ -425,13 +410,13 @@ namespace labourRecruitment.Migrations
                 {
                     table.PrimaryKey("PK_JobSkill", x => x.job_skill_id);
                     table.ForeignKey(
-                        name: "FK__JobSkill__job_id__412EB0B6",
+                        name: "FK__JobSkill__job_id__3F466844",
                         column: x => x.job_id,
                         principalTable: "Job",
                         principalColumn: "job_id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK__JobSkill__skill___4222D4EF",
+                        name: "FK__JobSkill__skill___403A8C7D",
                         column: x => x.skill_id,
                         principalTable: "Skill",
                         principalColumn: "skill_id",
@@ -446,7 +431,7 @@ namespace labourRecruitment.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     job_id = table.Column<int>(nullable: true),
                     labourer_id = table.Column<int>(nullable: true),
-                    daily_quality_rating = table.Column<double>(nullable: true),
+                    DailyQualityRating = table.Column<double>(nullable: true),
                     date = table.Column<DateTime>(type: "date", nullable: true)
                 },
                 constraints: table =>
@@ -463,6 +448,32 @@ namespace labourRecruitment.Migrations
                         column: x => x.labourer_id,
                         principalTable: "Labourer",
                         principalColumn: "labourer_id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IncidentReportDetail",
+                columns: table => new
+                {
+                    incident_report_detail_id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    job_labourer_id = table.Column<int>(nullable: true),
+                    incident_report_id = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IncidentReportDetail", x => x.incident_report_detail_id);
+                    table.ForeignKey(
+                        name: "FK__IncidentR__incid__4CA06362",
+                        column: x => x.incident_report_id,
+                        principalTable: "IncidentReport",
+                        principalColumn: "incident_report_id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK__IncidentR__job_l__4BAC3F29",
+                        column: x => x.job_labourer_id,
+                        principalTable: "JobLabourer",
+                        principalColumn: "job_labourer_id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -519,19 +530,19 @@ namespace labourRecruitment.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Incident_incident_type_id",
-                table: "Incident",
+                name: "IX_IncidentReport_incident_type_id",
+                table: "IncidentReport",
                 column: "incident_type_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Incident_job_id",
-                table: "Incident",
-                column: "job_id");
+                name: "IX_IncidentReportDetail_incident_report_id",
+                table: "IncidentReportDetail",
+                column: "incident_report_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Incident_labourer_id",
-                table: "Incident",
-                column: "labourer_id");
+                name: "IX_IncidentReportDetail_job_labourer_id",
+                table: "IncidentReportDetail",
+                column: "job_labourer_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Job_client_id",
@@ -610,10 +621,7 @@ namespace labourRecruitment.Migrations
                 name: "AvailabilityLabourer");
 
             migrationBuilder.DropTable(
-                name: "Incident");
-
-            migrationBuilder.DropTable(
-                name: "JobLabourer");
+                name: "IncidentReportDetail");
 
             migrationBuilder.DropTable(
                 name: "JobSkill");
@@ -632,6 +640,12 @@ namespace labourRecruitment.Migrations
 
             migrationBuilder.DropTable(
                 name: "Availability");
+
+            migrationBuilder.DropTable(
+                name: "IncidentReport");
+
+            migrationBuilder.DropTable(
+                name: "JobLabourer");
 
             migrationBuilder.DropTable(
                 name: "IncidentType");

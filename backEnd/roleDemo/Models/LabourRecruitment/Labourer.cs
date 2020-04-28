@@ -8,7 +8,6 @@ namespace labourRecruitment.Models.LabourRecruitment
         public Labourer()
         {
             AvailabilityLabourer = new HashSet<AvailabilityLabourer>();
-            Incident = new HashSet<Incident>();
             JobLabourer = new HashSet<JobLabourer>();
             LabourerAttendance = new HashSet<LabourerAttendance>();
             LabourerSkill = new HashSet<LabourerSkill>();
@@ -24,7 +23,6 @@ namespace labourRecruitment.Models.LabourRecruitment
 
         public virtual SystemUser User { get; set; }
         public virtual ICollection<AvailabilityLabourer> AvailabilityLabourer { get; set; }
-        public virtual ICollection<Incident> Incident { get; set; }
         public virtual ICollection<JobLabourer> JobLabourer { get; set; }
         public virtual ICollection<LabourerAttendance> LabourerAttendance { get; set; }
         public virtual ICollection<LabourerSkill> LabourerSkill { get; set; }

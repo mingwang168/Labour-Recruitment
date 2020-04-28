@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace labourRecruitment.Models.LabourRecruitment
 {
@@ -9,13 +7,11 @@ namespace labourRecruitment.Models.LabourRecruitment
     {
         public Job()
         {
-            Incident = new HashSet<Incident>();
             JobLabourer = new HashSet<JobLabourer>();
             JobSkill = new HashSet<JobSkill>();
             LabourerAttendance = new HashSet<LabourerAttendance>();
         }
 
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int JobId { get; set; }
         public int? ClientId { get; set; }
         public string Title { get; set; }
@@ -28,10 +24,8 @@ namespace labourRecruitment.Models.LabourRecruitment
         public string City { get; set; }
         public string State { get; set; }
         public string PostalCode { get; set; }
-        public int? TotalHired { get; set; }
 
         public virtual Client Client { get; set; }
-        public virtual ICollection<Incident> Incident { get; set; }
         public virtual ICollection<JobLabourer> JobLabourer { get; set; }
         public virtual ICollection<JobSkill> JobSkill { get; set; }
         public virtual ICollection<LabourerAttendance> LabourerAttendance { get; set; }
