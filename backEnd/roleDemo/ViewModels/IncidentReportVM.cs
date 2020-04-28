@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace labourRecruitment.ViewModels
 {
-    public class IncidentTypeVM
+    public class IncidentReportVM
     {
-        //public Incident Incident { get; set; }
-        public IEnumerable<IncidentType> IncidentTypes { get; set; }
-
+        public IncidentReport IncidentReport { get; set; }
+        public IEnumerable<LabourerIncidentReport> LabourerReports { get; set; }
     }
 }

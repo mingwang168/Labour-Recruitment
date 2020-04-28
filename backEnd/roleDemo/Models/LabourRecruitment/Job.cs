@@ -7,6 +7,7 @@ namespace labourRecruitment.Models.LabourRecruitment
     {
         public Job()
         {
+            IncidentReport = new HashSet<IncidentReport>();
             JobLabourer = new HashSet<JobLabourer>();
             JobSkill = new HashSet<JobSkill>();
             LabourerAttendance = new HashSet<LabourerAttendance>();
@@ -26,6 +27,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public string PostalCode { get; set; }
 
         public virtual Client Client { get; set; }
+        public virtual ICollection<IncidentReport> IncidentReport { get; set; }
         public virtual ICollection<JobLabourer> JobLabourer { get; set; }
         public virtual ICollection<JobSkill> JobSkill { get; set; }
         public virtual ICollection<LabourerAttendance> LabourerAttendance { get; set; }

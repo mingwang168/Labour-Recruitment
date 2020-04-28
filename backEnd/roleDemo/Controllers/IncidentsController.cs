@@ -14,12 +14,12 @@ namespace labourRecruitment.Controllers
     [ApiController]
     public class IncidentsController : ControllerBase
     {
-        //private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        //public IncidentsController(ApplicationDbContext context)
-        //{
-        //    _context = context;
-        //}
+        public IncidentsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         //// GET: api/Incidents
         //[HttpGet]
@@ -73,14 +73,21 @@ namespace labourRecruitment.Controllers
         //}
 
         //// POST: api/Incidents
-        //[HttpPost]
-        //public async Task<ActionResult<Incident>> PostIncident(Incident incident)
-        //{
-        //    _context.Incident.Add(incident);
-        //    await _context.SaveChangesAsync();
+        [HttpPost]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult PostIncident(IncidentReportVM report)
+        {
+            _context.IncidentReport.Add(report.IncidentReport);
 
-        //    return CreatedAtAction("GetIncident", new { id = incident.IncidentId }, incident);
-        //}
+            foreach (LabourerIncidentReport labourerReport in report.LabourerReports)
+            {
+                labourerReport.IncidentReportId = report.IncidentReport.IncidentReportId;
+                _context.LabourerIncidentReport.Add(labourerReport);
+
+            }
+            _context.SaveChanges();
+            return new ObjectResult(report);
+        }
 
 
         //// DELETE: api/Incidents/5
