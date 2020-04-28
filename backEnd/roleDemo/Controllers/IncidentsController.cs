@@ -61,7 +61,17 @@ namespace labourRecruitment.Controllers
 
             incident.Job = _context.Job.Where(j => j.JobId == incident.JobId).Select(j => new Job
             {
-                Title = j.Title
+                Title = j.Title,
+                Street = j.Street,
+                City = j.City,
+                State = j.State,
+                Client = j.Client,
+                JobLabourer =j.JobLabourer.Select(jl => new JobLabourer
+                {
+                    Labourer = jl.Labourer,
+                    Skill = jl.Skill
+                }).ToList()
+
             }).FirstOrDefault();
             incident.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == incident.IncidentTypeId).Select(i => new IncidentType
             {
