@@ -83,15 +83,11 @@ const IncidentDetail = (props) => {
                                     <h3 className="font-16">Affected labourer names</h3>
                                     {details.labourerIncidentReport.map((r, i) => (
                                         <ul key={i} className="list-unstyled mb-0">
-                                            <li>{r.labourer.labourerFirstName} {r.labourer.labourerLastName} ()</li>
+                                            <li>{r.labourer.labourerFirstName} {r.labourer.labourerLastName}</li>
                                         </ul>
                                     ))
                                     }
                                 </div>
-                                {/* <div className="card-body border-top">
-                                    <h3 className="font-16">Job title</h3>
-                                    <p>Drywall</p>
-                                </div> */}
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Incident type</h3>
                                     <p>{details.incidentType.incidentTypeName}</p>
