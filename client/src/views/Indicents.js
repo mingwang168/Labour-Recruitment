@@ -32,7 +32,6 @@ const Incidents = () => {
         fetchIncidents()
     }, [])
 
-    console.log(incidents)
     return (
     <>
     {incidents && 

@@ -1,9 +1,38 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
+
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
+import * as Auth from '../utils/Auth'
+
+const BASE_URL = "http://localhost:5001/api";
 
 const IncidentDetail = (props) => {
+    const [details, setDetails] = useState()
+
+    const fetchIncidentDetails = async(id) => {
+        let token = Auth.getToken()
+        console.log(token)
+        // try {
+        //     const response = await fetch(BASE_URL+'/incidents'+ id , {
+        //         method = 'GET',
+        //         headers: {
+        //             "Accept": "application/json",
+        //             "Content-Type": "application/json",
+        //             "Authorization": `Bearer ${token}`
+        //         }
+        //     })
+        //     const data = await response.json()
+        //     console.log(data)
+
+        // } catch (e) {
+        //     console.error(e);
+        // }
+    }
+    
+    useEffect(() =>{
+        fetchIncidentDetails(props.match.params.id)
+    }, [])
     return (
         <div className="dashboard-main-wrapper">
             <TopNav />
@@ -48,7 +77,7 @@ const IncidentDetail = (props) => {
                                     <h3 className="font-16">Affected labourer names</h3>
                                     <ul className="list-unstyled mb-0">
                                         <li>John Doe</li>
-                                        <l1>Sierra Brooks</l1>
+                                        <li>Sierra Brooks</li>
                                     </ul>
                                 </div>
                                 <div className="card-body border-top">
@@ -66,9 +95,9 @@ const IncidentDetail = (props) => {
                                 
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Incident file</h3>
-                                    <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="customFile"></input>
-                                    <label class="custom-file-label" for="customFile">Choose incident file</label>
+                                    <div className="custom-file">
+                                    <input type="file" className="custom-file-input" id="customFile"></input>
+                                    <label className="custom-file-label" htmlFor="customFile">Choose incident file</label>
                                 </div>
                                 </div>
                                 {/* Display this only if the job owner is viewing this page */}
