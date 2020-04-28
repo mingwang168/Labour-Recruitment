@@ -36,7 +36,7 @@ namespace labourRecruitment.Controllers
                         Labourer = r.Labourer
                     }).ToList();
 
-                report.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == report.IncidentTypeId).Select(i => new IncidentType
+                report.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == report.IncidentTypeId).Select(i=> new IncidentType
                 {
                     IncidentTypeName = i.IncidentTypeName
                 }).FirstOrDefault();
@@ -50,10 +50,11 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Incidents/5
         [HttpGet("{jobId}", Name = "GetIncidentsByJobId")]
+
         public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncidentsByJobId(int jobId)
         {
-            return await _context.IncidentReport.Where(j => j.JobId == jobId).ToListAsync();
 
+            return await _context.Incident.Where(j => j.JobId == jobId).ToListAsync();
         }
 
 
@@ -75,6 +76,6 @@ namespace labourRecruitment.Controllers
         }
 
 
-
+        
     }
 }
