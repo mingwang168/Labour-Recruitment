@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import * as Auth from '../../utils/Auth';
 import * as FormValidator from '../../utils/FormValidator';
-import PROVINCES from '../../utils/Provinces';
+import PROVINCES from '../../utils/staticdata/Provinces';
 
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";

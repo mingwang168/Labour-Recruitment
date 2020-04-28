@@ -4,7 +4,7 @@ import Select from 'react-select';
 
 import * as Auth from '../../utils/Auth';
 import * as DayCalculator from '../../utils/DayCalculator';
-import PROVINCES from '../../utils/Provinces';
+import PROVINCES from '../../utils/staticdata/Provinces';
 
 import TopNav from '../../components/TopNav';
 import SideNav from '../../components/SideNav';
@@ -114,7 +114,6 @@ const ClientAddJob = ({ history }) => {
             if(response.status !== 200) {
                 setFormErrors(["Failed to post job. Please try again later."]);
                 throw response;
-
             }
 
             // Success
@@ -162,7 +161,7 @@ const ClientAddJob = ({ history }) => {
             </ul>
             </div>
             }
-            <form className="client-add-job-form" onSubmit={e => validateForm(e)}>
+            <form className="client-add-job-form">
                 <div className="form-group mb-4">
                     <label htmlFor="title">Job Title <span className="text-danger">*</span></label>
                     <input
@@ -268,7 +267,7 @@ const ClientAddJob = ({ history }) => {
                         Cancel
                     </Link>
                     <button
-                        type="submit"
+                        onClick={validateForm}
                         className="btn btn-space btn-primary btn-lg"
                     >
                         Create New Job

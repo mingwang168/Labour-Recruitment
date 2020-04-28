@@ -2,7 +2,7 @@ import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import * as FormValidator from '../../utils/FormValidator';
-import DAYS from '../../utils/Days';
+import DAYS from '../../utils/staticdata/Days';
 
 const BASE_URL = "http://localhost:5001/api";
 const AUTH_TOKEN = "auth_token";
