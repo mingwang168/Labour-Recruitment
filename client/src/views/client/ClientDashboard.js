@@ -32,7 +32,7 @@ const ClientDashboard = (props) => {
     useEffect(() => {
         fetchJobs();
     }, [])
-
+    console.log(jobs)
     return (
     <>
     <div className="row">
