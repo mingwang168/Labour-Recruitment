@@ -6,7 +6,7 @@ import SideNav from '../../components/SideNav';
 import SelectWorkers from './components/SelectWorkers';
 import * as Auth from '../../utils/Auth';
 import Select from 'react-select';
-import PROVINCES from '../../utils/Provinces';
+import PROVINCES from '../../utils/staticdata/Provinces';
 
 const BASE_URL = "http://localhost:5001/api";
 
