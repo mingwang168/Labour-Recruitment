@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FormatDateString } from '../utils/DataSanitizer';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
@@ -52,8 +53,12 @@ const JobDetail = (props) => {
                 <div className="page-breadcrumb">
                 <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/dashboard" className="breadcrumb-link">Dashboard</a></li>
-                    <li className="breadcrumb-item active" aria-current="page">{details.title}</li>
+                    <li className="breadcrumb-item">
+                        <Link to="/dashboard" className="breadcrumb-link">Dashboard</Link>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">
+                        {details.title}
+                    </li>
                 </ol>
                 </nav>
                 </div>
@@ -79,11 +84,14 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Dates</h3>
-                            <time>{details.startDate.split('T')[0]}</time> to <time>{details.endDate.split('T')[0]}</time>
+                            <time>{FormatDateString(details.startDate)}</time> to <time>{FormatDateString(details.endDate)}</time>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Location</h3>
-                            <p>{details.street}<br/><span className="text-capitalize">{details.city}</span>,<span className="text-uppercase">{details.state}</span></p>
+                            <address className="mb-0">
+                                {details.street}<br />
+                                {details.city}, {details.state}
+                            </address>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Labourers Hired</h3>
