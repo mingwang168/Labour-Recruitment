@@ -16,12 +16,12 @@ exports.CLIENT_JOBS_TABLE_COLUMNS = [
         accessor: 'totalHired',
     },
     {
-        Header: 'Status',
-        accessor: 'status',
-    },
-    {
         Header: 'Reports',
         accessor: 'reports',
+    },
+    {
+        Header: 'Completion Status',
+        accessor: 'status',
     }
 ];
 
@@ -43,11 +43,11 @@ exports.LABOURERS_JOBS_TABLE_COLUMNS = [
         accessor: 'company',
     },
     {
-        Header: 'Status',
-        accessor: 'status',
-    },
-    {
         Header: 'Reports',
         accessor: 'reports',
+    },
+    {
+        Header: 'Completion Status',
+        accessor: 'status',
     }
 ];
