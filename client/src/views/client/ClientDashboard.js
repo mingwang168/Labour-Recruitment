@@ -22,7 +22,7 @@ const ClientDashboard = (props) => {
 
             let data = await response.json();
             if(data.length) {
-                setJobs(DataSanitizer.ClientJobs(data));
+                setJobs(DataSanitizer.cleanClientJobs(data));
                 console.log(data);
             }
         } catch(e) {

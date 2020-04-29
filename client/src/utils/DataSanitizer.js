@@ -1,4 +1,4 @@
-exports.ClientJobs = (data) => {
+exports.cleanClientJobs = (data) => {
     let sanitizedData = [];
 
     data.forEach((d) => {
@@ -14,12 +14,12 @@ exports.ClientJobs = (data) => {
 
         // Get start date
         if(d.hasOwnProperty("startDate")) {
-            sanitizedJob = {...sanitizedJob, startDate: this.FormatDateString(d.startDate)};
+            sanitizedJob = {...sanitizedJob, startDate: this.formatDateString(d.startDate)};
         }
 
         // Get end date
         if(d.hasOwnProperty("endDate")){
-            sanitizedJob = {...sanitizedJob, endDate: this.FormatDateString(d.endDate)};
+            sanitizedJob = {...sanitizedJob, endDate: this.formatDateString(d.endDate)};
         }
 
         // Get status
@@ -35,7 +35,44 @@ exports.ClientJobs = (data) => {
     return sanitizedData;
 }
 
-exports.FormatDateString = (date) => {
+exports.cleanAdminJobs = (data) => {
+    let sanitizedData = [];
+
+    data.forEach((d) => {
+        let sanitizedJob = {};
+
+        // Get job id
+        sanitizedJob = {...sanitizedJob, jobId: d.jobId};
+
+        // Get job title
+        if(d.hasOwnProperty("title")) {
+            sanitizedJob = {...sanitizedJob, title: d.title};
+        }
+
+        // Get start date
+        if(d.hasOwnProperty("startDate")) {
+            sanitizedJob = {...sanitizedJob, startDate: this.formatDateString(d.startDate)};
+        }
+
+        // Get end date
+        if(d.hasOwnProperty("endDate")){
+            sanitizedJob = {...sanitizedJob, endDate: this.formatDateString(d.endDate)};
+        }
+
+        // Get status
+        if(d.hasOwnProperty("isComplete")) {
+            let status = d.isComplete ? "Complete" : "In Progress";
+            sanitizedJob = {...sanitizedJob, status: status};
+        }
+
+        // Add to data array
+        sanitizedData.push(sanitizedJob);
+    });
+
+    return sanitizedData;
+}
+
+exports.formatDateString = (date) => {
     let d = new Date(date);
 
     const months = [
