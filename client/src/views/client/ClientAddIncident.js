@@ -1,55 +1,132 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import * as Auth from '../../utils/Auth';
+import * as DataSanitizer from '../../utils/DataSanitizer';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
+import LabourerList from '../components/LabourerList';
 import Select from 'react-select';
 
-const LABOURERS_LIST = [
-    { value: 'Labourer One', label: 'Labourer One' },
-    { value: 'Labourer Two', label: 'Labourer Two' },
-    { value: 'Labourer Three', label: 'Labourer Three' },
-    { value: 'Labourer Four', label: 'Labourer Four' },
-];
 
 const BASE_URL = "http://localhost:5001/api";
 
-const ClientAddIncident = () => {
-    const [workers, setWorkers] = useState([]);
-    const [skillOptions, setSkillOptions] = useState([]);
-    const [selectedSkills, setSelectedSkills] = useState([]);
+const ClientAddIncident = ({ history }) => {
+    const [report, setReport] = useState({
+        incidentdate : "",
+        incidentsummary : ""
+    })
+    const [jobs, setJobs] = useState([]);
+    const [labourerList, setLabourerList] = useState([]);
+    const [incidentOptions, setIncidentOptions] = useState([]);
+    const [selectedJob, setSelectedJob] = useState();
+    const [selectedIncident, setSelectedIncident] = useState()
     const [selectedLabourers, setselectedLabourers] = useState([]);
 
-    const validateForm = _ => {
+    const {incidentdate, incidentsummary} = report
+    const validateForm = e => {
+        e.preventDefault();
         console.log("Validating form...")
+        submitForm()
     }
 
-    const fetchskillOptions = async () => {
+    const fetchAllJobs = async() => {
         try {
-            const response = await fetch(BASE_URL + '/skills');
+            const response = await fetch(BASE_URL + `/Job/GetJobByClientId/${Auth.getID()}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            });
+
             let data = await response.json();
-            setSkillOptions(data);
+            setJobs(DataSanitizer.ClientJobs(data))
         } catch (e) {
             console.error(e)
         }
     }
 
-    const onChangeSkill = (skills) => {
-        if (skills) {
-            skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]))
+    const fetchLabourers= async(id) => {
+        if (selectedJob) {
+            const response = await fetch(BASE_URL + `/JobLabourers/${id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            })
+            const data = await response.json()
+            setLabourerList(data)
         }
     }
 
-    const onChangeLabourer = (labourers) => {
-        if (labourers) {
-            labourers.forEach(labourer => setselectedLabourers([...selectedLabourers, labourer.value]))
+    const fetchIncidentOptions = async() => {
+        try {
+            const response = await fetch(BASE_URL + '/IncidentType');
+            let data = await response.json();
+            setIncidentOptions(data)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+    
+    const onChange = e => {
+        setReport({... report, [e.target.name]: e.target.value})
+    }
+
+    const onChangeJob = job => {
+        if (job) {
+            setSelectedJob(job.value)
+            fetchLabourers(job.value)
         }
     }
 
+    const onChangeType = type => {
+        if (type) {
+            setSelectedIncident(type.value)
+        }
+    }
+
+    const submitForm = async() => {
+        let token = Auth.getToken()
+
+        let newReport = {
+            IncidentTypeId : selectedIncident,
+            IncidentReportDate : incidentdate,
+            IncidentReportDescription : incidentsummary,
+            JobId : selectedJob
+        }
+        
+        try {
+            let response = await fetch(BASE_URL + '/incidents', {
+                method : 'POST',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body : JSON.stringify({"IncidentReport" : newReport, "LabourerReports" : selectedLabourers})
+            })
+            
+            // Bad response
+            if(response.status !== 200) {
+                throw response;
+            }
+
+            let data = await response.json();
+            history.push('/incident/'+ data);
+
+        } catch(e) {
+            console.error(e);
+        }
+    }
 
     useEffect(() => {
-        fetchskillOptions();
+        fetchAllJobs();
+        fetchIncidentOptions();
     }, []);
+
+    console.log(selectedJob)
+
 
     return (
         <div className="dashboard-main-wrapper">
@@ -89,6 +166,7 @@ const ClientAddIncident = () => {
                                             name="incidentdate"
                                             type="date"
                                             className="form-control form-control-lg"
+                                            onChange={e => onChange(e)}
                                         />
                                     </div>
                                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
@@ -107,29 +185,41 @@ const ClientAddIncident = () => {
                                         <Select
                                             required
                                             name="incidenttype"
-                                            options={skillOptions &&
-                                                skillOptions.map(skill => {
-                                                    return {
-                                                        value: skill.skillId, label: skill.skillName
-                                                    }
+                                            options={incidentOptions &&
+                                                incidentOptions.map(incident => {
+                                                    return {value: incident.incidentTypeId, label: incident.incidentTypeName}
                                                 })
                                             }
-                                            onChange={onChangeSkill}
-                                            isMulti
+                                            onChange={onChangeType}
                                         />
                                     </div>
                                 </div>
-                                <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-4 px-0">
-                                    <label className="d-block" htmlFor="injuredLabourers">Injured Labourers<span className="text-danger">*</span></label>
-                                    <Select
-                                        required
-                                        name="injuredLabourers"
-                                        options={LABOURERS_LIST}
-                                        onChangeSkill={onChangeLabourer}
-                                        isMulti
-                                    />
+                                <div className="form-row mb-4">
+                                    <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
+                                        <label className="d-block" htmlFor="job">Select Job<span className="text-danger">*</span></label>
+                                        <Select
+                                            required
+                                            name="job"
+                                            options={ jobs &&
+                                                jobs.map(job => {return {value: job.jobId, label: job.title}}) 
+                                            } 
+                                            onChange={onChangeJob}
+                                        />
+                                    </div>
+                                    <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
+                                        <label className="d-block" htmlFor="injuredLabourers">Injured Labourers<span className="text-danger">*</span></label>
+                                        {selectedJob ? <LabourerList selectedJob={selectedJob} 
+                                                                     selectedLabourers={selectedLabourers}
+                                                                     setselectedLabourers={setselectedLabourers} 
+                                                                     labourerList = {labourerList}
+                                                                     fetchLabourers = {fetchLabourers} /> :
+                                        <input
+                                        placeholder="Select..."
+                                        className="form-control form-control-lg"
+                                        disabled
+                                        />}
+                                    </div>
                                 </div>
-
                                 <div className="form-group mb-4">
                                     <label htmlFor="incidentsummary">Summary of Incident</label>
                                     <textarea
@@ -138,13 +228,14 @@ const ClientAddIncident = () => {
                                         placeholder="Enter incident summary"
                                         rows="3"
                                         className="form-control form-control-lg"
+                                        onChange={e => onChange(e)}
                                     />
                                 </div>
 
                                 <div className="form-group row text-right mt-4">
                                     <div className="col col-lg-12">
                                         <Link to="/dashboard" className="btn btn-space btn-light btn-lg">Cancel</Link>
-                                        <button onClick={() => validateForm()} className="btn btn-space btn-primary btn-lg">Create New Incident</button>
+                                        <button onClick={validateForm} className="btn btn-space btn-primary btn-lg">Create New Incident</button>
                                     </div>
                                 </div>
 

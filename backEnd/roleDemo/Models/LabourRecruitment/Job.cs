@@ -14,7 +14,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         }
 
         public int JobId { get; set; }
-        public int? ClientId { get; set; }
+        public int ClientId { get; set; }
         public string Title { get; set; }
         public string JobDescription { get; set; }
         public DateTime? StartDate { get; set; }

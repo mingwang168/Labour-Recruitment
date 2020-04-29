@@ -66,7 +66,7 @@ namespace labourRecruitment.Controllers
                 City = j.City,
                 State = j.State,
                 Client = j.Client,
-                JobLabourer =j.JobLabourer.Select(jl => new JobLabourer
+                JobLabourer = j.JobLabourer.Select(jl => new JobLabourer
                 {
                     Labourer = jl.Labourer,
                     Skill = jl.Skill
@@ -86,7 +86,7 @@ namespace labourRecruitment.Controllers
             return incident;
         }
 
-        
+
         //// POST: api/Incidents
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -98,10 +98,9 @@ namespace labourRecruitment.Controllers
             {
                 labourerReport.IncidentReportId = report.IncidentReport.IncidentReportId;
                 _context.LabourerIncidentReport.Add(labourerReport);
-
             }
             _context.SaveChanges();
-            return new ObjectResult(report);
+            return new ObjectResult(report.IncidentReport.IncidentReportId);
         }
 
 

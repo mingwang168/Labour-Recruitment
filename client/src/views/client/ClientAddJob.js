@@ -79,7 +79,7 @@ const ClientAddJob = ({ history }) => {
         }
         console.log(requiredLabourers)
     }
-    
+
     const submitForm = async() => {
         let token = Auth.getToken();
         let id = Auth.getID();
