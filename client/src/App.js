@@ -26,6 +26,13 @@ import ClientAddIncident from "./views/client/ClientAddIncident";
 import LabourerRegister from "./views/labourer/LabourerRegister";
 import LabourerProfile from "./views/labourer/LabourerProfile";
 
+import AdminJobs from "./views/admin/AdminJobs";
+import AdminClients from "./views/admin/AdminClients";
+import AdminLabourers from "./views/admin/AdminLabourers";
+import AdminIncidents from "./views/admin/AdminIncidents";
+import AdminInvoices from "./views/admin/AdminInvoices";
+import AdminPayrates from "./views/admin/AdminPayrates";
+
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 	return (
 		<Route
@@ -75,6 +82,14 @@ class App extends Component {
 
 		{/* Labourer Views */}
         <ProtectedRoute exact path='/profile/labourer' component={LabourerProfile} />
+
+		{/* Admin Views */}
+		<ProtectedRoute exact path='/admin/jobs' component={AdminJobs} />
+		<ProtectedRoute exact path='/admin/clients' component={AdminClients} />
+		<ProtectedRoute exact path='/admin/labourers' component={AdminLabourers} />
+		<ProtectedRoute exact path='/admin/incidents' component={AdminIncidents} />
+		<ProtectedRoute exact path='/admin/invoices' component={AdminInvoices} />
+		<ProtectedRoute exact path='/admin/payrates' component={AdminPayrates} />
 
 		<Route component={PageNotFound} />
 	</Switch>
