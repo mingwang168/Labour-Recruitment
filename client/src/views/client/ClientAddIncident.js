@@ -5,6 +5,7 @@ import * as DataSanitizer from '../../utils/DataSanitizer';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
+import LabourerList from '../components/LabourerList';
 import Select from 'react-select';
 
 const LABOURERS_LIST = [
@@ -19,7 +20,8 @@ const BASE_URL = "http://localhost:5001/api";
 const ClientAddIncident = () => {
     const [jobs, setJobs] = useState([]);
     const [incidentOptions, setIncidentOptions] = useState([]);
-    const [selectedSkills, setSelectedSkills] = useState([]);
+    const [selectedJob, setSelectedJob] = useState();
+    const [selectedIncident, setSelectedIncident] = useState()
     const [selectedLabourers, setselectedLabourers] = useState([]);
 
     const validateForm = _ => {
@@ -50,25 +52,23 @@ const ClientAddIncident = () => {
             console.error(e)
         }
     }
-
-    const onChangeSkill = (skills) => {
-        // if (skills) {
-        //     skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]))
-        // }
-    }
-
-    const onChangeLabourer = (labourers) => {
-        if (labourers) {
-            labourers.forEach(labourer => setselectedLabourers([...selectedLabourers, labourer.value]))
+    
+    const onChangeJob = (job) => {
+        if (job) {
+            setSelectedJob(job.value)
         }
     }
 
-
+    const onChangeType = (type) => {
+        if (type) {
+            setSelectedIncident(type.value)
+        }
+    }
+    console.log(selectedLabourers)
     useEffect(() => {
         fetchAllJobs();
         fetchIncidentOptions();
     }, []);
-
 
     return (
         <div className="dashboard-main-wrapper">
@@ -128,13 +128,10 @@ const ClientAddIncident = () => {
                                             name="incidenttype"
                                             options={incidentOptions &&
                                                 incidentOptions.map(incident => {
-                                                    return {
-                                                        value: incident.incidentTypeId, label: incident.incidentTypeName
-                                                    }
+                                                    return {value: incident.incidentTypeId, label: incident.incidentTypeName}
                                                 })
                                             }
-                                            onChange={onChangeSkill}
-                                            isMulti
+                                            onChange={onChangeType}
                                         />
                                     </div>
                                 </div>
@@ -147,18 +144,18 @@ const ClientAddIncident = () => {
                                             options={ jobs &&
                                                 jobs.map(job => {return {value: job.jobId, label: job.title}}) 
                                             } 
-                                            onChangeSkill={onChangeLabourer}
+                                            onChange={onChangeJob}
                                         />
                                     </div>
                                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
                                         <label className="d-block" htmlFor="injuredLabourers">Injured Labourers<span className="text-danger">*</span></label>
-                                        <Select
-                                            required
-                                            name="injuredLabourers"
-                                            options={LABOURERS_LIST}
-                                            onChangeSkill={onChangeLabourer}
-                                            isMulti
-                                        />
+                                        {selectedJob ? <LabourerList selectedJob={selectedJob} 
+                                                                     selectedLabourers={selectedLabourers}
+                                                                     setselectedLabourers={setselectedLabourers} /> :
+                                        <input
+                                        placeholder="Select Job First"
+                                        className="form-control form-control-lg"
+                                        />}
                                     </div>
                                 </div>
                                 <div className="form-group mb-4">
