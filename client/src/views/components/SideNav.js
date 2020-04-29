@@ -1,7 +1,106 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import * as Auth from '../../utils/Auth';
 
 const SideNav = () => {
+
+    const CLIENT_LINKS = [
+        {
+            name: "Dashboard",
+            path: "/dashboard",
+            icon: "dashboard"
+        },
+        {
+            name: "My Profile",
+            path: "/profile/client",
+            icon: "account_box"
+        },
+        {
+            name: "Add Job",
+            path: "/addjob",
+            icon: "edit"
+        },
+        {
+            name: "Incidents",
+            path: "/incidents",
+            icon: "report_problem"
+        },
+        {
+            name: "Invoices",
+            path: "/dashboard",
+            icon: "receipt"
+        }
+    ];
+
+    const LABOURER_LINKS = [
+        {
+            name: "Dashboard",
+            path: "/dashboard",
+            icon: "dashboard"
+        },
+        {
+            name: "My Profile",
+            path: "/profile/labourer",
+            icon: "account_box"
+        },
+        {
+            name: "Incidents",
+            path: "/incidents",
+            icon: "report_problem"
+        },
+        {
+            name: "Invoices",
+            path: "/invoices",
+            icon: "receipt"
+        }
+    ];
+    
+    const ADMIN_LINKS = [
+        {
+            name: "Dashboard",
+            path: "/dashboard",
+            icon: "dashboard"
+        },
+        {
+            name: "Jobs",
+            path: "/admin/jobs",
+            icon: "work"
+        },
+        {
+            name: "Clients",
+            path: "/admin/clients",
+            icon: "business"
+        },
+        {
+            name: "Labourers",
+            path: "/admin/labourers",
+            icon: "emoji_people"
+        },
+        {
+            name: "Invoices",
+            path: "/admin/invoices",
+            icon: "receipt"
+        },
+        {
+            name: "Payrates",
+            path: "/admin/payrates",
+            icon: "trending_up"
+        }
+    ];
+
+    let role = Auth.getRole();
+    let links;
+
+    if(role === "Client") {
+        links = CLIENT_LINKS;
+    } else if(role === "Labourer") {
+        links = LABOURER_LINKS;
+    } else if(role === "Admin") {
+        links = ADMIN_LINKS;
+    } else {
+        Auth.forceLogout();
+    }
+
     return (
     <div className="nav-left-sidebar sidebar-dark">
     <div className="menu-list">
@@ -15,36 +114,25 @@ const SideNav = () => {
 
         {/* Main Navigation */}
         <div className="collapse navbar-collapse" id="navbarNav">
+
+        { links && 
         <ul className="navbar-nav flex-column">
             <li className="nav-divider">
-                Client Menu
+                {`${role} Menu`}
             </li>
-            <div className="nav-item">
-                <Link to="/dashboard" className="nav-link">
-                    <i className="material-icons" style={{paddingBottom:'3px'}}>dashboard</i>Dashboard
-                </Link>
-            </div>
-            <div className="nav-item">
-                <Link to="/addjob" className="nav-link">
-                    <i className="material-icons" style={{paddingBottom:'3px'}}>edit</i>Add Job
-                </Link>
-            </div>
-            <div className="nav-item">
-                <Link to="/incidents" className="nav-link">
-                    <i className="material-icons" style={{paddingBottom:'3px'}}>report_problem</i>Incident Reports
-                </Link>
-            </div>
-            <div className="nav-item">
-                <Link to="/profile/client" className="nav-link">
-                    <i className="material-icons" style={{paddingBottom:'3px'}}>account_box</i>Company Profile
-                </Link>
-            </div>
-            <div className="nav-item">
-                <Link to="/profile/labourer" className="nav-link">
-                    <i className="material-icons" style={{paddingBottom:'3px'}}>account_box</i>Labourer Profile
-                </Link>
-            </div>
+            {
+                links.map((link, i) => {
+                    return (
+                    <div className="nav-item" key={i}>
+                    <Link to={link.path} className="nav-link">
+                        <i className="material-icons pb-1">{link.icon}</i>{link.name}
+                    </Link>
+                    </div>
+                    );
+                })
+            }
         </ul>
+        }
         </div>
     </nav>
     </div>
