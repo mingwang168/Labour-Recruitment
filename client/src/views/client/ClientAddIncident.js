@@ -40,7 +40,6 @@ const ClientAddIncident = ({ history }) => {
             });
 
             let data = await response.json();
-            console.log(data)
             setJobs(data)
         } catch (e) {
             console.error(e)

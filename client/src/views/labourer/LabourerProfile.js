@@ -22,7 +22,7 @@ const LabourerProfile = () => {
 			<div className="col">
 			<div className="mb-4 pt-3 card card-small">
                 <div className="border-bottom text-center card-header">
-                    <h4 className="mb-1">Sierra Brooks</h4>
+                    <h4 className="mb-1">Mike Smith</h4>
                     <span className="m-5">Available</span>
                 </div>
                 <ul className="list-group list-group-flush">
@@ -59,7 +59,7 @@ const LabourerProfile = () => {
 							</strong>
 							</td>
 							<td className="pl-4 pr-4 pb-3">
-								info@construction.ca
+								mike@gmail.com
 							</td>
 						</tr>
 						<tr>
@@ -83,7 +83,7 @@ const LabourerProfile = () => {
 					<tr>
 						<td>
 						<strong className="text-muted d-block">
-						Average Safty Rating
+						Average Safety Rating
 						</strong>
 						</td>
 						<td>

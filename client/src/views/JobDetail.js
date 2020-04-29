@@ -164,68 +164,63 @@ const JobDetail = (props) => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
+                                    <td>April 12, 2020</td>
                                     <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
+                                    <td>April 11, 2020</td>
                                     <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
+                                    <td>April 10, 2020</td>
                                     <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
+                                    <td>April 9, 2020</td>
+                                    <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
+                                    <td>April 8, 2020</td>
+                                    <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
+                                    <td>April 7, 2020</td>
+                                    <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
+                                    <td>April 6, 2020</td>
+                                    <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
+                                    <td>April 5, 2020</td>
+                                    <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
+                                    <td>April 4, 2020</td>
+                                    <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
+                                    <td>April 3, 2020</td>
+                                    <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
+                                    <td>April 2, 2020</td>
+                                    <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                                 <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>Mar 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
+                                    <td>April 1, 2020</td>
+                                    <td><span className="badge badge-success">Complete</span></td>
                                     <td><a href="/job" className="badge badge-light">View Details</a></td>
                                 </tr>
                             </tbody>

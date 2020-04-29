@@ -25,6 +25,14 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
+        // GET: api/ClientProfile
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<IEnumerable<Client>>> GetAllClients()
+        {
+            return await _context.Client.ToListAsync();
+        }
+
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<ClientProfileVM> GetLClientProfile(int id)
