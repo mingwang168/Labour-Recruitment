@@ -51,9 +51,34 @@ namespace labourRecruitment.Controllers
 
             clientvms = clientvms.OrderByDescending(c => c.averageRating).ToList();
 
-            if (clientvms != null)
+            //var clientsorted = clientvms.Select(cvm => cvm.client).Select(oc => new Client { 
+            //ClientCity =oc.ClientCity,
+            //ClientDescription = oc.ClientDescription,
+            //ClientEmail = oc.ClientEmail,
+            //ClientId = oc.ClientId,
+            //ClientName = oc.ClientName,
+            //ClientPhoneNumber = oc.ClientPhoneNumber,
+            //ClientState = oc.ClientState,
+            //UserId = oc.UserId
+            //}).ToList();
+
+            var clientsorted = clientvms.Select(cvm => new ClientVM
             {
-                return new ObjectResult(clientvms);
+                ClientCity = cvm.client.ClientCity,
+                ClientDescription = cvm.client.ClientDescription,
+                ClientEmail = cvm.client.ClientEmail,
+                ClientId = cvm.client.ClientId,
+                ClientName = cvm.client.ClientName,
+                ClientPhoneNumber = cvm.client.ClientPhoneNumber,
+                ClientState = cvm.client.ClientState,
+                UserId = cvm.client.UserId,
+                ClientAverageRating =cvm.averageRating
+            }).ToList();
+
+
+            if (clientsorted != null)
+            {
+                return new ObjectResult(clientsorted);
             }
             else
             {
@@ -72,5 +97,19 @@ namespace labourRecruitment.Controllers
             public Job job { get; set; }
             public double? jobAverageRating { get; set; }
         }
+
+        public class ClientVM
+        {
+            public int ClientId { get; set; }
+            public int? UserId { get; set; }
+            public string ClientName { get; set; }
+            public string ClientEmail { get; set; }
+            public string ClientPhoneNumber { get; set; }
+            public string ClientCity { get; set; }
+            public string ClientState { get; set; }
+            public string ClientDescription { get; set; }
+            public double? ClientAverageRating { get; set; }
+        }
+
     }
 }
