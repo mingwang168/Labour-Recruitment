@@ -23,6 +23,7 @@ const ClientDashboard = (props) => {
             let data = await response.json();
             if(data.length) {
                 setJobs(DataSanitizer.ClientJobs(data));
+                console.log(data);
             }
         } catch(e) {
             console.error(e);
@@ -32,7 +33,7 @@ const ClientDashboard = (props) => {
     useEffect(() => {
         fetchJobs();
     }, [])
-    console.log(jobs)
+
     return (
     <>
     <div className="row">
