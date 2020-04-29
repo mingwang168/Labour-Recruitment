@@ -80,7 +80,7 @@ const IncidentDetail = (props) => {
                                     <time>{details.incidentReportDate.split('T')[0]}</time>
                                 </div>
                                 <div className="card-body border-top">
-                                    <h3 className="font-16">Affected labourer names</h3>
+                                    <h3 className="font-16">Affected labourer name(s)</h3>
                                     {details.labourerIncidentReport.map((r, i) => (
                                         <ul key={i} className="list-unstyled mb-0">
                                             <li>{r.labourer.labourerFirstName} {r.labourer.labourerLastName}</li>

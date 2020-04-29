@@ -17,6 +17,7 @@ const ClientAddIncident = ({ history }) => {
         incidentsummary : ""
     })
     const [jobs, setJobs] = useState([]);
+    const [labourerList, setLabourerList] = useState([]);
     const [incidentOptions, setIncidentOptions] = useState([]);
     const [selectedJob, setSelectedJob] = useState();
     const [selectedIncident, setSelectedIncident] = useState()
@@ -44,6 +45,20 @@ const ClientAddIncident = ({ history }) => {
             console.error(e)
         }
     }
+
+    const fetchLabourers= async(id) => {
+        if (selectedJob) {
+            const response = await fetch(BASE_URL + `/JobLabourers/${id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            })
+            const data = await response.json()
+            setLabourerList(data)
+        }
+    }
+
     const fetchIncidentOptions = async() => {
         try {
             const response = await fetch(BASE_URL + '/IncidentType');
@@ -61,6 +76,7 @@ const ClientAddIncident = ({ history }) => {
     const onChangeJob = job => {
         if (job) {
             setSelectedJob(job.value)
+            fetchLabourers(job.value)
         }
     }
 
@@ -108,6 +124,9 @@ const ClientAddIncident = ({ history }) => {
         fetchAllJobs();
         fetchIncidentOptions();
     }, []);
+
+    console.log(selectedJob)
+
 
     return (
         <div className="dashboard-main-wrapper">
@@ -191,7 +210,9 @@ const ClientAddIncident = ({ history }) => {
                                         <label className="d-block" htmlFor="injuredLabourers">Injured Labourers<span className="text-danger">*</span></label>
                                         {selectedJob ? <LabourerList selectedJob={selectedJob} 
                                                                      selectedLabourers={selectedLabourers}
-                                                                     setselectedLabourers={setselectedLabourers} /> :
+                                                                     setselectedLabourers={setselectedLabourers} 
+                                                                     labourerList = {labourerList}
+                                                                     fetchLabourers = {fetchLabourers} /> :
                                         <input
                                         placeholder="Select..."
                                         className="form-control form-control-lg"
