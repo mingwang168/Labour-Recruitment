@@ -49,12 +49,41 @@ namespace labourRecruitment.Controllers
         }
 
         // GET: api/Incidents/5
-        [HttpGet("{jobId}", Name = "GetIncidentsByJobId")]
-
-        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncidentsByJobId(int jobId)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IncidentReport>> GetIncident(int id)
         {
+            var incident = await _context.IncidentReport.FindAsync(id);
 
-            return await _context.IncidentReport.Where(j => j.JobId == jobId).ToListAsync();
+            if (incident == null)
+            {
+                return NotFound();
+            }
+
+            incident.Job = _context.Job.Where(j => j.JobId == incident.JobId).Select(j => new Job
+            {
+                Title = j.Title,
+                Street = j.Street,
+                City = j.City,
+                State = j.State,
+                Client = j.Client,
+                JobLabourer = j.JobLabourer.Select(jl => new JobLabourer
+                {
+                    Labourer = jl.Labourer,
+                    Skill = jl.Skill
+                }).ToList()
+
+            }).FirstOrDefault();
+            incident.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == incident.IncidentTypeId).Select(i => new IncidentType
+            {
+                IncidentTypeName = i.IncidentTypeName
+            }).FirstOrDefault();
+            incident.LabourerIncidentReport = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == incident.IncidentReportId).
+                Select(l => new LabourerIncidentReport
+                {
+                    Labourer = l.Labourer
+                }).ToList();
+
+            return incident;
         }
 
 
@@ -69,10 +98,9 @@ namespace labourRecruitment.Controllers
             {
                 labourerReport.IncidentReportId = report.IncidentReport.IncidentReportId;
                 _context.LabourerIncidentReport.Add(labourerReport);
-
             }
             _context.SaveChanges();
-            return new ObjectResult(report);
+            return new ObjectResult(report.IncidentReport.IncidentReportId);
         }
 
 

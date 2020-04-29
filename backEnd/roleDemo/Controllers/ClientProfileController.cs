@@ -24,11 +24,11 @@ namespace labourRecruitment.Controllers
         {
             _context = context;
         }
-       
+
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<ClientProfileVM>> GetLClientProfile(int id)
+        public ActionResult<ClientProfileVM> GetLClientProfile(int id)
         {
             return new ClientProfileVMRepo(_context).GetClient(id);
         }

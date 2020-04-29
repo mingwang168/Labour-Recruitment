@@ -51,7 +51,7 @@ namespace labourRecruitment.Controllers
                 SystemUser sysUser = new SystemUser()
                 {
                     Email = input.Email,
-                    Role = input.Role
+                    Role = "Admin"
                 };
 
                 _context.SystemUser.Add(sysUser);
@@ -62,7 +62,7 @@ namespace labourRecruitment.Controllers
                 var tokenString = registerRepo.GenerateJSONWebToken(user);
                 jsonResponse.token = tokenString;
                 jsonResponse.status = "OK";
-                jsonResponse.role = sysUser.Role;
+                jsonResponse.role = "Admin";
                 jsonResponse.email = sysUser.Email;
                 return Json(jsonResponse);
             }
