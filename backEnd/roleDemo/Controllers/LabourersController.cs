@@ -24,7 +24,8 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Labourers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Labourer>>> GetLabourer()
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<IEnumerable<Labourer>>> GetAllLabourers()
         {
             return await _context.Labourer.ToListAsync();
         }
