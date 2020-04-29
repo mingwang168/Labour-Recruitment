@@ -28,9 +28,6 @@ exports.ClientJobs = (data) => {
             sanitizedJob = {...sanitizedJob, status: status};
         }
 
-        // Get reports
-        sanitizedJob = {...sanitizedJob, reports: "Complete"};
-
         // Add to data array
         sanitizedData.push(sanitizedJob);
     });
