@@ -40,9 +40,9 @@ namespace labourRecruitment.Controllers
 
             labourerAss = labourerAss.OrderByDescending(la => la.averageRating).ToList();
 
-            labourers = labourers.OrderByDescending(ol => (_context.LabourerAttendance.Where(la => la.LabourerId == ol.LabourerId)
-.Average(las => las.DailyQualityRating == null? 0 : las.DailyQualityRating) + _context.JobLabourer.Where(la => la.LabourerId == ol.LabourerId)
-.Average(lss => lss.LabourerSafetyRating == null? 5 : lss.LabourerSafetyRating) / 2)).ToList();
+//            labourers = labourers.OrderByDescending(ol => (_context.LabourerAttendance.Where(la => la.LabourerId == ol.LabourerId)
+//.Average(las => las.DailyQualityRating == null? 0 : las.DailyQualityRating) + _context.JobLabourer.Where(la => la.LabourerId == ol.LabourerId)
+//.Average(lss => lss.LabourerSafetyRating == null? 5 : lss.LabourerSafetyRating) / 2)).ToList();
 
             if (labourerAss != null)
             {
