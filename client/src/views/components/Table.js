@@ -14,7 +14,7 @@ const GlobalFilter = ({
           onChange={e => {
             setGlobalFilter(e.target.value || undefined);
           }}
-          placeholder={`Search ${count} job(s)...`}
+          placeholder={`Search ${count} item(s)...`}
           className="form-control form-control-lg mb-3"
         />
     );
