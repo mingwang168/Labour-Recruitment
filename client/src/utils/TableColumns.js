@@ -35,3 +35,18 @@ exports.CLIENTS_TABLE_COLUMNS = [
         accessor: 'location',
     }
 ];
+
+exports.LABOURERS_TABLE_COLUMNS = [
+    {
+        Header: 'Name',
+        accessor: 'name',
+    },
+    {
+        Header: 'Email',
+        accessor: 'email',
+    },
+    {
+        Header: 'Is Available',
+        accessor: 'availability',
+    }
+];

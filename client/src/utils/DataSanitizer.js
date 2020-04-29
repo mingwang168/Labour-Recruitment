@@ -30,6 +30,21 @@ exports.cleanClientsData = (data) => {
     return sanitizedData;
 }
 
+exports.cleanLabourersData = (data) => {
+    let sanitizedData = [];
+
+    data.forEach((d) => {
+        sanitizedData.push({
+            id: d.labourerId,
+            name: `${d.labourerFirstName} ${d.labourerLastName}`,
+            email: d.labourerEmail,
+            availability: d.isAvailable ? "Yes" : "No"
+        });
+    });
+
+    return sanitizedData;
+}
+
 exports.formatDateString = (date) => {
     let d = new Date(date);
 
