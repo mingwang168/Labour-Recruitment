@@ -68,7 +68,7 @@ const AdminClients = (props) => {
                 <div className="row">
                 <div className="col">
                 <div className="card">
-                <h5 className="card-header">All Jobs</h5>
+                <h5 className="card-header">All Clients</h5>
                 <div className="card-body">
                     { clients ?
                     <Table
