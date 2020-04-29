@@ -23,9 +23,9 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        // GET: api/Job
+        // GET: api/Job/GetAllJobs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Job>>> GetJob()
+        public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
         {
             return await _context.Job.ToListAsync();
         }
