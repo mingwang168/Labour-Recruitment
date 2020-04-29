@@ -18,7 +18,7 @@ const BASE_URL = "http://localhost:5001/api";
 
 const ClientAddIncident = () => {
     const [jobs, setJobs] = useState([]);
-    const [skillOptions, setSkillOptions] = useState([]);
+    const [incidentOptions, setIncidentOptions] = useState([]);
     const [selectedSkills, setSelectedSkills] = useState([]);
     const [selectedLabourers, setselectedLabourers] = useState([]);
 
@@ -43,18 +43,18 @@ const ClientAddIncident = () => {
     }
     const fetchIncidentOptions = async () => {
         try {
-            const response = await fetch(BASE_URL + '/skills');
+            const response = await fetch(BASE_URL + '/IncidentType');
             let data = await response.json();
-            setSkillOptions(data);
+            setIncidentOptions(data)
         } catch (e) {
             console.error(e)
         }
     }
 
     const onChangeSkill = (skills) => {
-        if (skills) {
-            skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]))
-        }
+        // if (skills) {
+        //     skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]))
+        // }
     }
 
     const onChangeLabourer = (labourers) => {
@@ -66,10 +66,10 @@ const ClientAddIncident = () => {
 
     useEffect(() => {
         fetchAllJobs();
-        //fetchIncidentOptions();
+        fetchIncidentOptions();
     }, []);
 
-    console.log(jobs)
+
     return (
         <div className="dashboard-main-wrapper">
             <TopNav />
@@ -126,10 +126,10 @@ const ClientAddIncident = () => {
                                         <Select
                                             required
                                             name="incidenttype"
-                                            options={skillOptions &&
-                                                skillOptions.map(skill => {
+                                            options={incidentOptions &&
+                                                incidentOptions.map(incident => {
                                                     return {
-                                                        value: skill.skillId, label: skill.skillName
+                                                        value: incident.incidentTypeId, label: incident.incidentTypeName
                                                     }
                                                 })
                                             }
