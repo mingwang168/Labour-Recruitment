@@ -40,7 +40,7 @@ const ClientAddIncident = ({ history }) => {
             });
 
             let data = await response.json();
-            setJobs(DataSanitizer.ClientJobs(data))
+            setJobs(data)
         } catch (e) {
             console.error(e)
         }
