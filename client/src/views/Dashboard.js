@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as Auth from '../utils/Auth';
 
 import ClientDashboard from './client/ClientDashboard';
@@ -11,8 +11,8 @@ import Footer from './components/Footer';
 
 const Dashboard = (props) => {
 
-    const [role] = useState(Auth.getRole());
-    const [name] = useState(Auth.getName());
+    const role = Auth.getRole();
+    const name = Auth.getName();
     let dashboard;
 
     if(role === "Client") {
