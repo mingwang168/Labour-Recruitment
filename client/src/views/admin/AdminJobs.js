@@ -9,7 +9,7 @@ import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
 import Footer from '../components/Footer';
 
-import { ADMIN_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+import { JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
 const BASE_URL = "http://localhost:5001/api";
 
 const AdminJobs = (props) => {
@@ -27,8 +27,7 @@ const AdminJobs = (props) => {
 
             let data = await response.json();
             if(data.length) {
-                setJobs(DataSanitizer.cleanAdminJobs(data));
-                console.log(data);
+                setJobs(DataSanitizer.cleanJobsData(data));
             }
         } catch(e) {
             console.error(e);
@@ -73,8 +72,9 @@ const AdminJobs = (props) => {
                 <div className="card-body">
                     { jobs ?
                     <Table
-                        columns={ADMIN_JOBS_TABLE_COLUMNS}
+                        columns={JOBS_TABLE_COLUMNS}
                         data={jobs}
+                        path={"/job"}
                         {...props}
                     />
                     :

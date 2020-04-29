@@ -5,7 +5,7 @@ import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
 
 import Table from '../components/Table';
-import { ADMIN_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+import { JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -24,8 +24,7 @@ const AdminDashboard = (props) => {
 
             let data = await response.json();
             if(data.length) {
-                setJobs(DataSanitizer.cleanAdminJobs(data));
-                console.log(data);
+                setJobs(DataSanitizer.cleanJobsData(data));
             }
         } catch(e) {
             console.error(e);
@@ -65,8 +64,9 @@ const AdminDashboard = (props) => {
     <div className="card-body">
         { jobs ?
         <Table
-            columns={ADMIN_JOBS_TABLE_COLUMNS}
+            columns={JOBS_TABLE_COLUMNS}
             data={jobs}
+            path={"/job"}
             {...props}
         />
         :
