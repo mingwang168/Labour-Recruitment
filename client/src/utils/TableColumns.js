@@ -50,3 +50,22 @@ exports.LABOURERS_TABLE_COLUMNS = [
         accessor: 'availability',
     }
 ];
+
+exports.INCIDENTS_TABLE_COLUMNS = [
+    {
+        Header: 'Job',
+        accessor: 'job',
+    },
+    {
+        Header: 'Date',
+        accessor: 'date',
+    },
+    {
+        Header: 'Incident Type',
+        accessor: 'type',
+    },
+    {
+        Header: '# affected',
+        accessor: 'affected',
+    }
+];

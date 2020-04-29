@@ -45,6 +45,22 @@ exports.cleanLabourersData = (data) => {
     return sanitizedData;
 }
 
+exports.cleanIncidentsData = (data) => {
+    let sanitizedData = [];
+
+    data.forEach((d) => {
+        sanitizedData.push({
+            id: d.incidentReportId,
+            job: d.job.title,
+            date: this.formatDateString(d.incidentReportDate),
+            type: d.incidentType.incidentTypeName,
+            affected: `${d.labourerIncidentReport.length} labourer(s)`
+        });
+    });
+
+    return sanitizedData;
+}
+
 exports.formatDateString = (date) => {
     let d = new Date(date);
 
