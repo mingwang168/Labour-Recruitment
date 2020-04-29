@@ -9,7 +9,11 @@ exports.setSessionData = (data, history) => {
     sessionStorage.setItem(TOKEN_EXP, this.setTokenExpiration());
     sessionStorage.setItem(USER_ROLE, data.role);
     sessionStorage.setItem(USER_ID, data.id);
-    sessionStorage.setItem(USER_NAME, data.name);
+    if(data.role === "Admin") {
+        sessionStorage.setItem(USER_NAME, "Admin");
+    } else {
+        sessionStorage.setItem(USER_NAME, data.name);
+    }
     history.push("/dashboard");
 }
 
@@ -70,6 +74,10 @@ exports.getRole = _ => {
 
 exports.getName = _ => {
     return sessionStorage.getItem(USER_NAME);
+}
+
+exports.logout = _ => {
+    sessionStorage.clear();
 }
 
 exports.forceLogout = _ => {

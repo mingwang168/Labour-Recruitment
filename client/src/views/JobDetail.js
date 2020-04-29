@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FormatDateString } from '../utils/DataSanitizer';
+import { formatDateString } from '../utils/DataSanitizer';
 
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
@@ -21,7 +21,7 @@ const JobDetail = (props) => {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    'Authorization': `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`
                 }
             })
             let data = await response.json();
@@ -95,7 +95,7 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Dates</h3>
-                            <time>{FormatDateString(details.startDate)}</time> to <time>{FormatDateString(details.endDate)}</time>
+                            <time>{formatDateString(details.startDate)}</time> to <time>{formatDateString(details.endDate)}</time>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Location</h3>

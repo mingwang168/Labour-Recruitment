@@ -23,13 +23,21 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        // GET: api/Job
+        // GET: api/Job/GetAllJobs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Job>>> GetAllJob()
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
         {
             return await _context.Job.ToListAsync();
         }
 
+        // GET: api/Job/GetAllActiveJobs
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<IEnumerable<Job>>> GetAllActiveJobs()
+        {
+            return await _context.Job.Where(job => job.InProgress == true).ToListAsync();
+        }
 
         [HttpGet("{id}", Name = "GetJob")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

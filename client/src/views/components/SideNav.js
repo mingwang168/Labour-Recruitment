@@ -77,6 +77,11 @@ const SideNav = () => {
             icon: "emoji_people"
         },
         {
+            name: "Incidents",
+            path: "/admin/incidents",
+            icon: "report_problem"
+        },
+        {
             name: "Invoices",
             path: "/admin/invoices",
             icon: "receipt"

@@ -1,53 +1,86 @@
-exports.CLIENT_JOBS_TABLE_COLUMNS = [
+exports.JOBS_TABLE_COLUMNS = [
     {
         Header: 'Job Title',
         accessor: 'title',
     },
     {
         Header: 'Start Date',
-        accessor: 'startDate',
+        accessor: 'startdate',
     },
     {
         Header: 'End Date',
-        accessor: 'endDate',
+        accessor: 'enddate',
     },
     {
-        Header: '# Hired',
-        accessor: 'totalHired',
-    },
-    {
-        Header: 'Status',
+        Header: 'Completion Status',
         accessor: 'status',
-    },
-    {
-        Header: 'Reports',
-        accessor: 'reports',
     }
 ];
 
-exports.LABOURERS_JOBS_TABLE_COLUMNS = [
+exports.CLIENTS_TABLE_COLUMNS = [
     {
-        Header: 'Job Title',
-        accessor: 'jobTitle',
+        Header: 'Name',
+        accessor: 'name',
     },
     {
-        Header: 'Start Date',
-        accessor: 'startDate',
+        Header: 'Email',
+        accessor: 'email',
     },
     {
-        Header: 'End Date',
-        accessor: 'endDate',
+        Header: 'Phone',
+        accessor: 'phone',
     },
     {
-        Header: 'Company',
-        accessor: 'company',
+        Header: 'Location',
+        accessor: 'location',
+    }
+];
+
+exports.LABOURERS_TABLE_COLUMNS = [
+    {
+        Header: 'Name',
+        accessor: 'name',
     },
     {
-        Header: 'Status',
-        accessor: 'status',
+        Header: 'Email',
+        accessor: 'email',
     },
     {
-        Header: 'Reports',
-        accessor: 'reports',
+        Header: 'Is Available',
+        accessor: 'availability',
+    }
+];
+
+exports.INCIDENTS_TABLE_COLUMNS = [
+    {
+        Header: 'Job',
+        accessor: 'job',
+    },
+    {
+        Header: 'Date',
+        accessor: 'date',
+    },
+    {
+        Header: 'Incident Type',
+        accessor: 'type',
+    },
+    {
+        Header: '# affected',
+        accessor: 'affected',
+    }
+];
+
+exports.PAYRATES_TABLE_COLUMNS = [
+    {
+        Header: 'Name',
+        accessor: 'name',
+    },
+    {
+        Header: 'Labourer Receives',
+        accessor: 'labourerReceives',
+    },
+    {
+        Header: 'Admin Receives (20% cut)',
+        accessor: 'adminReceives',
     }
 ];

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
+
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
+
 import Table from '../components/Table';
-import { CLIENT_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+import { JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -22,7 +24,8 @@ const ClientDashboard = (props) => {
 
             let data = await response.json();
             if(data.length) {
-                setJobs(DataSanitizer.ClientJobs(data));
+                setJobs(DataSanitizer.cleanJobsData(data));
+                console.log(data);
             }
         } catch(e) {
             console.error(e);
@@ -124,8 +127,9 @@ const ClientDashboard = (props) => {
         <div className="card-body">
             { jobs.length ?
             <Table
-                columns={CLIENT_JOBS_TABLE_COLUMNS}
+                columns={JOBS_TABLE_COLUMNS}
                 data={jobs}
+                path={'/job'}
                 {...props}
             />
             :

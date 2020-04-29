@@ -25,7 +25,6 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<ClientProfileVM> GetLClientProfile(int id)
