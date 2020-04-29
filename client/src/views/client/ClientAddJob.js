@@ -105,9 +105,11 @@ const ClientAddJob = ({ history }) => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({"Job": newJob, "JobSkills": requiredLabourers})
+                body: JSON.stringify({
+                    "Job": newJob,
+                    "JobSkills": requiredLabourers
+                })
             })
-
 
             // Bad response
             if(response.status !== 200) {
