@@ -2,10 +2,14 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 import Table from '../components/Table';
-import { LABOURERS_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
-import { LABOURERS_JOBS_DATA } from '../JobsDummyData';
+// import { LABOURERS_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+// import { LABOURERS_JOBS_DATA } from '../JobsDummyData';
 
 const LabourDashboard = (props) => {
+
+    const viewPage = () => {
+        props.history.push("/job/1");
+    }
     return (
     <>
     <div className="row">
@@ -95,11 +99,28 @@ const LabourDashboard = (props) => {
         <div className="card">
         <h5 className="card-header">All Jobs</h5>
         <div className="card-body">
-            <Table
-                columns={LABOURERS_JOBS_TABLE_COLUMNS}
-                data={LABOURERS_JOBS_DATA}
-                {...props}
-            />
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Completion Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onClick={viewPage} style={{cursor:'pointer'}}>
+                        <td>The Butterfly</td>
+                        <td>April 1, 2020</td>
+                        <td>October 25, 2020</td>
+                        <td>
+                            <span className="badge badge-warning">
+                            In Progress
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         </div>
         </div>
