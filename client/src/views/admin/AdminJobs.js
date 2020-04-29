@@ -58,7 +58,7 @@ const AdminJobs = (props) => {
                         <Link to="/dashboard" className="breadcrumb-link">Home</Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                        All Jobs
+                        Jobs
                     </li>
                 </ol>
                 </nav>
