@@ -12,10 +12,6 @@ exports.CLIENT_JOBS_TABLE_COLUMNS = [
         accessor: 'endDate',
     },
     {
-        Header: '# Hired',
-        accessor: 'totalHired',
-    },
-    {
         Header: 'Reports',
         accessor: 'reports',
     },

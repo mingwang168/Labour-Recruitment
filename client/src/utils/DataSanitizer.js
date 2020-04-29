@@ -22,11 +22,6 @@ exports.ClientJobs = (data) => {
             sanitizedJob = {...sanitizedJob, endDate: this.FormatDateString(d.endDate)};
         }
 
-        // Get # hired
-        if(d.hasOwnProperty("jobLabourer")) {
-            sanitizedJob = {...sanitizedJob, totalHired: d.jobLabourer.length};
-        }
-
         // Get status
         if(d.hasOwnProperty("isComplete")) {
             let status = d.isComplete ? "Complete" : "In Progress";
