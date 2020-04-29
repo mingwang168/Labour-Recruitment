@@ -49,7 +49,7 @@ const AdminJobs = (props) => {
                 {/* Page Header */}
                 <div className="page-header">
                 <h2 className="pageheader-title">
-                    All Jobs
+                    Manage Jobs
                 </h2>
                 <div className="page-breadcrumb">
                 <nav aria-label="breadcrumb">
