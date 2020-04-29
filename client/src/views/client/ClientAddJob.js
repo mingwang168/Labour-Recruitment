@@ -83,8 +83,6 @@ const ClientAddJob = ({ history }) => {
     const submitForm = async() => {
         let token = Auth.getToken();
         let id = Auth.getID();
-        let today = new Date();
-        let inProgress = (DayCalculator.convert(startdate) < today) || (DayCalculator.convert(startdate).getTime() === today.getTime()) ? true : false;
 
         let newJob = {
             ClientId: id,
@@ -95,7 +93,7 @@ const ClientAddJob = ({ history }) => {
             Street: address,
             City: city,
             State: province,
-            InProgress: inProgress,
+            InProgress: true,
             IsComplete: false
         }
 
@@ -210,7 +208,7 @@ const ClientAddJob = ({ history }) => {
                 <div className="form-group mb-4">
                     <label htmlFor="description">Job Description</label>
                     <textarea
-                        maxLength="200"
+                        maxLength="400"
                         name="jobdescription"
                         type="text"
                         placeholder="Enter job description"
