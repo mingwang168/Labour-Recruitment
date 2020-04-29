@@ -78,7 +78,7 @@ const AdminClients = (props) => {
                         {...props}
                     />
                     :
-                    <p className="lead">No jobs to display.</p>
+                    <p className="lead">No clients to display.</p>
                     }
                 </div>
                 </div>

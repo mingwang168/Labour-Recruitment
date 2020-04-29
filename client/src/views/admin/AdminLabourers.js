@@ -78,7 +78,7 @@ const AdminLabourers = (props) => {
                         {...props}
                     />
                     :
-                    <p className="lead">No jobs to display.</p>
+                    <p className="lead">No labourers to display.</p>
                     }
                 </div>
                 </div>
