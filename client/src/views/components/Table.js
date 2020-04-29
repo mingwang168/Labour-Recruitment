@@ -14,7 +14,7 @@ const GlobalFilter = ({
           onChange={e => {
             setGlobalFilter(e.target.value || undefined);
           }}
-          placeholder={`Search ${count} jobs...`}
+          placeholder={`Search ${count} job(s)...`}
           className="form-control form-control-lg mb-3"
         />
     );
@@ -83,7 +83,7 @@ const Table = ({columns, data, history}) => {
                 {row.cells.map((cell, i) => {
 
                     // Check if colored badge needs to be rendered
-                    if(cell.column.Header === "Status" || cell.column.Header === "Reports") {
+                    if(cell.column.Header === "Completion Status" || cell.column.Header === "Reports") {
                         let color = "primary";
                         if(cell.value === "Complete") {
                             color = "success";
