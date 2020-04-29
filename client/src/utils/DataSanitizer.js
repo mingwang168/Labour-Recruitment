@@ -1,72 +1,30 @@
-exports.cleanClientJobs = (data) => {
+exports.cleanJobsData = (data) => {
     let sanitizedData = [];
 
     data.forEach((d) => {
-        let sanitizedJob = {};
-
-        // Get job id
-        sanitizedJob = {...sanitizedJob, jobId: d.jobId};
-
-        // Get job title
-        if(d.hasOwnProperty("title")) {
-            sanitizedJob = {...sanitizedJob, title: d.title};
-        }
-
-        // Get start date
-        if(d.hasOwnProperty("startDate")) {
-            sanitizedJob = {...sanitizedJob, startDate: this.formatDateString(d.startDate)};
-        }
-
-        // Get end date
-        if(d.hasOwnProperty("endDate")){
-            sanitizedJob = {...sanitizedJob, endDate: this.formatDateString(d.endDate)};
-        }
-
-        // Get status
-        if(d.hasOwnProperty("isComplete")) {
-            let status = d.isComplete ? "Complete" : "In Progress";
-            sanitizedJob = {...sanitizedJob, status: status};
-        }
-
-        // Add to data array
-        sanitizedData.push(sanitizedJob);
+        sanitizedData.push({
+            id: d.jobId,
+            title: d.title,
+            startdate: this.formatDateString(d.startDate),
+            enddate: this.formatDateString(d.endDate),
+            status: d.isComplete ? "Complete" : "In Progress"
+        });
     });
 
     return sanitizedData;
 }
 
-exports.cleanAdminJobs = (data) => {
+exports.cleanClientsData = (data) => {
     let sanitizedData = [];
 
     data.forEach((d) => {
-        let sanitizedJob = {};
-
-        // Get job id
-        sanitizedJob = {...sanitizedJob, jobId: d.jobId};
-
-        // Get job title
-        if(d.hasOwnProperty("title")) {
-            sanitizedJob = {...sanitizedJob, title: d.title};
-        }
-
-        // Get start date
-        if(d.hasOwnProperty("startDate")) {
-            sanitizedJob = {...sanitizedJob, startDate: this.formatDateString(d.startDate)};
-        }
-
-        // Get end date
-        if(d.hasOwnProperty("endDate")){
-            sanitizedJob = {...sanitizedJob, endDate: this.formatDateString(d.endDate)};
-        }
-
-        // Get status
-        if(d.hasOwnProperty("isComplete")) {
-            let status = d.isComplete ? "Complete" : "In Progress";
-            sanitizedJob = {...sanitizedJob, status: status};
-        }
-
-        // Add to data array
-        sanitizedData.push(sanitizedJob);
+        sanitizedData.push({
+            id: d.clientId,
+            name: d.clientName,
+            email: d.clientEmail,
+            phone: d.clientPhoneNumber,
+            location: `${d.clientCity}, ${d.clientState}`
+        });
     });
 
     return sanitizedData;

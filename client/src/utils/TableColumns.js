@@ -1,15 +1,15 @@
-exports.CLIENT_JOBS_TABLE_COLUMNS = [
+exports.JOBS_TABLE_COLUMNS = [
     {
         Header: 'Job Title',
         accessor: 'title',
     },
     {
         Header: 'Start Date',
-        accessor: 'startDate',
+        accessor: 'startdate',
     },
     {
         Header: 'End Date',
-        accessor: 'endDate',
+        accessor: 'enddate',
     },
     {
         Header: 'Completion Status',
@@ -17,40 +17,21 @@ exports.CLIENT_JOBS_TABLE_COLUMNS = [
     }
 ];
 
-exports.LABOURERS_JOBS_TABLE_COLUMNS = [
+exports.CLIENTS_TABLE_COLUMNS = [
     {
-        Header: 'Job Title',
-        accessor: 'title',
+        Header: 'Name',
+        accessor: 'name',
     },
     {
-        Header: 'Start Date',
-        accessor: 'startDate',
+        Header: 'Email',
+        accessor: 'email',
     },
     {
-        Header: 'End Date',
-        accessor: 'endDate',
+        Header: 'Phone',
+        accessor: 'phone',
     },
     {
-        Header: 'Completion Status',
-        accessor: 'status',
-    }
-];
-
-exports.ADMIN_JOBS_TABLE_COLUMNS = [
-    {
-        Header: 'Job Title',
-        accessor: 'title',
-    },
-    {
-        Header: 'Start Date',
-        accessor: 'startDate',
-    },
-    {
-        Header: 'End Date',
-        accessor: 'endDate',
-    },
-    {
-        Header: 'Completion Status',
-        accessor: 'status',
+        Header: 'Location',
+        accessor: 'location',
     }
 ];
