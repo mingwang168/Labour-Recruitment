@@ -36,7 +36,7 @@ exports.LABOURERS_JOBS_TABLE_COLUMNS = [
     }
 ];
 
-exports.ADMIN_DASHBOARD_JOBS_TABLE_COLUMNS = [
+exports.ADMIN_JOBS_TABLE_COLUMNS = [
     {
         Header: 'Job Title',
         accessor: 'title',

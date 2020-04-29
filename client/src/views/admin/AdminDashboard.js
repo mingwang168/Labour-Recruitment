@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
+
 import Table from '../components/Table';
-import { ADMIN_DASHBOARD_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+import { ADMIN_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -46,7 +47,7 @@ const AdminDashboard = (props) => {
     <nav aria-label="breadcrumb">
     <ol className="breadcrumb">
         <li className="breadcrumb-item">
-            <Link to="/dashboard" className="breadcrumb-link">Dashboard</Link>
+            <Link to="/dashboard" className="breadcrumb-link">Home</Link>
         </li>
         <li className="breadcrumb-item active" aria-current="page">
             Admin Dashboard
@@ -64,7 +65,7 @@ const AdminDashboard = (props) => {
     <div className="card-body">
         { jobs ?
         <Table
-            columns={ADMIN_DASHBOARD_JOBS_TABLE_COLUMNS}
+            columns={ADMIN_JOBS_TABLE_COLUMNS}
             data={jobs}
             {...props}
         />
