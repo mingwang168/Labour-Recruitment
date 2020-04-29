@@ -21,7 +21,7 @@ const JobDetail = (props) => {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    'Authorization': `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`
                 }
             })
             let data = await response.json();
