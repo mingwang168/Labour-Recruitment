@@ -12,7 +12,7 @@ const LabourerProfile = (props) => {
 	const [availability, setAvailability] = useState(true);
 	const [labourerEmail, setLabourerEmail] = useState('');
 	const [averageSafety, setAverageSafety] = useState('');
-	const [averageQuality, setAveraveQuality] = useState('');
+	const [averageQuality, setAverageQuality] = useState('');
 	
 	const fetchLabourerProfile = async() =>{
 		try	
@@ -30,7 +30,7 @@ const LabourerProfile = (props) => {
 			setAvailability(data.labourer.isAvailable);
 			setLabourerEmail(data.labourer.labourerEmail);
 			setAverageSafety(data.labourer.averageSafety);
-			setAveraveQuality(data.labourer.averageQuality);
+			setAverageQuality(data.labourer.averageQuality);
 		} catch(e){
 			console.log(e);
 		}
@@ -61,7 +61,7 @@ const LabourerProfile = (props) => {
                 <div className="border-bottom text-center card-header">
                     <h4 className="mb-1">{labourerFirstName} {labourerLastName}</h4>
                     <span className="m-5">{availability ? 'Available' : 'Not Available'}</span>
-                </div>               
+                </div>
 			</div>
 			</div>
 			</div>
@@ -89,19 +89,6 @@ const LabourerProfile = (props) => {
 								{labourerEmail}
 							</td>
 						</tr>
-						{/* <tr>
-							<td className="text-muted d-block pl-4 pr-4 pb-3">
-							<strong className="text-muted d-block">
-								Availability:
-							</strong>
-							</td>
-							<td className="pl-4 pr-4 pb-3">
-								
-								Monday<br />
-								Wednesday<br />
-								Friday
-							</td>
-						</tr> */}
 						</tbody>
 					</table>
 				</li>
@@ -111,7 +98,7 @@ const LabourerProfile = (props) => {
 					<tr>
 						<td>
 						<strong className="text-muted d-block">
-						Average Safty Rating
+						Average Safety Rating
 						</strong>
 						</td>
 						<td>
