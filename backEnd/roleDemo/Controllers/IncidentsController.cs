@@ -49,44 +49,15 @@ namespace labourRecruitment.Controllers
         }
 
         // GET: api/Incidents/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<IncidentReport>> GetIncident(int id)
+        [HttpGet("{jobId}", Name = "GetIncidentsByJobId")]
+
+        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncidentsByJobId(int jobId)
         {
-            var incident = await _context.IncidentReport.FindAsync(id);
 
-            if (incident == null)
-            {
-                return NotFound();
-            }
-
-            incident.Job = _context.Job.Where(j => j.JobId == incident.JobId).Select(j => new Job
-            {
-                Title = j.Title,
-                Street = j.Street,
-                City = j.City,
-                State = j.State,
-                Client = j.Client,
-                JobLabourer =j.JobLabourer.Select(jl => new JobLabourer
-                {
-                    Labourer = jl.Labourer,
-                    Skill = jl.Skill
-                }).ToList()
-
-            }).FirstOrDefault();
-            incident.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == incident.IncidentTypeId).Select(i => new IncidentType
-            {
-                IncidentTypeName = i.IncidentTypeName
-            }).FirstOrDefault();
-            incident.LabourerIncidentReport = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == incident.IncidentReportId).
-                Select(l => new LabourerIncidentReport
-                {
-                    Labourer = l.Labourer
-                }).ToList();
-
-            return incident;
+            return await _context.IncidentReport.Where(j => j.JobId == jobId).ToListAsync();
         }
 
-        
+
         //// POST: api/Incidents
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
