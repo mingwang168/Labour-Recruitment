@@ -8,27 +8,28 @@ import SideNav from '../components/SideNav';
 import LabourerList from '../components/LabourerList';
 import Select from 'react-select';
 
-const LABOURERS_LIST = [
-    { value: 'Labourer One', label: 'Labourer One' },
-    { value: 'Labourer Two', label: 'Labourer Two' },
-    { value: 'Labourer Three', label: 'Labourer Three' },
-    { value: 'Labourer Four', label: 'Labourer Four' },
-];
 
 const BASE_URL = "http://localhost:5001/api";
 
-const ClientAddIncident = () => {
+const ClientAddIncident = ({ history }) => {
+    const [report, setReport] = useState({
+        incidentdate : "",
+        incidentsummary : ""
+    })
     const [jobs, setJobs] = useState([]);
     const [incidentOptions, setIncidentOptions] = useState([]);
     const [selectedJob, setSelectedJob] = useState();
     const [selectedIncident, setSelectedIncident] = useState()
     const [selectedLabourers, setselectedLabourers] = useState([]);
 
-    const validateForm = _ => {
+    const {incidentdate, incidentsummary} = report
+    const validateForm = e => {
+        e.preventDefault();
         console.log("Validating form...")
+        submitForm()
     }
 
-    const fetchAllJobs = async () => {
+    const fetchAllJobs = async() => {
         try {
             const response = await fetch(BASE_URL + `/Job/GetJobByClientId/${Auth.getID()}`, {
                 method: "GET",
@@ -43,7 +44,7 @@ const ClientAddIncident = () => {
             console.error(e)
         }
     }
-    const fetchIncidentOptions = async () => {
+    const fetchIncidentOptions = async() => {
         try {
             const response = await fetch(BASE_URL + '/IncidentType');
             let data = await response.json();
@@ -53,18 +54,56 @@ const ClientAddIncident = () => {
         }
     }
     
-    const onChangeJob = (job) => {
+    const onChange = e => {
+        setReport({... report, [e.target.name]: e.target.value})
+    }
+
+    const onChangeJob = job => {
         if (job) {
             setSelectedJob(job.value)
         }
     }
 
-    const onChangeType = (type) => {
+    const onChangeType = type => {
         if (type) {
             setSelectedIncident(type.value)
         }
     }
-    console.log(selectedLabourers)
+
+    const submitForm = async() => {
+        let token = Auth.getToken()
+
+        let newReport = {
+            IncidentTypeId : selectedIncident,
+            IncidentReportDate : incidentdate,
+            IncidentReportDescription : incidentsummary,
+            JobId : selectedJob
+        }
+        
+        try {
+            let response = await fetch(BASE_URL + '/incidents', {
+                method : 'POST',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body : JSON.stringify({"IncidentReport" : newReport, "LabourerReports" : selectedLabourers})
+            })
+            
+            // Bad response
+            if(response.status !== 200) {
+                throw response;
+            }
+
+            let data = await response.json();
+            history.push('/incident/'+ data);
+
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
     useEffect(() => {
         fetchAllJobs();
         fetchIncidentOptions();
@@ -108,6 +147,7 @@ const ClientAddIncident = () => {
                                             name="incidentdate"
                                             type="date"
                                             className="form-control form-control-lg"
+                                            onChange={e => onChange(e)}
                                         />
                                     </div>
                                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
@@ -153,8 +193,9 @@ const ClientAddIncident = () => {
                                                                      selectedLabourers={selectedLabourers}
                                                                      setselectedLabourers={setselectedLabourers} /> :
                                         <input
-                                        placeholder="Select Job First"
+                                        placeholder="Select..."
                                         className="form-control form-control-lg"
+                                        disabled
                                         />}
                                     </div>
                                 </div>
@@ -166,13 +207,14 @@ const ClientAddIncident = () => {
                                         placeholder="Enter incident summary"
                                         rows="3"
                                         className="form-control form-control-lg"
+                                        onChange={e => onChange(e)}
                                     />
                                 </div>
 
                                 <div className="form-group row text-right mt-4">
                                     <div className="col col-lg-12">
                                         <Link to="/dashboard" className="btn btn-space btn-light btn-lg">Cancel</Link>
-                                        <button onClick={() => validateForm()} className="btn btn-space btn-primary btn-lg">Create New Incident</button>
+                                        <button onClick={validateForm} className="btn btn-space btn-primary btn-lg">Create New Incident</button>
                                     </div>
                                 </div>
 

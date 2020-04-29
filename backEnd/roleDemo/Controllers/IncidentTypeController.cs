@@ -19,6 +19,7 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<IncidentType>>> GetIncidentType()
         {
             return await _context.IncidentType.ToListAsync();

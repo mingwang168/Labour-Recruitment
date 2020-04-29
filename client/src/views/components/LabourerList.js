@@ -17,12 +17,11 @@ const LabourerList = (props) => {
             const data = await response.json()
             setList(data)
         }
-       
     }
 
     const onChangeLabourer = (labourers) => {
         if (labourers) {
-            labourers.forEach(labourer => props.setselectedLabourers([...props.selectedLabourers, labourer.value]))
+            labourers.forEach(labourer => props.setselectedLabourers([...props.selectedLabourers,{ labourerId : labourer.value}]))
         }
     } 
 

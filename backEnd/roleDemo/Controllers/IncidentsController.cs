@@ -98,10 +98,9 @@ namespace labourRecruitment.Controllers
             {
                 labourerReport.IncidentReportId = report.IncidentReport.IncidentReportId;
                 _context.LabourerIncidentReport.Add(labourerReport);
-
             }
             _context.SaveChanges();
-            return new ObjectResult(report);
+            return new ObjectResult(report.IncidentReport.IncidentReportId);
         }
 
 

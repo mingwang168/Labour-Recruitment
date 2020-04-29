@@ -36,7 +36,7 @@ const IncidentDetail = (props) => {
         fetchIncidentDetails(props.match.params.id)
     }, [])
 
-    console.log(details)
+   
     return (
         <>
         {details && 

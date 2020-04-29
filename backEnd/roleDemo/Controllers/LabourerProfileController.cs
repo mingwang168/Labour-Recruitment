@@ -27,14 +27,15 @@ namespace labourRecruitment.Controllers
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<LabourerProfileVM>> GetLabourerProfile(int id)
+        public ActionResult<LabourerProfileVM> GetLabourerProfile(int id)
         {
             return new LabourerProfileVMRepo(_context).GetLabourer(id);
         }
 
+        
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> PutLabourerProfile(LabourerProfileVM labourerProfile)
+        public IActionResult PutLabourerProfile(LabourerProfileVM labourerProfile)
         {
             var lp = _context.Labourer.SingleOrDefault(l => l.LabourerId == labourerProfile.Labourer.LabourerId);
 
@@ -48,12 +49,12 @@ namespace labourRecruitment.Controllers
                 lp.LabourerLastName = labourerProfile.Labourer.LabourerLastName;
                 lp.IsAvailable = labourerProfile.Labourer.IsAvailable;
                 lp.LabourerEmail = labourerProfile.Labourer.LabourerEmail;
-             }
+            }
 
 
             _context.AvailabilityLabourer.RemoveRange(_context.AvailabilityLabourer.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
 
-            foreach (string day in labourerProfile.Availabilities.Select(av=> av.AvailabilityDay))
+            foreach (string day in labourerProfile.Availabilities.Select(av => av.AvailabilityDay))
             {
                 Availability availability = _context.Availability.Where(a => a.AvailabilityDay == day).FirstOrDefault();
                 if (availability != null)
