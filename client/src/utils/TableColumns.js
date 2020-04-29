@@ -69,3 +69,18 @@ exports.INCIDENTS_TABLE_COLUMNS = [
         accessor: 'affected',
     }
 ];
+
+exports.PAYRATES_TABLE_COLUMNS = [
+    {
+        Header: 'Name',
+        accessor: 'name',
+    },
+    {
+        Header: 'Labourer Receives',
+        accessor: 'labourerReceives',
+    },
+    {
+        Header: 'Admin Receives (20% cut)',
+        accessor: 'adminReceives',
+    }
+];

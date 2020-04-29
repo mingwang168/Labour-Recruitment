@@ -61,6 +61,24 @@ exports.cleanIncidentsData = (data) => {
     return sanitizedData;
 }
 
+exports.cleanPayratesData = (data) => {
+    let sanitizedData = [];
+
+    data.forEach((d) => {
+        let rate = (Math.floor(Math.random() * 10) + 20).toFixed(2);
+        let adminRate = (rate * 1.2).toFixed(2); 
+        sanitizedData.push({
+            id: d.skillId,
+            name: d.skillName,
+            labourerReceives: `$${rate}/hr`,
+            adminReceives: `$${adminRate}/hr`
+        });
+    });
+
+    return sanitizedData;
+}
+
+
 exports.formatDateString = (date) => {
     let d = new Date(date);
 
