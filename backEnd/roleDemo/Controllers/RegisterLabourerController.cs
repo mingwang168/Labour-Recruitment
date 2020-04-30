@@ -65,32 +65,32 @@ namespace roleDemo.Controllers
                 sysUser.Labourer.Add(labourer);
                 _context.SaveChanges();
 
-                if (input.AvailableDays != null)
-                {
+                //if (input.AvailableDays != null)
+                //{
 
-                    foreach (string day in input.AvailableDays)
-                    {
-                        Availability availability = _context.Availability.Where(a => a.AvailabilityDay == day).FirstOrDefault();
+                //    foreach (string day in input.AvailableDays)
+                //    {
+                //        Availability availability = _context.Availability.Where(a => a.AvailabilityDay == day).FirstOrDefault();
 
-                        AvailabilityLabourer availabilityLabourer = new AvailabilityLabourer
-                        {
-                            AvailabilityId = availability.AvailabilityId,
-                            LabourerId = labourer.LabourerId
-                        };
-                        _context.AvailabilityLabourer.Add(availabilityLabourer);
-                        _context.SaveChanges();
-                    }
-                }
-                else
-                {
-                    await _userManager.DeleteAsync(user);
-                    _context.Labourer.Remove(labourer);
-                    _context.SystemUser.Remove(sysUser);
-                    _context.SaveChanges();
-                    jsonResponse.status = "Available day is not valid";
-                    jsonResponse.token = " ";
-                    return Json(jsonResponse);
-                }
+                //        AvailabilityLabourer availabilityLabourer = new AvailabilityLabourer
+                //        {
+                //            AvailabilityId = availability.AvailabilityId,
+                //            LabourerId = labourer.LabourerId
+                //        };
+                //        _context.AvailabilityLabourer.Add(availabilityLabourer);
+                //        _context.SaveChanges();
+                //    }
+                //}
+                //else
+                //{
+                //    await _userManager.DeleteAsync(user);
+                //    _context.Labourer.Remove(labourer);
+                //    _context.SystemUser.Remove(sysUser);
+                //    _context.SaveChanges();
+                //    jsonResponse.status = "Available day is not valid";
+                //    jsonResponse.token = " ";
+                //    return Json(jsonResponse);
+                //}
 
 
                 foreach (int skillId in input.Skills)

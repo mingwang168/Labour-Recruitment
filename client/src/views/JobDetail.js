@@ -31,17 +31,6 @@ const JobDetail = (props) => {
         }
     }
 
-    const calculateTotalHired = _ => {
-        let total = 0;
-        if(details.jobSkill.length) {
-            details.jobSkill.forEach(i => {
-                if(i.numberNeeded) {
-                    total += i.numberNeeded;
-                }
-            });
-        }
-        return total;
-    }
     
     useEffect(() => {
         fetchJobDetails(props.match.params.id);
@@ -114,7 +103,7 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Total Hired</h3>
-                            <p>{`${calculateTotalHired()} labourer(s) hired`}</p>
+                            <p>{details.totalHired} labourer(s) hired</p>
                         </div>
                         {/* Display this only if the job owner is viewing this page */}
                         <div className="card-body border-top">

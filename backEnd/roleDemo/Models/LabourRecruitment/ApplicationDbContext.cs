@@ -34,7 +34,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public virtual DbSet<Skill> Skill { get; set; }
         public virtual DbSet<SystemUser> SystemUser { get; set; }
 
-        
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -53,7 +53,7 @@ namespace labourRecruitment.Models.LabourRecruitment
             modelBuilder.Entity<AvailabilityLabourer>(entity =>
             {
                 entity.HasKey(e => e.AvailabilityLobourerId)
-                    .HasName("PK__Availabi__786BC5128837F885");
+                    .HasName("PK__Availabi__786BC512ACB8B3CF");
 
                 entity.Property(e => e.AvailabilityLobourerId).HasColumnName("availabilityLobourer_id");
 
@@ -202,6 +202,8 @@ namespace labourRecruitment.Models.LabourRecruitment
                     .HasColumnName("title")
                     .HasMaxLength(30)
                     .IsUnicode(false);
+
+                entity.Property(e => e.TotalHired).HasColumnName("total_hired");
 
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Job)
@@ -375,7 +377,7 @@ namespace labourRecruitment.Models.LabourRecruitment
             modelBuilder.Entity<SystemUser>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK__SystemUs__B9BE370F67E3B341");
+                    .HasName("PK__SystemUs__B9BE370FF3E568C0");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 

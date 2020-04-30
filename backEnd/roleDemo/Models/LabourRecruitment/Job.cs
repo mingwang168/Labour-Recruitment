@@ -14,7 +14,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         }
 
         public int JobId { get; set; }
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
         public string Title { get; set; }
         public string JobDescription { get; set; }
         public DateTime? StartDate { get; set; }
@@ -25,6 +25,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public string City { get; set; }
         public string State { get; set; }
         public string PostalCode { get; set; }
+        public int? TotalHired { get; set; }
 
         public virtual Client Client { get; set; }
         public virtual ICollection<IncidentReport> IncidentReport { get; set; }

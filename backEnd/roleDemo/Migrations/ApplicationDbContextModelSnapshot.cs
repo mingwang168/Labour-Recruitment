@@ -206,7 +206,7 @@ namespace labourRecruitment.Migrations
                         .HasColumnName("labourer_id");
 
                     b.HasKey("AvailabilityLobourerId")
-                        .HasName("PK__Availabi__786BC5128837F885");
+                        .HasName("PK__Availabi__786BC512ACB8B3CF");
 
                     b.HasIndex("AvailabilityId");
 
@@ -363,6 +363,9 @@ namespace labourRecruitment.Migrations
                         .HasMaxLength(30)
                         .IsUnicode(false);
 
+                    b.Property<int?>("TotalHired")
+                        .HasColumnName("total_hired");
+
                     b.HasKey("JobId");
 
                     b.HasIndex("ClientId");
@@ -417,7 +420,7 @@ namespace labourRecruitment.Migrations
                     b.Property<int?>("NumberNeeded")
                         .HasColumnName("number_needed");
 
-                    b.Property<int?>("SkillId")
+                    b.Property<int>("SkillId")
                         .HasColumnName("skill_id");
 
                     b.HasKey("JobSkillId");
@@ -581,7 +584,7 @@ namespace labourRecruitment.Migrations
                         .IsUnicode(false);
 
                     b.HasKey("UserId")
-                        .HasName("PK__SystemUs__B9BE370F67E3B341");
+                        .HasName("PK__SystemUs__B9BE370FF3E568C0");
 
                     b.ToTable("SystemUser");
                 });
@@ -701,7 +704,8 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
                         .WithMany("JobSkill")
                         .HasForeignKey("SkillId")
-                        .HasConstraintName("FK__JobSkill__skill___412EB0B6");
+                        .HasConstraintName("FK__JobSkill__skill___412EB0B6")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.Labourer", b =>
