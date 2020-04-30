@@ -99,7 +99,7 @@ namespace labourRecruitment.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__SystemUs__B9BE370F67E3B341", x => x.user_id);
+                    table.PrimaryKey("PK__SystemUs__B9BE370FF3E568C0", x => x.user_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -273,7 +273,8 @@ namespace labourRecruitment.Migrations
                     street = table.Column<string>(unicode: false, maxLength: 50, nullable: true),
                     city = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
                     state = table.Column<string>(unicode: false, maxLength: 10, nullable: true),
-                    postal_code = table.Column<string>(unicode: false, maxLength: 20, nullable: true)
+                    postal_code = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
+                    total_hired = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -297,7 +298,7 @@ namespace labourRecruitment.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Availabi__786BC5128837F885", x => x.availabilityLobourer_id);
+                    table.PrimaryKey("PK__Availabi__786BC512ACB8B3CF", x => x.availabilityLobourer_id);
                     table.ForeignKey(
                         name: "FK__Availabil__avail__2F10007B",
                         column: x => x.availability_id,
@@ -410,7 +411,7 @@ namespace labourRecruitment.Migrations
                     job_skill_id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     job_id = table.Column<int>(nullable: true),
-                    skill_id = table.Column<int>(nullable: true),
+                    skill_id = table.Column<int>(nullable: false),
                     number_needed = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -427,7 +428,7 @@ namespace labourRecruitment.Migrations
                         column: x => x.skill_id,
                         principalTable: "Skill",
                         principalColumn: "skill_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

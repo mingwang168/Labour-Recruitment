@@ -59,6 +59,7 @@ const ClientAddJob = ({ history }) => {
         setJob({ ...job, province: e.label })
     }
 
+    
     const validateForm = e => {
         e.preventDefault();
         let errors = [];
@@ -94,7 +95,7 @@ const ClientAddJob = ({ history }) => {
             City: city,
             State: province,
             InProgress: true,
-            IsComplete: false
+            IsComplete: false,
         }
 
         try {

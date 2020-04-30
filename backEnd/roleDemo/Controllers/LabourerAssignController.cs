@@ -23,7 +23,7 @@ namespace labourRecruitment.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetHighestRatingLabourers(int id)
         {
             List<Labourer> labourers = await _context.LabourerSkill.Where(ls => ls.SkillId == id).Select(ols => ols.Labourer
@@ -39,10 +39,6 @@ namespace labourRecruitment.Controllers
             }).ToList();
 
             labourerAss = labourerAss.OrderByDescending(la => la.averageRating).ToList();
-
-//            labourers = labourers.OrderByDescending(ol => (_context.LabourerAttendance.Where(la => la.LabourerId == ol.LabourerId)
-//.Average(las => las.DailyQualityRating == null? 0 : las.DailyQualityRating) + _context.JobLabourer.Where(la => la.LabourerId == ol.LabourerId)
-//.Average(lss => lss.LabourerSafetyRating == null? 5 : lss.LabourerSafetyRating) / 2)).ToList();
 
             if (labourerAss != null)
             {
