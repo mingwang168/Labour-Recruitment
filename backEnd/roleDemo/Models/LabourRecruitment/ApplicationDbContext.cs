@@ -31,7 +31,6 @@ namespace labourRecruitment.Models.LabourRecruitment
         public virtual DbSet<Skill> Skill { get; set; }
         public virtual DbSet<SystemUser> SystemUser { get; set; }
 
-       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -214,6 +213,12 @@ namespace labourRecruitment.Models.LabourRecruitment
 
                 entity.Property(e => e.ClientQualityRating).HasColumnName("client_quality_rating");
 
+                entity.Property(e => e.Duration).HasColumnName("duration");
+
+                entity.Property(e => e.EndDay)
+                    .HasColumnName("end_day")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.JobId).HasColumnName("job_id");
 
                 entity.Property(e => e.LabourerId).HasColumnName("labourer_id");
@@ -223,6 +228,10 @@ namespace labourRecruitment.Models.LabourRecruitment
                 entity.Property(e => e.SafetyMeetingCompleted).HasColumnName("safety_meeting_completed");
 
                 entity.Property(e => e.SkillId).HasColumnName("skill_id");
+
+                entity.Property(e => e.StartDay)
+                    .HasColumnName("start_day")
+                    .HasColumnType("datetime");
 
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.JobLabourer)

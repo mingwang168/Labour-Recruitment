@@ -25,6 +25,7 @@ namespace labourRecruitment.Controllers
         public IActionResult AddFirstSchedule([FromBody]Job job)
         {
             var jobSelected = _context.Job.Where(j => j.JobId == job.JobId).FirstOrDefault();
+            var duration = jobSelected.EndDate - jobSelected.StartDate;
             var jobSkillSelected = _context.Job.Where(j => j.JobId == job.JobId).Select(j => j.JobSkill).FirstOrDefault();
             HighestRatedLabourers rated = new HighestRatedLabourers(_context);
 
@@ -49,7 +50,6 @@ namespace labourRecruitment.Controllers
                 _context.SaveChanges();
 
             }
-
             return new ObjectResult(job);
         }
 

@@ -6,7 +6,7 @@ namespace labourRecruitment.Models.LabourRecruitment
     public partial class JobSkill
     {
         public int JobSkillId { get; set; }
-        public int? JobId { get; set; }
+        public int JobId { get; set; }
         public int SkillId { get; set; }
         public int NumberNeeded { get; set; }
 
