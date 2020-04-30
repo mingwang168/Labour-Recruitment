@@ -38,13 +38,18 @@ namespace labourRecruitment.Controllers
                 foreach (Labourer labourer in labourers)
                 {
                     _context.Labourer.FirstOrDefault(l => l.LabourerId == labourer.LabourerId).IsAvailable = false;
-                  
+
                     _context.JobLabourer.Add(new JobLabourer
                     {
                         JobId = job.JobId,
                         SkillId = js.SkillId,
                         LabourerId = labourer.LabourerId,
-                        LabourerSafetyRating = 5
+                        LabourerSafetyRating = 5,
+                        SafetyMeetingCompleted = false,
+                        ClientQualityRating = 0,
+                        StartDay = jobSelected.StartDate,
+                        EndDay = jobSelected.EndDate,
+                        Duration = ScheduleRepo.GetBusinessDays(jobSelected.StartDate, jobSelected.EndDate)
                     });
                 }
                 _context.SaveChanges();
@@ -55,4 +60,6 @@ namespace labourRecruitment.Controllers
 
 
     }
+
 }
+
