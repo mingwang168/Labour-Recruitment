@@ -1,9 +1,46 @@
-import React from "react";
+import React , {useState, useEffect} from "react";
 
 import TopNav from "../components/TopNav";
 import SideNav from "../components/SideNav";
+import * as Auth from '../../utils/Auth';
 
-const LabourerProfile = () => {
+const BASE_URL = "http://localhost:5001/api";
+
+const LabourerProfile = (props) => {
+	const [labourerFirstName, setLabourerFirstName] = useState('');
+	const [labourerLastName, setLabourerLastName] = useState('');
+	const [availability, setAvailability] = useState(true);
+	const [labourerEmail, setLabourerEmail] = useState('');
+	const [averageSafety, setAverageSafety] = useState('');
+	const [averageQuality, setAverageQuality] = useState('');
+	
+	const fetchLabourerProfile = async() =>{
+		try	
+		{
+			let response = await fetch(BASE_URL + `/LabourerProfile/${Auth.getID()}`,{
+			method: 'GET',
+			headers: {
+				'Authorization': `Bearer ${Auth.getToken()}`
+			} 
+			});
+			let data = await response.json();
+			console.log(data);
+			setLabourerFirstName(data.labourer.labourerFirstName);
+			setLabourerLastName(data.labourer.labourerLastName);
+			setAvailability(data.labourer.isAvailable);
+			setLabourerEmail(data.labourer.labourerEmail);
+			setAverageSafety(data.labourer.averageSafety);
+			setAverageQuality(data.labourer.averageQuality);
+		} catch(e){
+			console.log(e);
+		}
+	}
+
+	useEffect(() => {
+		fetchLabourerProfile();
+	}, [])
+
+	
 	return (
 	<div className="dashboard-main-wrapper">
 		<TopNav />
@@ -22,19 +59,9 @@ const LabourerProfile = () => {
 			<div className="col">
 			<div className="mb-4 pt-3 card card-small">
                 <div className="border-bottom text-center card-header">
-                    <h4 className="mb-1">Mike Smith</h4>
-                    <span className="m-5">Available</span>
+                    <h4 className="mb-1">{labourerFirstName} {labourerLastName}</h4>
+                    <span className="m-5">{availability ? 'Available' : 'Not Available'}</span>
                 </div>
-                <ul className="list-group list-group-flush">
-                    <li className="p-4 list-group-item">
-                        <strong className="text-muted d-block mb-2">
-                            Description
-                        </strong>
-                        <span>
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione natus minima, deleniti dignissimos voluptatem repellat sunt eum sint hic architecto cupiditate reiciendis, nisi praesentium rerum debitis voluptatum unde esse soluta.
-                        </span>
-                    </li>
-                </ul>
 			</div>
 			</div>
 			</div>
@@ -59,19 +86,7 @@ const LabourerProfile = () => {
 							</strong>
 							</td>
 							<td className="pl-4 pr-4 pb-3">
-								mike@gmail.com
-							</td>
-						</tr>
-						<tr>
-							<td className="text-muted d-block pl-4 pr-4 pb-3">
-							<strong className="text-muted d-block">
-								Availability:
-							</strong>
-							</td>
-							<td className="pl-4 pr-4 pb-3">
-								Monday<br />
-								Wednesday<br />
-								Friday
+								{labourerEmail}
 							</td>
 						</tr>
 						</tbody>
@@ -89,7 +104,7 @@ const LabourerProfile = () => {
 						<td>
 						<span className="pl-4 pb-3">
 						<i className="fas fa-star mr-2"></i>
-							4.91 (18 ratings)
+							{averageSafety} 4.91 (18 ratings)
 						</span>
 						</td>
 					</tr>
@@ -102,7 +117,7 @@ const LabourerProfile = () => {
 						<td>
 							<span className="pl-4 pb-3">
 							<i className="fas fa-star mr-2"></i>
-							4.91 (18 ratings)
+								{averageQuality} 4.91 (18 ratings)
 							</span>
 						</td>
 					</tr>

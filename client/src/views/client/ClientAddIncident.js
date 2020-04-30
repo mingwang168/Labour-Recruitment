@@ -144,7 +144,12 @@ const ClientAddIncident = ({ history }) => {
                                 <div className="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol className="breadcrumb">
-                                            <li className="breadcrumb-item"><a href="/dashboard" className="breadcrumb-link">Dashboard</a></li>
+                                            <li className="breadcrumb-item">
+                                                <Link to="/dashboard" className="breadcrumb-link">Home</Link>
+                                            </li>
+                                            <li className="breadcrumb-item">
+                                                <Link to="/incidents" className="breadcrumb-link">Incidents</Link>
+                                            </li>
                                             <li className="breadcrumb-item active" aria-current="page">Add New Incident</li>
                                         </ol>
                                     </nav>

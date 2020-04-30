@@ -22,6 +22,7 @@ const Incidents = () => {
                 }
             })
             let data = await response.json()
+            console.log(data)
             setIncidents(data)
         } catch (e) {
             console.error(e);
@@ -50,8 +51,10 @@ const Incidents = () => {
                 <div className="page-breadcrumb">
                 <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/dashboard" className="breadcrumb-link">Dashboard</a></li>
-                    <li className="breadcrumb-item active" aria-current="page">Incident Reports</li>
+                    <li className="breadcrumb-item">
+                        <Link to="/dashboard" className="breadcrumb-link">Home</Link>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">Incidents</li>
                 </ol>
                 </nav>
                 </div>
@@ -66,6 +69,7 @@ const Incidents = () => {
                 <h5 className="card-header">Incidents</h5>
                 <div className="card-body">
                 <div className="table-responsive">
+                <Link to="/addincident" className="btn btn-primary px-3 py-2 mb-2 float-right">Add Incident</Link>
                 <table className="table table-striped table-bordered">
                     <thead>
                     <tr>

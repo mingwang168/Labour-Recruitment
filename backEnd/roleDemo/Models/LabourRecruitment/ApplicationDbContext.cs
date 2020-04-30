@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -7,6 +8,8 @@ namespace labourRecruitment.Models.LabourRecruitment
 {
     public partial class ApplicationDbContext : IdentityDbContext
     {
+        internal IEnumerable<object> LabourerSKill;
+
         public ApplicationDbContext()
         {
         }
