@@ -5,8 +5,8 @@ exports.cleanJobsData = (data) => {
         sanitizedData.push({
             id: d.jobId,
             title: d.title,
-            startdate: this.formatDateString(d.startDate),
-            enddate: this.formatDateString(d.endDate),
+            startdate: this.date(d.startDate),
+            enddate: this.date(d.endDate),
             status: d.isComplete ? "Complete" : "In Progress"
         });
     });
@@ -52,7 +52,7 @@ exports.cleanIncidentsData = (data) => {
         sanitizedData.push({
             id: d.incidentReportId,
             job: d.job.title,
-            date: this.formatDateString(d.incidentReportDate),
+            date: this.date(d.incidentReportDate),
             type: d.incidentType.incidentTypeName,
             affected: `${d.labourerIncidentReport.length} labourer(s)`
         });
@@ -78,8 +78,7 @@ exports.cleanPayratesData = (data) => {
     return sanitizedData;
 }
 
-
-exports.formatDateString = (date) => {
+exports.date = (date) => {
     let d = new Date(date);
 
     const months = [
@@ -98,4 +97,10 @@ exports.formatDateString = (date) => {
     ];
     
     return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+exports.phone = (p) => {
+    let cleaned = ('' + p).replace(/\D/g, '');
+    let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    return match ? '(' + match[1] + ') ' + match[2] + '-' + match[3] : p;
 }
