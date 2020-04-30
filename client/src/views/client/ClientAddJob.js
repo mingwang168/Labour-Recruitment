@@ -59,7 +59,19 @@ const ClientAddJob = ({ history }) => {
         setJob({ ...job, province: e.label })
     }
 
-    
+    const calculateTotalHired = _ => {
+        let total = 0;
+        if(requiredLabourers.length) {
+            requiredLabourers.forEach(i => {
+                if(i.NumberNeeded) {
+                    console.log(i.NumberNeeded)
+                    total += parseInt(i.NumberNeeded);
+                }
+            });
+        }
+        return total;
+    }
+
     const validateForm = e => {
         e.preventDefault();
         let errors = [];
@@ -78,9 +90,10 @@ const ClientAddJob = ({ history }) => {
         } else {
             submitForm();
         }
-        console.log(requiredLabourers)
+        
     }
 
+    console.log(requiredLabourers)
     const submitForm = async() => {
         let token = Auth.getToken();
         let id = Auth.getID();
@@ -96,6 +109,7 @@ const ClientAddJob = ({ history }) => {
             State: province,
             InProgress: true,
             IsComplete: false,
+            TotalHired: calculateTotalHired()
         }
 
         try {
