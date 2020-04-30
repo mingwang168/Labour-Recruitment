@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { formatDateString } from '../utils/DataSanitizer';
+import * as DataSanitizer from '../utils/DataSanitizer';
 
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
@@ -84,7 +84,7 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Dates</h3>
-                            <time>{formatDateString(details.startDate)}</time> to <time>{formatDateString(details.endDate)}</time>
+                            <time>{DataSanitizer.date(details.startDate)}</time> to <time>{DataSanitizer.date(details.endDate)}</time>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Location</h3>
