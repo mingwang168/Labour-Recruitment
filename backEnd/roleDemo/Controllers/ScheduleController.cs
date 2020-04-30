@@ -28,12 +28,7 @@ namespace labourRecruitment.Controllers
             List <Labourer> labourers = new List<Labourer>();
             HighestRatedLabourers rated = new HighestRatedLabourers(_context);
 
-            foreach (JobSkill skill in jobSkillVM.JobSkills)
-            {
-                List <Labourer> ratedLabourers = rated.GetHighestRatedLabourers(skill.SkillId).ToList();
-               //Array.Copy(ratedLabourers, labourers, skill.NumberNeeded);
-
-            }
+           
             
             return new ObjectResult(jobSkillVM);
         }
