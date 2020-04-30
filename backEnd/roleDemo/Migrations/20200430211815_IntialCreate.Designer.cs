@@ -9,7 +9,7 @@ using labourRecruitment.Models.LabourRecruitment;
 namespace labourRecruitment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200430031020_IntialCreate")]
+    [Migration("20200430211815_IntialCreate")]
     partial class IntialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -384,10 +384,17 @@ namespace labourRecruitment.Migrations
                     b.Property<double?>("ClientQualityRating")
                         .HasColumnName("client_quality_rating");
 
-                    b.Property<int?>("JobId")
+                    b.Property<int?>("Duration")
+                        .HasColumnName("duration");
+
+                    b.Property<DateTime?>("EndDay")
+                        .HasColumnName("end_day")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("JobId")
                         .HasColumnName("job_id");
 
-                    b.Property<int?>("LabourerId")
+                    b.Property<int>("LabourerId")
                         .HasColumnName("labourer_id");
 
                     b.Property<double?>("LabourerSafetyRating")
@@ -396,8 +403,12 @@ namespace labourRecruitment.Migrations
                     b.Property<bool?>("SafetyMeetingCompleted")
                         .HasColumnName("safety_meeting_completed");
 
-                    b.Property<int?>("SkillId")
+                    b.Property<int>("SkillId")
                         .HasColumnName("skill_id");
+
+                    b.Property<DateTime?>("StartDay")
+                        .HasColumnName("start_day")
+                        .HasColumnType("datetime");
 
                     b.HasKey("JobLabourerId");
 
@@ -416,10 +427,10 @@ namespace labourRecruitment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("job_skill_id");
 
-                    b.Property<int?>("JobId")
+                    b.Property<int>("JobId")
                         .HasColumnName("job_id");
 
-                    b.Property<int?>("NumberNeeded")
+                    b.Property<int>("NumberNeeded")
                         .HasColumnName("number_needed");
 
                     b.Property<int>("SkillId")
@@ -683,17 +694,20 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Job", "Job")
                         .WithMany("JobLabourer")
                         .HasForeignKey("JobId")
-                        .HasConstraintName("FK__JobLabour__job_i__47DBAE45");
+                        .HasConstraintName("FK__JobLabour__job_i__47DBAE45")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Labourer", "Labourer")
                         .WithMany("JobLabourer")
                         .HasForeignKey("LabourerId")
-                        .HasConstraintName("FK__JobLabour__labou__48CFD27E");
+                        .HasConstraintName("FK__JobLabour__labou__48CFD27E")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
                         .WithMany("JobLabourer")
                         .HasForeignKey("SkillId")
-                        .HasConstraintName("FK__JobLabour__skill__49C3F6B7");
+                        .HasConstraintName("FK__JobLabour__skill__49C3F6B7")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.JobSkill", b =>
@@ -701,7 +715,8 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Job", "Job")
                         .WithMany("JobSkill")
                         .HasForeignKey("JobId")
-                        .HasConstraintName("FK__JobSkill__job_id__403A8C7D");
+                        .HasConstraintName("FK__JobSkill__job_id__403A8C7D")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
                         .WithMany("JobSkill")
