@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
+import * as FormValidator from '../../utils/FormValidator';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
 import LabourerList from '../components/LabourerList';
 import Select from 'react-select';
+import FormErrors from '../components/FormErrors';
 
 
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientAddIncident = ({ history }) => {
+
     const [report, setReport] = useState({
         incidentdate : "",
         incidentsummary : ""
@@ -22,12 +25,32 @@ const ClientAddIncident = ({ history }) => {
     const [selectedJob, setSelectedJob] = useState();
     const [selectedIncident, setSelectedIncident] = useState()
     const [selectedLabourers, setselectedLabourers] = useState([]);
+    const [formErrors, setFormErrors] = useState([]);
 
     const {incidentdate, incidentsummary} = report
     const validateForm = e => {
         e.preventDefault();
-        console.log("Validating form...")
-        submitForm()
+        console.log("Validating form...");
+        let errors = [];
+
+        if((!FormValidator.date(incidentdate)) && (incidentdate ===  null) && (incidentdate === '')){
+            errors.push("Invalid date entered.");
+        }
+        if(!selectedIncident){
+            errors.push("You must select incident type.")
+        }
+        if(!selectedJob){
+            errors.push("You must select the job involved.")
+        }
+        if(!selectedLabourers.length){
+            errors.push("You must select labourers affected.")
+        }
+
+        if(errors.length){
+            setFormErrors(errors)
+        }else {
+            submitForm()
+        }
     }
 
     const fetchAllJobs = async() => {
@@ -113,12 +136,14 @@ const ClientAddIncident = ({ history }) => {
             }
 
             let data = await response.json();
-            history.push('/incident/'+ data);
-
+            //history.push('/incident/'+ data);
+            console.log(data)
         } catch(e) {
             console.error(e);
         }
     }
+
+  
 
     useEffect(() => {
         fetchAllJobs();
@@ -163,6 +188,10 @@ const ClientAddIncident = ({ history }) => {
                         <div className="card-body">
                             <form className="client-add-incident-form">
 
+                                <div>
+                                {formErrors.length > 0 && <FormErrors errors={formErrors}/> }
+                                </div>
+
                                 <div className="form-row mb-4">
                                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
                                         <label htmlFor="incidentdate">Date Of Incident<span className="text-danger">*</span></label>
@@ -174,17 +203,7 @@ const ClientAddIncident = ({ history }) => {
                                             onChange={e => onChange(e)}
                                         />
                                     </div>
-                                    <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                                        <label htmlFor="injurytype">Injury Type<span className="text-danger">*</span></label>
-                                        <input
-                                            required
-                                            name="injurytype"
-                                            placeholder="Enter injury type"
-                                            type="text"
-                                            className="form-control form-control-lg"
-                                        />
-                                    </div>
-
+                                 
                                     <div className=" col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
                                         <label className="d-block" htmlFor="incidentType">Select incident type<span className="text-danger">*</span></label>
                                         <Select
@@ -212,7 +231,7 @@ const ClientAddIncident = ({ history }) => {
                                         />
                                     </div>
                                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                                        <label className="d-block" htmlFor="injuredLabourers">Injured Labourers<span className="text-danger">*</span></label>
+                                        <label className="d-block" htmlFor="injuredLabourers">Labourers Affected<span className="text-danger">*</span></label>
                                         {selectedJob ? <LabourerList selectedJob={selectedJob} 
                                                                      selectedLabourers={selectedLabourers}
                                                                      setselectedLabourers={setselectedLabourers} 
