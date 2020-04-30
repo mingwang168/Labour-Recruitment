@@ -125,9 +125,6 @@ const ClientAddIncident = ({ history }) => {
         fetchIncidentOptions();
     }, []);
 
-    console.log(selectedJob)
-
-
     return (
         <div className="dashboard-main-wrapper">
             <TopNav />
