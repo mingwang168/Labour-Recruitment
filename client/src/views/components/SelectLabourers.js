@@ -7,7 +7,7 @@ const SelectLabourers = ({requiredLabourers, setRequiredLabourers}) => {
 
     const [skills, setSkills] = useState([])
     const [selectedSkill, setSelectedSkill] = useState();
-    const [selectedNumWorkers, setSelectedNumWorkers] = useState('');
+    const [selectedNumLabourers, setSelectedNumLabourers] = useState('');
 
     useEffect (() => {
         const fetchSkills = async() => {
@@ -22,26 +22,26 @@ const SelectLabourers = ({requiredLabourers, setRequiredLabourers}) => {
         fetchSkills()
     }, [])
 
-    const addWorkers = () => {
-        if(selectedSkill && selectedNumWorkers > 0) {
-            if(requiredLabourers.length && requiredLabourers.findIndex(i => i.skill === selectedSkill) > -1) {
-                let indexOfExistingSkill = requiredLabourers.findIndex(i => i.skill === selectedSkill);
+    const addLabourers = () => {
+        if(selectedSkill && selectedNumLabourers > 0) {
+            if(requiredLabourers.length && (requiredLabourers.findIndex(i => i.SkillName === selectedSkill)) != -1) {
+                let indexOfExistingSkill = requiredLabourers.findIndex(i => i.SkillName === selectedSkill);
                 if(indexOfExistingSkill > -1) {
-                    let skillUpdated = [...requiredLabourers]
-                    skillUpdated[indexOfExistingSkill].NumberNeeded = selectedNumWorkers;
+                    let skillUpdated = [...requiredLabourers]                   
+                    skillUpdated[indexOfExistingSkill].NumberNeeded = parseInt(selectedNumLabourers) + parseInt(requiredLabourers[indexOfExistingSkill].NumberNeeded) ;
                     setRequiredLabourers(skillUpdated)
                 } else {
-                    setRequiredLabourers(requiredLabourers => [ ...requiredLabourers, {SkillName: selectedSkill, SkillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumWorkers}])
-                }
+                    setRequiredLabourers(requiredLabourers => [ ...requiredLabourers, {SkillName: selectedSkill, SkillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumLabourers}])
+                }            
             } else {
-                setRequiredLabourers(requiredLabourers => [ ...requiredLabourers, {SkillName: selectedSkill, SkillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumWorkers}])
+                setRequiredLabourers(requiredLabourers => [ ...requiredLabourers, {SkillName: selectedSkill, SkillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumLabourers}])
             }
-            setSelectedNumWorkers('');
+            setSelectedNumLabourers('');
         }
 
     }
 
-    const deleteWorkers = (index) => {
+    const deleteLabourers = (index) => {
         if(requiredLabourers.length <= 1) {
             setRequiredLabourers([]);
         } else {
@@ -67,7 +67,7 @@ const SelectLabourers = ({requiredLabourers, setRequiredLabourers}) => {
 
     return (
     <div className="form-group">
-        <label htmlFor="workers">Select labourers <span className="text-danger">*</span></label>
+        <label htmlFor="labourers">Select labourers <span className="text-danger">*</span></label>
             
         { requiredLabourers.length ?
         <div className="row m-2">
@@ -77,7 +77,7 @@ const SelectLabourers = ({requiredLabourers, setRequiredLabourers}) => {
             <tr key={i}>
                 <td>{item.SkillName}</td>
                 <td>{item.NumberNeeded} required</td>
-                <td><span onClick={() => deleteWorkers(i)} className="p-2 badge badge-danger" style={{cursor:'pointer'}}>Remove</span></td>
+                <td><span onClick={() => deleteLabourers(i)} className="p-2 badge badge-danger" style={{cursor:'pointer'}}>Remove</span></td>
             </tr>
         ))}
         </tbody>
@@ -98,20 +98,20 @@ const SelectLabourers = ({requiredLabourers, setRequiredLabourers}) => {
             </div>
             <div className="col col-md-5 col-lg-3 col-xl-2">
             <input
-                value={selectedNumWorkers}
+                value={selectedNumLabourers}
                 onKeyPress={e => preventSubmit(e)}
-                onChange={e => setSelectedNumWorkers(e.target.value)}
+                onChange={e => setSelectedNumLabourers(e.target.value)}
                 type="number"
                 min="0"
                 max="999"
-                name="workersrequired"
+                name="labourersrequired"
                 placeholder="# required"
                 className="form-control form-control-lg"
             />
             </div>
             <div className="col col-md-2 col-lg-1">
             <span
-                onClick={addWorkers}
+                onClick={addLabourers}
                 className="btn btn-light btn-lg"
             >
                 Add
