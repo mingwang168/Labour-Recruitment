@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import TopNav from '../components/TopNav';
@@ -7,6 +7,8 @@ import Footer from '../components/Footer';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
+
+const BASE_URL = "http://localhost:5001/api";
 
 const ClientLabourerAttendance = (props) => {
 
