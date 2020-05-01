@@ -21,7 +21,7 @@ import ClientRegister from "./views/client/ClientRegister";
 import ClientProfile from "./views/client/ClientProfile";
 import ClientAddJob from "./views/client/ClientAddJob";
 import ClientUpdateJobDetails from "./views/client/ClientUpdateJobDetails";
-import ClientDailyQualityRating from "./views/client/ClientDailyQualityRating";
+import ClientLabourerAttendance from "./views/client/ClientLabourerAttendance";
 import ClientAddIncident from "./views/client/ClientAddIncident";
 
 import LabourerRegister from "./views/labourer/LabourerRegister";
@@ -79,7 +79,7 @@ class App extends Component {
 		<ProtectedRoute exact path='/profile/client' component={ClientProfile} />
         <ProtectedRoute exact path='/addjob' component={ClientAddJob} />
 		<ProtectedRoute exact path='/editjob/:id' act component={ClientUpdateJobDetails} />
-		<ProtectedRoute exact path='/job/:id/:date' act component={ClientDailyQualityRating} />
+		<ProtectedRoute exact path='/job/:id/attendance/:date' act component={ClientLabourerAttendance} />
         <ProtectedRoute exact path='/addincident' act component={ClientAddIncident} />
 
 		{/* Labourer Views */}
