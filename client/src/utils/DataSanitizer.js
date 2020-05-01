@@ -91,6 +91,19 @@ exports.cleanAttendanceDatesData = (data) => {
     return sanitizedData;
 }
 
+exports.cleanAttendanceRatingsData = (data) => {
+    let sanitizedData = [];
+
+    data.forEach((d) => {
+        sanitizedData.push({
+            name: `${d.labourer.labourerFirstName} ${d.labourer.labourerLastName}`,
+            rating: d.dailyQualityRating
+        })
+    });
+
+    return sanitizedData;
+}
+
 const months = [
     'January',
     'February',
@@ -120,7 +133,8 @@ exports.formatDateString = (date) => {
     // Check if date is in YYYY-MM-DD format
     if(date.match(/^\d{4}-\d{2}-\d{2}$/)) {
         let d = new Date(date);
-        return `${months[d.getMonth()]} ${d.getDate() + 1}, ${d.getFullYear()} (${weekdays[d.getDay()]})`;
+        d.setDate(d.getDate() + 1);
+        return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} (${weekdays[d.getDay() - 1]})`;
     }
 
     let d = new Date(date);
