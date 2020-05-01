@@ -91,6 +91,25 @@ namespace labourRecruitment.Controllers
             }).ToListAsync();
         }
 
+
+        [HttpGet("{labourerId}", Name = "GetJobByLabourerId")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<IEnumerable<Job>>> GetJobByLabourerId(int labourerId)
+        {
+            return await _context.JobLabourer.Where(jl => jl.LabourerId == labourerId).Select(jl => new Job
+            {
+                JobId = jl.Job.JobId,
+                Title = jl.Job.Title,
+                StartDate = jl.Job.StartDate,
+                EndDate = jl.Job.EndDate,
+                InProgress = jl.Job.InProgress,
+                IsComplete = jl.Job.IsComplete,
+                JobLabourer = jl.Job.JobLabourer
+            }).ToListAsync();
+        }
+
+
+
         // POST: api/Job
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
