@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { formatDateString } from '../utils/DataSanitizer';
+import * as DataSanitizer from '../utils/DataSanitizer';
 
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
 import RateWorkers from './components/RateWorkers'
+import Table from './components/Table';
+
 import * as Auth from '../utils/Auth';
+
+import { ATTENDANCE_DATES_TABLE_COLUMNS } from '../utils/TableColumns';
+import schedule from '../utils/staticdata/schedule';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const JobDetail = (props) => {
 
-    const [details, setDetails] = useState()
+    const [details, setDetails] = useState();
 
     const fetchJobDetails = async(id) => {
         let token = Auth.getToken()
@@ -31,7 +36,6 @@ const JobDetail = (props) => {
         }
     }
 
-    
     useEffect(() => {
         fetchJobDetails(props.match.params.id);
     }, [props.match.params.id])
@@ -84,7 +88,7 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Dates</h3>
-                            <time>{formatDateString(details.startDate)}</time> to <time>{formatDateString(details.endDate)}</time>
+                            <time>{DataSanitizer.formatDateString(details.startDate)}</time> to <time>{DataSanitizer.formatDateString(details.endDate)}</time>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Location</h3>
@@ -138,82 +142,18 @@ const JobDetail = (props) => {
                 {/* Controls */}
                 <div className="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
 
-                    {/* Daily Quality Ratings */}
-                    <div className="card job-dqr">
-                        <h5 className="card-header">Daily Quality Ratings</h5>
+                    {/* Labourer Attendance */}
+                    <div className="card">
+                        <h5 className="card-header">Labourer Attendance</h5>
                         <div className="card-body">
-                        <p>Daily quality ratings are used to track a labourer's attendance, and average quality rating.</p>
-                        <table className="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>April 12, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 11, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 10, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 9, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 8, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 7, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 6, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 5, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 4, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 3, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 2, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 1, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <p>Daily ratings are used to track a labourer's attendance, and calculate their average quality rating.</p>
+                        <Table
+                            columns={ATTENDANCE_DATES_TABLE_COLUMNS}
+                            data={DataSanitizer.cleanScheduleDatesData(schedule)}
+                            path={`/job/${props.match.params.id}/attendance`}
+                            itemsPerRow={5}
+                            {...props}
+                        />
                         </div>
                     </div>
                     
