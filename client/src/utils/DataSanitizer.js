@@ -5,8 +5,8 @@ exports.cleanJobsData = (data) => {
         sanitizedData.push({
             id: d.jobId,
             title: d.title,
-            startdate: this.date(d.startDate),
-            enddate: this.date(d.endDate),
+            startdate: this.formatDateString(d.startDate),
+            enddate: this.formatDateString(d.endDate),
             status: d.isComplete ? "Complete" : "In Progress"
         });
     });
@@ -52,7 +52,7 @@ exports.cleanIncidentsData = (data) => {
         sanitizedData.push({
             id: d.incidentReportId,
             job: d.job.title,
-            date: this.date(d.incidentReportDate),
+            date: this.formatDateString(d.incidentReportDate),
             type: d.incidentType.incidentTypeName,
             affected: `${d.labourerIncidentReport.length} labourer(s)`
         });
