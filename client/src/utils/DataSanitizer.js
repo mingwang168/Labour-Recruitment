@@ -78,13 +78,13 @@ exports.cleanPayratesData = (data) => {
     return sanitizedData;
 }
 
-exports.cleanScheduleDatesData = (data) => {
+exports.cleanAttendanceDatesData = (data) => {
     let sanitizedData = [];
 
     data.forEach((d) => {
         sanitizedData.push({
-            id: this.formatDateParams(d.date),
-            date: this.formatDateString(d.date)
+            id: this.formatDateParams(d),
+            date: this.formatDateString(d)
         })
     });
 
