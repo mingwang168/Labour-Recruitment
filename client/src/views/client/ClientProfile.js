@@ -85,6 +85,8 @@ const ClientProfile = (props) => {
 
         <div className="dashboard-wrapper">
             <div className="container-fluid dashboard-content">
+                { !client ? <ErrorMessage message={"No profile found."} /> :
+                <>
                 {/* Page Header */}
                 <div className="row">
                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -106,7 +108,6 @@ const ClientProfile = (props) => {
                 </div>
                 </div>
 
-                { !client ? <ErrorMessage message={"No profile found."} /> :
                 <div className="row">
                     {/* Client Details */}
                     <div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -212,6 +213,7 @@ const ClientProfile = (props) => {
 
                     </div>
                 </div>
+                </>
                 }
 
             </div>
