@@ -117,7 +117,7 @@ const Table = ({ columns, data, history, path, itemsPerRow }) => {
                 prepareRow(row);
                 return (
                   <tr
-                    onClick={() => viewDetails(row.original.id)}
+                    onClick={() => path && viewDetails(row.original.id)}
                     {...row.getRowProps()}
                     style={{cursor:'pointer'}}>
                     {row.cells.map((cell, i) => {
