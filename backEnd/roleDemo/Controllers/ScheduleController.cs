@@ -19,7 +19,7 @@ namespace labourRecruitment.Controllers
         }
 
         [HttpPut]
-        public IActionResult AddFirstSchedule([FromBody]Job job)
+        public IActionResult AddScheduleForTwoWeekJob([FromBody]Job job)
         {
             var jobSelected = _context.Job.Where(j => j.JobId == job.JobId).FirstOrDefault();
             var duration = jobSelected.EndDate - jobSelected.StartDate;
@@ -52,7 +52,6 @@ namespace labourRecruitment.Controllers
                     scheduleRepo.PopulateLabourerAttendance(job.JobId, labourer.LabourerId, jobSelected.StartDate, jobSelected.EndDate);
                 }
                 _context.SaveChanges();
-
             }
             return new ObjectResult(job);
         }
