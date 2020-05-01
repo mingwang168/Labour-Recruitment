@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { formatDateString } from '../utils/DataSanitizer';
+import { Link, Redirect } from 'react-router-dom';
+import * as DataSanitizer from '../utils/DataSanitizer';
 
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
 import RateWorkers from './components/RateWorkers'
+import Table from './components/Table';
+import ErrorMessage from './components/ErrorMessage';
+
 import * as Auth from '../utils/Auth';
+
+import { ATTENDANCE_DATES_TABLE_COLUMNS } from '../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const JobDetail = (props) => {
 
-    const [details, setDetails] = useState()
+    const [details, setDetails] = useState();
+    const [attendanceDates, setAttendanceDates] = useState();
 
     const fetchJobDetails = async(id) => {
-        let token = Auth.getToken()
+        let token = Auth.getToken();
+
+        // Job details
         try {
-            const response = await fetch(BASE_URL + '/job/getJob/' + id , {
+            let response = await fetch(BASE_URL + '/job/getJob/' + id , {
                 method : 'GET',
                 headers: {
                     "Accept": "application/json",
@@ -25,20 +33,40 @@ const JobDetail = (props) => {
                 }
             })
             let data = await response.json();
+            console.log(data)
             setDetails(data);
+        } catch (err) {
+            console.error(err);
+        }
+
+        // Attendance schedule days
+        try {
+            let response = await fetch(BASE_URL + '/LabourerAttendance/' + id, {
+                method : 'GET',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+            })
+            let data = await response.json();
+            if(data.length) {
+                setAttendanceDates(DataSanitizer.cleanAttendanceDatesData(data));
+            }
         } catch (err) {
             console.error(err);
         }
     }
 
-    
     useEffect(() => {
-        fetchJobDetails(props.match.params.id);
+        if(props.match.params.id) {
+            if(Number.isInteger(Number(props.match.params.id))) {
+                fetchJobDetails(props.match.params.id);
+            }
+        }
     }, [props.match.params.id])
 
     return (
     <>
-    {details && 
     <div className="dashboard-main-wrapper">
         <TopNav />
         <SideNav />
@@ -46,6 +74,8 @@ const JobDetail = (props) => {
         <div className="dashboard-wrapper">
         <div className="container-fluid dashboard-content">
 
+            { !details ? <ErrorMessage message={"Job does not exist."} /> :
+            <>
             {/* Page Header */}
             <div className="row">
             <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -67,6 +97,7 @@ const JobDetail = (props) => {
             </div>
             </div>
 
+            
             <div className="row">
                 {/* Project Details */}
                 <div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -84,7 +115,7 @@ const JobDetail = (props) => {
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Dates</h3>
-                            <time>{formatDateString(details.startDate)}</time> to <time>{formatDateString(details.endDate)}</time>
+                            <time>{DataSanitizer.formatDateString(details.startDate)}</time> to <time>{DataSanitizer.formatDateString(details.endDate)}</time>
                         </div>
                         <div className="card-body border-top">
                             <h3 className="font-16">Location</h3>
@@ -105,7 +136,6 @@ const JobDetail = (props) => {
                             <h3 className="font-16">Total Hired</h3>
                             <p>{details.totalHired} labourer(s) hired</p>
                         </div>
-                        {/* Display this only if the job owner is viewing this page */}
                         <div className="card-body border-top">
                             <Link to={`/editjob/${details.jobId}`} className="btn btn-light">Edit Job Details</Link>
                         </div>
@@ -138,82 +168,20 @@ const JobDetail = (props) => {
                 {/* Controls */}
                 <div className="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
 
-                    {/* Daily Quality Ratings */}
-                    <div className="card job-dqr">
-                        <h5 className="card-header">Daily Quality Ratings</h5>
+                    {/* Labourer Attendance */}
+                    <div className="card">
+                        <h5 className="card-header">Labourer Attendance</h5>
                         <div className="card-body">
-                        <p>Daily quality ratings are used to track a labourer's attendance, and average quality rating.</p>
-                        <table className="table table-bordered job-dqr-table">
-                            <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>April 12, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 11, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 10, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 9, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 8, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 7, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 6, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 5, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 4, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 3, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 2, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                                <tr>
-                                    <td>April 1, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><a href="/job" className="badge badge-light">View Details</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <p>Daily ratings are used to track a labourer's attendance, and calculate their average quality rating.</p>
+                        { !attendanceDates ? <p className="text-danger">No dates to display.</p> :
+                        <Table
+                            columns={ATTENDANCE_DATES_TABLE_COLUMNS}
+                            data={attendanceDates}
+                            path={`/job/${props.match.params.id}/attendance`}
+                            itemsPerRow={5}
+                            {...props}
+                        />
+                        }
                         </div>
                     </div>
                     
@@ -284,11 +252,12 @@ const JobDetail = (props) => {
                         </div>
                     </div>
                 </div>
-            </div> {/* end row */}
+            </div>
+            </>
+            }
         </div>
         </div>
     </div>
-    }
     </>
     )
 }

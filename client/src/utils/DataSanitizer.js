@@ -78,24 +78,78 @@ exports.cleanPayratesData = (data) => {
     return sanitizedData;
 }
 
+exports.cleanAttendanceDatesData = (data) => {
+    let sanitizedData = [];
+
+    data.forEach((d) => {
+        sanitizedData.push({
+            id: this.formatDateParams(d),
+            date: this.formatDateString(d)
+        })
+    });
+
+    return sanitizedData;
+}
+
+exports.cleanAttendanceRatingsData = (data) => {
+    let sanitizedData = [];
+
+    data.forEach((d) => {
+        sanitizedData.push({
+            name: `${d.labourer.labourerFirstName} ${d.labourer.labourerLastName}`,
+            rating: d.dailyQualityRating
+        })
+    });
+
+    return sanitizedData;
+}
+
+const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+];
+
+const weekdays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+];
 
 exports.formatDateString = (date) => {
-    let d = new Date(date);
+    // Check if date is in YYYY-MM-DD format
+    if(date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        let d = new Date(date);
+        d.setDate(d.getDate() + 1);
+        return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} (${weekdays[d.getDay() - 1]})`;
+    }
 
-    const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-    ];
-    
+    let d = new Date(date);
     return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+exports.phone = (p) => {
+    let cleaned = ('' + p).replace(/\D/g, '');
+    let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    return match ? '(' + match[1] + ') ' + match[2] + '-' + match[3] : p;
+
+}
+
+exports.formatDateParams = (date) => {
+    let d = new Date(date);
+    const addZero = (n) => {return n<10? '0'+n:''+n;}
+    return `${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())}`;
 }
