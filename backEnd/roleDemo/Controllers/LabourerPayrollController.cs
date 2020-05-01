@@ -69,7 +69,7 @@ namespace labourRecruitment.Controllers
                     jobvm.Hours = jobHours;
                     jobvm.Paid = jobPaid;
                     jobvm.SkillId = skill;
-
+                    jobvm.PaidPerHour = LabourerReceive;
                     hours = hours + jobvm.Hours;
                     paid = paid + jobvm.Paid;
                 }
@@ -114,6 +114,7 @@ namespace labourRecruitment.Controllers
             public int? JobId { get; set; }
             public int SkillId { get; set; }
             public int Hours { get; set; }
+            public decimal? PaidPerHour { get; set; }
             public decimal? Paid { get; set; }
         }
 
