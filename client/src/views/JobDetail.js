@@ -23,7 +23,7 @@ const JobDetail = (props) => {
 
         // Job details
         try {
-            const response = await fetch(BASE_URL + '/job/getJob/' + id , {
+            let response = await fetch(BASE_URL + '/job/getJob/' + id , {
                 method : 'GET',
                 headers: {
                     "Accept": "application/json",
@@ -47,7 +47,9 @@ const JobDetail = (props) => {
                 }
             })
             let data = await response.json();
-            setAttendanceDates(DataSanitizer.cleanAttendanceDatesData(data));
+            if(data.length) {
+                setAttendanceDates(DataSanitizer.cleanAttendanceDatesData(data));
+            }
         } catch (err) {
             console.error(err);
         }
@@ -163,7 +165,7 @@ const JobDetail = (props) => {
                         <h5 className="card-header">Labourer Attendance</h5>
                         <div className="card-body">
                         <p>Daily ratings are used to track a labourer's attendance, and calculate their average quality rating.</p>
-                        { attendanceDates &&
+                        { !attendanceDates ? <p className="text-danger">No dates to display.</p> :
                         <Table
                             columns={ATTENDANCE_DATES_TABLE_COLUMNS}
                             data={attendanceDates}
