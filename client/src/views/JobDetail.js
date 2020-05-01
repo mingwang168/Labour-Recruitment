@@ -10,16 +10,18 @@ import Table from './components/Table';
 import * as Auth from '../utils/Auth';
 
 import { ATTENDANCE_DATES_TABLE_COLUMNS } from '../utils/TableColumns';
-import schedule from '../utils/staticdata/schedule';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const JobDetail = (props) => {
 
     const [details, setDetails] = useState();
+    const [attendanceDates, setAttendanceDates] = useState();
 
     const fetchJobDetails = async(id) => {
-        let token = Auth.getToken()
+        let token = Auth.getToken();
+
+        // Job details
         try {
             const response = await fetch(BASE_URL + '/job/getJob/' + id , {
                 method : 'GET',
@@ -31,6 +33,21 @@ const JobDetail = (props) => {
             })
             let data = await response.json();
             setDetails(data);
+        } catch (err) {
+            console.error(err);
+        }
+
+        // Attendance schedule days
+        try {
+            let response = await fetch(BASE_URL + '/LabourerAttendance/' + id, {
+                method : 'GET',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+            })
+            let data = await response.json();
+            setAttendanceDates(DataSanitizer.cleanAttendanceDatesData(data));
         } catch (err) {
             console.error(err);
         }
@@ -109,7 +126,6 @@ const JobDetail = (props) => {
                             <h3 className="font-16">Total Hired</h3>
                             <p>{details.totalHired} labourer(s) hired</p>
                         </div>
-                        {/* Display this only if the job owner is viewing this page */}
                         <div className="card-body border-top">
                             <Link to={`/editjob/${details.jobId}`} className="btn btn-light">Edit Job Details</Link>
                         </div>
@@ -147,13 +163,15 @@ const JobDetail = (props) => {
                         <h5 className="card-header">Labourer Attendance</h5>
                         <div className="card-body">
                         <p>Daily ratings are used to track a labourer's attendance, and calculate their average quality rating.</p>
+                        { attendanceDates &&
                         <Table
                             columns={ATTENDANCE_DATES_TABLE_COLUMNS}
-                            data={DataSanitizer.cleanScheduleDatesData(schedule)}
+                            data={attendanceDates}
                             path={`/job/${props.match.params.id}/attendance`}
                             itemsPerRow={5}
                             {...props}
                         />
+                        }
                         </div>
                     </div>
                     
