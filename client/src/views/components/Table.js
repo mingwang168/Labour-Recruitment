@@ -57,7 +57,7 @@ const Pagination = ({
     );
 }
 
-const Table = ({ columns, data, history, path }) => {
+const Table = ({ columns, data, history, path, itemsPerRow }) => {
 
     const {
         getTableProps,
@@ -78,14 +78,13 @@ const Table = ({ columns, data, history, path }) => {
         {
           columns,
           data,
-          initialState: {pageIndex: 0, pageSize: 10}
+          initialState: {pageIndex: 0, pageSize: itemsPerRow ? itemsPerRow : 10}
         },
         useGlobalFilter,
         usePagination
     );
 
     const viewDetails = (id) => {
-        // history.push(`/profile/client/${id}`);
         history.push(`${path}/${id}`);
     }
 
