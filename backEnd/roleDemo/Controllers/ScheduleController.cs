@@ -21,16 +21,38 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        [HttpPut("{id}")]
-        public IActionResult AddFirstSchedule([FromBody] JobSkillVM jobSkillVM)
+        [HttpPut]
+        public IActionResult AddFirstSchedule([FromBody]Job job)
         {
-            var jobSelected = _context.Job.Where(j => j.JobId == jobSkillVM.Job.JobId).FirstOrDefault();
-            List <Labourer> labourers = new List<Labourer>();
+            var jobSelected = _context.Job.Where(j => j.JobId == job.JobId).FirstOrDefault();
+            var duration = jobSelected.EndDate - jobSelected.StartDate;
+            var jobSkillSelected = _context.Job.Where(j => j.JobId == job.JobId).Select(j => j.JobSkill).FirstOrDefault();
             HighestRatedLabourers rated = new HighestRatedLabourers(_context);
 
-           
-            
-            return new ObjectResult(jobSkillVM);
+            foreach (JobSkill js in jobSkillSelected)
+            {
+                var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
+                List<Labourer> labourers = new List<Labourer>();
+                labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
+
+                foreach (Labourer labourer in labourers)
+                {
+                    _context.Labourer.FirstOrDefault(l => l.LabourerId == labourer.LabourerId).IsAvailable = false;
+                  
+                    _context.JobLabourer.Add(new JobLabourer
+                    {
+                        JobId = job.JobId,
+                        SkillId = js.SkillId,
+                        LabourerId = labourer.LabourerId,
+                        LabourerSafetyRating = 5
+                    });
+                }
+                _context.SaveChanges();
+
+            }
+            return new ObjectResult(job);
         }
+
+
     }
 }
