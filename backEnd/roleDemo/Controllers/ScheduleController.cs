@@ -18,15 +18,24 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        [HttpPut]
-        public IActionResult AddScheduleForTwoWeekJob([FromBody]Job job)
+        [HttpPut("{jobId}")]
+        public IActionResult AddFirstSchedule(int jobId)
         {
-            var jobSelected = _context.Job.Where(j => j.JobId == job.JobId).FirstOrDefault();
-            var duration = jobSelected.EndDate - jobSelected.StartDate;
-            var jobSkillSelected = _context.Job.Where(j => j.JobId == job.JobId).Select(j => j.JobSkill).FirstOrDefault();
-            HighestRatedLabourers rated = new HighestRatedLabourers(_context);
+            var jobSelected = _context.Job.Where(j => j.JobId == jobId).FirstOrDefault();
+            var jobSkillSelected = _context.Job.Where(j => j.JobId == jobId).Select(j => j.JobSkill).FirstOrDefault();
             ScheduleRepo scheduleRepo = new ScheduleRepo(_context);
-        
+            var duration = (jobSelected.EndDate - jobSelected.StartDate).TotalDays;
+            DateTime eDate;
+            if (duration <= 14)
+            {
+               eDate = jobSelected.EndDate;
+            } 
+            else
+            {
+                eDate = jobSelected.StartDate.AddDays(ScheduleRepo.CalculateLastDay(jobSelected.StartDate));
+            }
+
+            HighestRatedLabourers rated = new HighestRatedLabourers(_context);
             foreach (JobSkill js in jobSkillSelected)
             {
                 var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
@@ -39,21 +48,23 @@ namespace labourRecruitment.Controllers
 
                     _context.JobLabourer.Add(new JobLabourer
                     {
-                        JobId = job.JobId,
+                        JobId = jobId,
                         SkillId = js.SkillId,
                         LabourerId = labourer.LabourerId,
                         LabourerSafetyRating = 5,
                         SafetyMeetingCompleted = false,
                         ClientQualityRating = 0,
                         StartDay = jobSelected.StartDate,
-                        EndDay = jobSelected.EndDate,
-                        Duration = ScheduleRepo.GetBusinessDays(jobSelected.StartDate, jobSelected.EndDate)
+                        EndDay = eDate,
+                        Duration = ScheduleRepo.GetBusinessDays(jobSelected.StartDate, eDate)
                     });
-                    scheduleRepo.PopulateLabourerAttendance(job.JobId, labourer.LabourerId, jobSelected.StartDate, jobSelected.EndDate);
+                    scheduleRepo.PopulateLabourerAttendance(jobId, labourer.LabourerId, jobSelected.StartDate, eDate);
                 }
                 _context.SaveChanges();
+
             }
-            return new ObjectResult(job);
+
+            return new ObjectResult(jobId);
         }
 
         
