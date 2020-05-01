@@ -82,7 +82,6 @@ exports.cleanScheduleDatesData = (data) => {
     let sanitizedData = [];
 
     data.forEach((d) => {
-        console.log(d)
         sanitizedData.push({
             id: this.formatDateParams(d.date),
             date: this.formatDateString(d.date)
