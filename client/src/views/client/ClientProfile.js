@@ -17,10 +17,13 @@ const ClientProfile = (props) => {
 
     const [client, setClient] = useState();
     const [jobs, setJobs] = useState();
+    const [incidents, setIncidents] = useState();
     const [displayEditButton, setDisplayEditButton] = useState(false);
 
+    const isAdministrator = Auth.authenticateAdmin();
+
     const fetchClientData = async(id) => {
-        // Get client profile data
+        // Get client profile
         try {
             let response = await fetch(BASE_URL + `/ClientProfile/${id}`, {
                 method: "GET",
@@ -33,7 +36,6 @@ const ClientProfile = (props) => {
 
             if(response.status === 200 && data.client) {
                 setClient({...data.client, rating: data.averageRating});
-                console.log(data)
             } else {
                 console.log("No profile found.");
                 throw response;
@@ -59,6 +61,9 @@ const ClientProfile = (props) => {
         } catch(e) {
             console.error(e);
         }
+
+        // Get client incidents
+        
     }
 
     useEffect(() => {
@@ -150,10 +155,33 @@ const ClientProfile = (props) => {
                         </div>
                     </div>
 
-                    {/* Tables */}
+                    {/* Data */}
                     <div className="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
 
-                        {/* Active Jobs */}
+                        {/* Admin Actions */}
+                        { isAdministrator &&
+                        <div className="card">
+                            <h5 className="card-header">Invoices</h5>
+                            <div className="card-body">
+                                <table className="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Job</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr onClick={() => props.history.push(`/invoice/1`)}>
+                                            <td>Example Job</td>
+                                            <td><span className="badge badge-warning">In Progress</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        }
+
+                        {/* Jobs */}
                         <div className="card">
                             <h5 className="card-header">Active Jobs</h5>
                             <div className="card-body">
@@ -169,6 +197,19 @@ const ClientProfile = (props) => {
                             }
                             </div>
                         </div>
+
+                        {/* Incidents */}
+                        <div className="card">
+                            <h5 className="card-header">Incidents</h5>
+                            <div className="card-body">
+                            { incidents ?
+                            <p>Incidents table goes here.</p>
+                            :
+                            <p className="lead">No incidents to display.</p>
+                            }
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 }
