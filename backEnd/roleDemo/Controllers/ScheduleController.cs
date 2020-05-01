@@ -19,7 +19,7 @@ namespace labourRecruitment.Controllers
         }
 
         [HttpPut("{jobId}")]
-        public IActionResult AddFirstSchedule(int jobId)
+        public IActionResult AddLabourersToFirstSchedule(int jobId)
         {
             var jobSelected = _context.Job.Where(j => j.JobId == jobId).FirstOrDefault();
             var jobSkillSelected = _context.Job.Where(j => j.JobId == jobId).Select(j => j.JobSkill).FirstOrDefault();
@@ -32,8 +32,7 @@ namespace labourRecruitment.Controllers
             } 
             else
             {
-                var l = ScheduleRepo.CalculateLastDay(jobSelected.StartDate);
-                eDate = jobSelected.StartDate.AddDays(l);
+                eDate = jobSelected.StartDate.AddDays(ScheduleRepo.CalculateLastDay(jobSelected.StartDate));
             }
 
             HighestRatedLabourers rated = new HighestRatedLabourers(_context);

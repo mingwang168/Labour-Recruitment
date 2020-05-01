@@ -54,7 +54,7 @@ namespace labourRecruitment.Repositories
         public static int CalculateLastDay(DateTime startDay)
         {
             int dayofWeek = (int)startDay.DayOfWeek;
-            return (7 - dayofWeek) + 6;
+            return (6 - dayofWeek) + 6;
         }
 
 
