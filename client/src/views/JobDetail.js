@@ -56,12 +56,16 @@ const JobDetail = (props) => {
     }
 
     useEffect(() => {
-        fetchJobDetails(props.match.params.id);
+        if(props.match.params.id) {
+            if(Number.isInteger(Number(props.match.params.id))) {
+                fetchJobDetails(props.match.params.id);
+            }
+        }
     }, [props.match.params.id])
 
     return (
     <>
-    {details && 
+    { details && 
     <div className="dashboard-main-wrapper">
         <TopNav />
         <SideNav />
@@ -244,7 +248,7 @@ const JobDetail = (props) => {
                         </div>
                     </div>
                 </div>
-            </div> {/* end row */}
+            </div>
         </div>
         </div>
     </div>
