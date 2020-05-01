@@ -32,7 +32,8 @@ namespace labourRecruitment.Controllers
             } 
             else
             {
-                eDate = jobSelected.StartDate.AddDays(ScheduleRepo.CalculateLastDay(jobSelected.StartDate));
+                var l = ScheduleRepo.CalculateLastDay(jobSelected.StartDate);
+                eDate = jobSelected.StartDate.AddDays(l);
             }
 
             HighestRatedLabourers rated = new HighestRatedLabourers(_context);
