@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using labourRecruitment.Models.LabourRecruitment;
 using labourRecruitment.Repositories;
-using labourRecruitment.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace labourRecruitment.Controllers
@@ -28,7 +25,8 @@ namespace labourRecruitment.Controllers
             var duration = jobSelected.EndDate - jobSelected.StartDate;
             var jobSkillSelected = _context.Job.Where(j => j.JobId == job.JobId).Select(j => j.JobSkill).FirstOrDefault();
             HighestRatedLabourers rated = new HighestRatedLabourers(_context);
-
+            ScheduleRepo scheduleRepo = new ScheduleRepo(_context);
+        
             foreach (JobSkill js in jobSkillSelected)
             {
                 var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
@@ -51,6 +49,7 @@ namespace labourRecruitment.Controllers
                         EndDay = jobSelected.EndDate,
                         Duration = ScheduleRepo.GetBusinessDays(jobSelected.StartDate, jobSelected.EndDate)
                     });
+                    scheduleRepo.PopulateLabourerAttendance(job.JobId, labourer.LabourerId, jobSelected.StartDate, jobSelected.EndDate);
                 }
                 _context.SaveChanges();
 
