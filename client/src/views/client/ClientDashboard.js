@@ -25,7 +25,6 @@ const ClientDashboard = (props) => {
             let data = await response.json();
             if(data.length) {
                 setJobs(DataSanitizer.cleanJobsData(data));
-                console.log(data);
             }
         } catch(e) {
             console.error(e);
