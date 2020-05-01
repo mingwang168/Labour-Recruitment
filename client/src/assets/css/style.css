@@ -6871,3 +6871,13 @@ Media Query
     background: #5969ff;
     border: 1px solid #5969ff;
 }
+
+.icon-list li {
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.icon-list li i {
+    margin-right: 0.5rem;
+}

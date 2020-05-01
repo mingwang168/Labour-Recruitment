@@ -11,7 +11,7 @@ const SideNav = () => {
             icon: "dashboard"
         },
         {
-            name: "My Profile",
+            name: "Profile",
             path: "/profile/client",
             icon: "account_box"
         },

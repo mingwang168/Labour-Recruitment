@@ -141,6 +141,13 @@ exports.formatDateString = (date) => {
     return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }
 
+exports.phone = (p) => {
+    let cleaned = ('' + p).replace(/\D/g, '');
+    let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    return match ? '(' + match[1] + ') ' + match[2] + '-' + match[3] : p;
+
+}
+
 exports.formatDateParams = (date) => {
     let d = new Date(date);
     const addZero = (n) => {return n<10? '0'+n:''+n;}
