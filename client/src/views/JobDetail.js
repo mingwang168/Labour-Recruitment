@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import * as DataSanitizer from '../utils/DataSanitizer';
 
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
 import RateWorkers from './components/RateWorkers'
 import Table from './components/Table';
+import ErrorMessage from './components/ErrorMessage';
 
 import * as Auth from '../utils/Auth';
 
@@ -32,6 +33,7 @@ const JobDetail = (props) => {
                 }
             })
             let data = await response.json();
+            console.log(data)
             setDetails(data);
         } catch (err) {
             console.error(err);
@@ -65,7 +67,6 @@ const JobDetail = (props) => {
 
     return (
     <>
-    { details && 
     <div className="dashboard-main-wrapper">
         <TopNav />
         <SideNav />
@@ -73,6 +74,8 @@ const JobDetail = (props) => {
         <div className="dashboard-wrapper">
         <div className="container-fluid dashboard-content">
 
+            { !details ? <ErrorMessage message={"Job does not exist."} /> :
+            <>
             {/* Page Header */}
             <div className="row">
             <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -94,6 +97,7 @@ const JobDetail = (props) => {
             </div>
             </div>
 
+            
             <div className="row">
                 {/* Project Details */}
                 <div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -249,10 +253,11 @@ const JobDetail = (props) => {
                     </div>
                 </div>
             </div>
+            </>
+            }
         </div>
         </div>
     </div>
-    }
     </>
     )
 }
