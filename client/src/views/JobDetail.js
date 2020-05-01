@@ -143,7 +143,7 @@ const JobDetail = (props) => {
                         <h5 className="card-header">Daily Quality Ratings</h5>
                         <div className="card-body">
                         <p>Daily quality ratings are used to track a labourer's attendance, and average quality rating.</p>
-                        <table className="table table-bordered job-dqr-table">
+                        <table className="table table-bordered">
                             <thead>
                             <tr>
                                 <th>Date</th>
