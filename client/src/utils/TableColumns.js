@@ -84,3 +84,7 @@ exports.PAYRATES_TABLE_COLUMNS = [
         accessor: 'adminReceives',
     }
 ];
+
+exports.ATTENDANCE_DATES_TABLE_COLUMNS = [
+    { Header: 'Date', accessor: 'date' }
+]
