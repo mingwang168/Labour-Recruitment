@@ -22,6 +22,26 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetScheduleDaysByJobId(int id)
+        {
+            var days = _context.LabourerAttendance.Where(jl => jl.JobId == id).Select(l=>l.Date).Distinct();
+            return new ObjectResult(days);
+        }
+
+        [HttpGet, Route("data")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetLabourersByScheduleDay(int jobId, DateTime date)
+        {
+            var labourers = _context.LabourerAttendance.Where(la => la.JobId == jobId & la.Date == date).Select(l => new LabourerAttendance
+            {
+                DailyQualityRating = l.DailyQualityRating,
+                Date = l.Date,
+                Labourer = l.Labourer
+            });
+            return new ObjectResult(labourers);
+        }
+
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetLabourerAttendanceRating([FromBody] LabourerAttendance la)

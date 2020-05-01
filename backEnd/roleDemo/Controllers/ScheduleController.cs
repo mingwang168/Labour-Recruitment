@@ -56,7 +56,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(job);
         }
 
-
+        
     }
 
 }
