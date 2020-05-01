@@ -78,24 +78,58 @@ exports.cleanPayratesData = (data) => {
     return sanitizedData;
 }
 
+exports.cleanScheduleDatesData = (data) => {
+    let sanitizedData = [];
+
+    data.forEach((d) => {
+        console.log(d)
+        sanitizedData.push({
+            id: this.formatDateParams(d.date),
+            date: this.formatDateString(d.date)
+        })
+    });
+
+    return sanitizedData;
+}
+
+const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+];
+
+const weekdays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+];
 
 exports.formatDateString = (date) => {
-    let d = new Date(date);
+    // Check if date is in YYYY-MM-DD format
+    if(date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        let d = new Date(date);
+        return `${months[d.getMonth()]} ${d.getDate() + 1}, ${d.getFullYear()} (${weekdays[d.getDay()]})`;
+    }
 
-    const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-    ];
-    
+    let d = new Date(date);
     return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+exports.formatDateParams = (date) => {
+    let d = new Date(date);
+    const addZero = (n) => {return n<10? '0'+n:''+n;}
+    return `${d.getFullYear()}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())}`;
 }
