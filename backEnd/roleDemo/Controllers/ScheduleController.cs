@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using labourRecruitment.Models.LabourRecruitment;
 using labourRecruitment.Repositories;
-using labourRecruitment.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace labourRecruitment.Controllers
@@ -22,13 +19,14 @@ namespace labourRecruitment.Controllers
         }
 
         [HttpPut]
-        public IActionResult AddFirstSchedule([FromBody]Job job)
+        public IActionResult AddScheduleForTwoWeekJob([FromBody]Job job)
         {
             var jobSelected = _context.Job.Where(j => j.JobId == job.JobId).FirstOrDefault();
             var duration = jobSelected.EndDate - jobSelected.StartDate;
             var jobSkillSelected = _context.Job.Where(j => j.JobId == job.JobId).Select(j => j.JobSkill).FirstOrDefault();
             HighestRatedLabourers rated = new HighestRatedLabourers(_context);
-
+            ScheduleRepo scheduleRepo = new ScheduleRepo(_context);
+        
             foreach (JobSkill js in jobSkillSelected)
             {
                 var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
@@ -38,21 +36,28 @@ namespace labourRecruitment.Controllers
                 foreach (Labourer labourer in labourers)
                 {
                     _context.Labourer.FirstOrDefault(l => l.LabourerId == labourer.LabourerId).IsAvailable = false;
-                  
+
                     _context.JobLabourer.Add(new JobLabourer
                     {
                         JobId = job.JobId,
                         SkillId = js.SkillId,
                         LabourerId = labourer.LabourerId,
-                        LabourerSafetyRating = 5
+                        LabourerSafetyRating = 5,
+                        SafetyMeetingCompleted = false,
+                        ClientQualityRating = 0,
+                        StartDay = jobSelected.StartDate,
+                        EndDay = jobSelected.EndDate,
+                        Duration = ScheduleRepo.GetBusinessDays(jobSelected.StartDate, jobSelected.EndDate)
                     });
+                    scheduleRepo.PopulateLabourerAttendance(job.JobId, labourer.LabourerId, jobSelected.StartDate, jobSelected.EndDate);
                 }
                 _context.SaveChanges();
-
             }
             return new ObjectResult(job);
         }
 
-
+        
     }
+
 }
+
