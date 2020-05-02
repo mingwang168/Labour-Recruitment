@@ -126,7 +126,9 @@ namespace labourRecruitment.Controllers
 
             _context.SaveChangesAsync();
 
-          
+            ScheduleRepo scheduleRepo = new ScheduleRepo(_context);
+            scheduleRepo.AddLabourersToFirstSchedule(jobSkill.Job.JobId);
+
             return new ObjectResult(jobSkill.Job.JobId); 
    
         }
