@@ -5,8 +5,6 @@ namespace labourRecruitment.Models.LabourRecruitment
 {
     public partial class LabourerSkill
     {
-        internal Skill skill;
-
         public int LabourerSkillId { get; set; }
         public int? LabourerId { get; set; }
         public int? SkillId { get; set; }

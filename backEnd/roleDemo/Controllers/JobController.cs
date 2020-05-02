@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using labourRecruitment.Models.LabourRecruitment;
+using labourRecruitment.Repositories;
 using labourRecruitment.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -115,7 +116,7 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostJob(JobSkillVM jobSkill)
         {
-            
+            jobSkill.Job.ScheduleDone = false; 
             _context.Job.Add(jobSkill.Job);
            
             foreach (JobSkill js in jobSkill.JobSkills) {
@@ -125,6 +126,7 @@ namespace labourRecruitment.Controllers
 
             _context.SaveChangesAsync();
 
+          
             return new ObjectResult(jobSkill.Job.JobId); 
    
         }

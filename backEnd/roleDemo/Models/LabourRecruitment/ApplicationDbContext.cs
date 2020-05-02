@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -8,8 +7,6 @@ namespace labourRecruitment.Models.LabourRecruitment
 {
     public partial class ApplicationDbContext : IdentityDbContext
     {
-        internal IEnumerable<object> LabourerSKill;
-
         public ApplicationDbContext()
         {
         }
@@ -34,6 +31,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public virtual DbSet<Skill> Skill { get; set; }
         public virtual DbSet<SystemUser> SystemUser { get; set; }
 
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -182,6 +180,8 @@ namespace labourRecruitment.Models.LabourRecruitment
                     .HasColumnName("postal_code")
                     .HasMaxLength(20)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ScheduleDone).HasColumnName("schedule_done");
 
                 entity.Property(e => e.StartDate)
                     .HasColumnName("start_date")

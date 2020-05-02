@@ -57,6 +57,7 @@ namespace labourRecruitment.Repositories
             return (6 - dayofWeek) + 6;
         }
 
+        
 
     }
 }
