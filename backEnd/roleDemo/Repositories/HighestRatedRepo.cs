@@ -1,26 +1,26 @@
 ﻿using labourRecruitment.Models.LabourRecruitment;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static labourRecruitment.Controllers.ClientAssignController;
 using static labourRecruitment.Controllers.LabourerAssignController;
 
 namespace labourRecruitment.Repositories
 {
-    public class HighestRatedLabourers
+    public class HighestRatedRepo
     {
         private readonly ApplicationDbContext _context;
-        public HighestRatedLabourers(ApplicationDbContext context)
+        public HighestRatedRepo(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<Labourer> GetHighestRatedLabourersAsync(int id)
+        public IEnumerable<Labourer> GetHighestRatedLabourers(int id)
         {
             DateTime today = new DateTime();
             List<Labourer> labourers = _context.LabourerSkill.Where(ls => ls.SkillId == id).Select(ols => ols.Labourer
-                       ).Where(l => l.IsAvailable == true).ToList();
+                       ).ToList();
             List<Labourer> labourerScheduled = _context.LabourerAttendance.Where(l => l.Date > today).Select(l => l.Labourer).ToList();
             List<Labourer> availableLabourers = labourers.Except(labourerScheduled).ToList();
 
@@ -33,8 +33,39 @@ namespace labourRecruitment.Repositories
                 + (_context.JobLabourer.Where(la => la.LabourerId == l.LabourerId).Average(lss => lss.LabourerSafetyRating == null ? 5 : lss.LabourerSafetyRating))) / 2
             }).ToList();
 
-            List<Labourer> labourerSorted = labourerAss.OrderByDescending(la => la.averageRating).Select(la=>la.labourer).ToList();
+            List<Labourer> labourerSorted = labourerAss.OrderByDescending(la => la.averageRating).Select(la => la.labourer).ToList();
             return labourerSorted;
+        }
+
+        public IEnumerable<Client> GetHighestRatingClients()
+        {
+            List<Client> clients = _context.Job.Where(j => j.InProgress == true && j.ScheduleDone != true).Select(oj => oj.Client).ToList();
+
+            List<ClientAssignVM> clientvms = clients.Select(c => new ClientAssignVM()
+            {
+                client = c,
+                averageRating = 0,
+
+            }).ToList();
+
+            foreach (ClientAssignVM clientvm in clientvms)
+            {
+                List<JobVM> jobs = _context.Job.Where(j => j.ClientId == clientvm.client.ClientId).Select(oj => new JobVM()
+                {
+                    job = oj,
+                    jobAverageRating = 0,
+                }).ToList();
+                foreach (JobVM job in jobs)
+                {
+                    List<JobLabourer> jls = _context.JobLabourer.Where(jl => jl.JobId == job.job.JobId).ToList();
+                    job.jobAverageRating = jls.Average(av => av.ClientQualityRating);
+                }
+                clientvm.averageRating = jobs.Average(avj => avj.jobAverageRating);
+            }
+
+            List<Client> clientSorted = clientvms.OrderByDescending(c => c.averageRating).Select(c=>c.client).ToList();
+            return clientSorted;
+
         }
     }
 }

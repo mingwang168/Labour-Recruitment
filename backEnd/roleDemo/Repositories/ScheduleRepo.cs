@@ -73,10 +73,10 @@ namespace labourRecruitment.Repositories
                 eDate = jobSelected.StartDate.AddDays(ScheduleRepo.CalculateLastDay(jobSelected.StartDate));
             }
 
-            HighestRatedLabourers rated = new HighestRatedLabourers(_context);
+            HighestRatedRepo rated = new HighestRatedRepo(_context);
             foreach (JobSkill js in jobSkillSelected)
             {
-                var ratedLabourers = rated.GetHighestRatedLabourersAsync(js.SkillId).ToList();
+                var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
                 List<Labourer> labourers = new List<Labourer>();
                 labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
 
@@ -102,6 +102,68 @@ namespace labourRecruitment.Repositories
 
             }
 
+        }
+
+        public void AddWeeklySchedule()
+        {
+            HighestRatedRepo rated = new HighestRatedRepo(_context);
+            var ratedClients = rated.GetHighestRatingClients();
+            //var ratedLabourers = rated.GetHighestRatedLabourers();
+            foreach(Client client in ratedClients)
+            {
+                var jobs = _context.Job.Where(j => j.ClientId == client.ClientId && j.ScheduleDone != true).ToList();
+                jobs.ForEach(j =>
+                {
+                    var jobSkills = _context.JobSkill.Where(js => js.JobId == j.JobId).ToList();
+                    
+                    jobSkills.ForEach(js =>
+                    {
+                        var labourers = rated.GetHighestRatedLabourers(js.JobId).ToList();
+                        labourers.ForEach(l =>
+                        {
+                            var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
+                            DateTime sDate = DateTime.Now.AddDays(10);
+                            DateTime eDate = j.EndDate > DateTime.Now.AddDays(14) ? DateTime.Now.AddDays(14) : j.EndDate;
+                            if (jobLabourer == null)
+                            {
+                                _context.Add(new JobLabourer
+                                {
+                                    JobId = j.JobId,
+                                    SkillId = js.SkillId,
+                                    LabourerId = l.LabourerId,
+                                    LabourerSafetyRating = 5,
+                                    SafetyMeetingCompleted = false,
+                                    ClientQualityRating = 0,
+                                    StartDay = sDate,
+                                    EndDay = eDate,
+                                    Duration = GetBusinessDays(sDate, eDate) 
+                                });
+                            }
+                            else
+                            {
+                                _context.Add(new JobLabourer
+                                {
+                                    JobId = j.JobId,
+                                    SkillId = js.SkillId,
+                                    LabourerId = l.LabourerId,
+                                    LabourerSafetyRating = jobLabourer.LabourerSafetyRating,
+                                    SafetyMeetingCompleted = jobLabourer.SafetyMeetingCompleted,
+                                    ClientQualityRating = jobLabourer.ClientQualityRating,
+                                    StartDay = sDate,
+                                    EndDay = eDate,
+                                    Duration = GetBusinessDays(sDate,eDate)
+                                });
+
+                            }
+                            PopulateLabourerAttendance(j.JobId, l.LabourerId, sDate, eDate);
+                        });
+         
+                    });
+                });
+                
+
+                
+            }
         }
 
     }
