@@ -17,6 +17,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using labourRecruitment.Models.LabourRecruitment;
+using Hangfire;
+using labourRecruitment.Repositories;
 
 namespace roleDemo {
     public class Startup {
@@ -100,6 +102,9 @@ namespace roleDemo {
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseHangfireDashboard("/hangfire");
+            app.UseHangfireServer();
+            //RecurringJob.AddOrUpdate<ScheduleRepo>( x => x.AddWeeklySchedule(), Cron.Weekly);
         }
     }
 }
