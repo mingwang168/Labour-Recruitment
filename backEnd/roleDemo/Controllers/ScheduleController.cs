@@ -38,7 +38,7 @@ namespace labourRecruitment.Controllers
             HighestRatedLabourers rated = new HighestRatedLabourers(_context);
             foreach (JobSkill js in jobSkillSelected)
             {
-                var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
+                var ratedLabourers = rated.GetHighestRatedLabourersAsync(js.SkillId).ToList();
                 List<Labourer> labourers = new List<Labourer>();
                 labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
 
