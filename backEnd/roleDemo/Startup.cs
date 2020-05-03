@@ -76,7 +76,7 @@ namespace roleDemo {
                         .AllowCredentials();
                     });
             });
-
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHangfire(_ => _.UseSqlServerStorage(Configuration.GetConnectionString("SqlConnection")));
             //services.AddHangfire(x => x.UseSQLiteStorage(Configuration.GetConnectionString("DefaultConnection")));
