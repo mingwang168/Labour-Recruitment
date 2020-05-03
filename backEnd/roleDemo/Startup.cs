@@ -78,8 +78,9 @@ namespace roleDemo {
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddHangfire(_ => _.UseSqlServerStorage(Configuration.GetConnectionString("SqlConnection")));
-            
+            //services.AddHangfire(_ => _.UseSqlServerStorage(Configuration.GetConnectionString("SqlConnection")));
+            services.AddHangfire(x => x.UseSQLiteStorage(Configuration.GetConnectionString("DefaultConnection")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
