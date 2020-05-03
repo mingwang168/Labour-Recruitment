@@ -22,14 +22,21 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
+
+        public static bool IsSameWeek(DateTime dt1, DateTime dt2)
+        {
+            TimeSpan ts = (dt1 - dt2).Duration();
+            return !(ts.TotalDays >= 7 || (DateTime.Compare(dt1, dt2) > 0 ? (dt1.DayOfWeek < dt2.DayOfWeek) : (dt1.DayOfWeek > dt2.DayOfWeek)));
+        }
+
         [HttpGet("{dateInput}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetPayroll(DateTime dateInput)
         {
-            List<Labourer> labourers =await _context.LabourerAttendance.Where(ja => ja.Date.Value.Month == dateInput.Month && ja.DailyQualityRating != null && ja.DailyQualityRating != 0)
+            List<Labourer> labourers =await _context.LabourerAttendance.Where(ja => IsSameWeek(ja.Date, dateInput) && ja.DailyQualityRating != null && ja.DailyQualityRating != 0)
                 .Select(oja => oja.Labourer).ToListAsync();
 
-            List<LabourerAttendance> labourerAttendances = await _context.LabourerAttendance.Where(la => la.Date.Value.Month == dateInput.Month && la.DailyQualityRating != null && la.DailyQualityRating != 0)
+            List<LabourerAttendance> labourerAttendances = await _context.LabourerAttendance.Where(la => IsSameWeek(la.Date, dateInput) && la.DailyQualityRating != null && la.DailyQualityRating != 0)
                 .ToListAsync();
 
             var labourerGrouped = labourers.GroupBy(g => g.LabourerId).Select(s=>s.First()).ToList();
@@ -45,7 +52,7 @@ namespace labourRecruitment.Controllers
 
             foreach (LabourerPayrollVM labourerPayrollVm in LabourerPayrollVMs)
             {
-                var oneLabourerAttendances=_context.LabourerAttendance.Where(la => la.Date.Value.Month == dateInput.Month && la.DailyQualityRating != null && la.DailyQualityRating != 0 && la.LabourerId == labourerPayrollVm.labourer.LabourerId)
+                var oneLabourerAttendances=_context.LabourerAttendance.Where(la => IsSameWeek(la.Date, dateInput) && la.DailyQualityRating != null && la.DailyQualityRating != 0 && la.LabourerId == labourerPayrollVm.labourer.LabourerId)
                     .ToList();
 
                 List<JobVM> jobVMs = oneLabourerAttendances.GroupBy(g=>g.JobId).Select(ola => ola.First()).Select(j=> new JobVM()
