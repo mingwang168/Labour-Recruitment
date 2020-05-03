@@ -73,7 +73,7 @@ namespace roleDemo {
                         .AllowCredentials();
                     });
             });
-
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

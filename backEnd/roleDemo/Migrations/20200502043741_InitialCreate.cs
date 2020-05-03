@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace labourRecruitment.Migrations
 {
-    public partial class IntialCreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -263,18 +263,19 @@ namespace labourRecruitment.Migrations
                 {
                     job_id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    client_id = table.Column<int>(nullable: true),
+                    client_id = table.Column<int>(nullable: false),
                     title = table.Column<string>(unicode: false, maxLength: 30, nullable: true),
                     job_description = table.Column<string>(type: "text", nullable: true),
-                    start_date = table.Column<DateTime>(type: "date", nullable: true),
-                    end_date = table.Column<DateTime>(type: "date", nullable: true),
+                    start_date = table.Column<DateTime>(type: "date", nullable: false),
+                    end_date = table.Column<DateTime>(type: "date", nullable: false),
                     inProgress = table.Column<bool>(nullable: true),
                     isComplete = table.Column<bool>(nullable: true),
                     street = table.Column<string>(unicode: false, maxLength: 50, nullable: true),
                     city = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
                     state = table.Column<string>(unicode: false, maxLength: 10, nullable: true),
                     postal_code = table.Column<string>(unicode: false, maxLength: 20, nullable: true),
-                    total_hired = table.Column<int>(nullable: true)
+                    total_hired = table.Column<int>(nullable: true),
+                    schedule_done = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -284,7 +285,7 @@ namespace labourRecruitment.Migrations
                         column: x => x.client_id,
                         principalTable: "Client",
                         principalColumn: "client_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -374,15 +375,15 @@ namespace labourRecruitment.Migrations
                 {
                     job_labourer_id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    job_id = table.Column<int>(nullable: false),
+                    job_id = table.Column<int>(nullable: true),
                     skill_id = table.Column<int>(nullable: false),
-                    labourer_id = table.Column<int>(nullable: false),
+                    labourer_id = table.Column<int>(nullable: true),
                     client_quality_rating = table.Column<double>(nullable: true),
                     labourer_safety_rating = table.Column<double>(nullable: true),
                     safety_meeting_completed = table.Column<bool>(nullable: true),
-                    start_day = table.Column<DateTime>(type: "datetime", nullable: true),
-                    end_day = table.Column<DateTime>(type: "datetime", nullable: true),
-                    duration = table.Column<int>(nullable: true)
+                    start_day = table.Column<DateTime>(type: "datetime", nullable: false),
+                    end_day = table.Column<DateTime>(type: "datetime", nullable: false),
+                    duration = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -392,13 +393,13 @@ namespace labourRecruitment.Migrations
                         column: x => x.job_id,
                         principalTable: "Job",
                         principalColumn: "job_id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK__JobLabour__labou__48CFD27E",
                         column: x => x.labourer_id,
                         principalTable: "Labourer",
                         principalColumn: "labourer_id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK__JobLabour__skill__49C3F6B7",
                         column: x => x.skill_id,

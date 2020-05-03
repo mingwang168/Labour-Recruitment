@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using labourRecruitment.Models.LabourRecruitment;
+using labourRecruitment.Repositories;
 using labourRecruitment.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -91,6 +92,17 @@ namespace labourRecruitment.Controllers
             }).ToListAsync();
         }
 
+        [HttpGet("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetClientIDByJobID(int id)
+        {
+            var client = _context.Job.Where(j => j.JobId == id).Select(c => c.ClientId).Distinct();
+            if (client == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(client);
+        }
 
         [HttpGet("{labourerId}", Name = "GetJobByLabourerId")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -115,7 +127,7 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostJob(JobSkillVM jobSkill)
         {
-            
+            jobSkill.Job.ScheduleDone = false; 
             _context.Job.Add(jobSkill.Job);
            
             foreach (JobSkill js in jobSkill.JobSkills) {
@@ -125,6 +137,7 @@ namespace labourRecruitment.Controllers
 
             _context.SaveChangesAsync();
 
+          
             return new ObjectResult(jobSkill.Job.JobId); 
    
         }

@@ -322,10 +322,10 @@ namespace labourRecruitment.Migrations
                         .HasMaxLength(20)
                         .IsUnicode(false);
 
-                    b.Property<int?>("ClientId")
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnName("end_date")
                         .HasColumnType("date");
 
@@ -344,7 +344,10 @@ namespace labourRecruitment.Migrations
                         .HasMaxLength(20)
                         .IsUnicode(false);
 
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<bool?>("ScheduleDone")
+                        .HasColumnName("schedule_done");
+
+                    b.Property<DateTime>("StartDate")
                         .HasColumnName("start_date")
                         .HasColumnType("date");
 
@@ -382,17 +385,17 @@ namespace labourRecruitment.Migrations
                     b.Property<double?>("ClientQualityRating")
                         .HasColumnName("client_quality_rating");
 
-                    b.Property<int?>("Duration")
+                    b.Property<int>("Duration")
                         .HasColumnName("duration");
 
-                    b.Property<DateTime?>("EndDay")
+                    b.Property<DateTime>("EndDay")
                         .HasColumnName("end_day")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("JobId")
+                    b.Property<int?>("JobId")
                         .HasColumnName("job_id");
 
-                    b.Property<int>("LabourerId")
+                    b.Property<int?>("LabourerId")
                         .HasColumnName("labourer_id");
 
                     b.Property<double?>("LabourerSafetyRating")
@@ -404,7 +407,7 @@ namespace labourRecruitment.Migrations
                     b.Property<int>("SkillId")
                         .HasColumnName("skill_id");
 
-                    b.Property<DateTime?>("StartDay")
+                    b.Property<DateTime>("StartDay")
                         .HasColumnName("start_day")
                         .HasColumnType("datetime");
 
@@ -684,7 +687,8 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Client", "Client")
                         .WithMany("Job")
                         .HasForeignKey("ClientId")
-                        .HasConstraintName("FK__Job__client_id__31EC6D26");
+                        .HasConstraintName("FK__Job__client_id__31EC6D26")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.JobLabourer", b =>
@@ -692,14 +696,12 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Job", "Job")
                         .WithMany("JobLabourer")
                         .HasForeignKey("JobId")
-                        .HasConstraintName("FK__JobLabour__job_i__47DBAE45")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasConstraintName("FK__JobLabour__job_i__47DBAE45");
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Labourer", "Labourer")
                         .WithMany("JobLabourer")
                         .HasForeignKey("LabourerId")
-                        .HasConstraintName("FK__JobLabour__labou__48CFD27E")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasConstraintName("FK__JobLabour__labou__48CFD27E");
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
                         .WithMany("JobLabourer")
