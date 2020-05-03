@@ -29,7 +29,7 @@ namespace labourRecruitment.Repositories
         {
             DateTime i = sDate;
            
-            while (DateTime.Compare(i,eDate) < 0)
+            while (DateTime.Compare(i,eDate) <= 0)
             {
                 if (i.DayOfWeek == DayOfWeek.Sunday || i.DayOfWeek == DayOfWeek.Saturday)
                 {
@@ -108,6 +108,7 @@ namespace labourRecruitment.Repositories
         {
             HighestRatedRepo rated = new HighestRatedRepo(_context);
             var ratedClients = rated.GetHighestRatingClients();
+ 
             DateTime today = new DateTime(2020,5,8);
             foreach (Client client in ratedClients)
             {
@@ -125,7 +126,7 @@ namespace labourRecruitment.Repositories
                         {
                             var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
                             DateTime sDate = today.AddDays(10);
-                            DateTime eDate = j.EndDate > DateTime.Now.AddDays(15) ? DateTime.Now.AddDays(15) : j.EndDate;
+                            DateTime eDate = j.EndDate > today.AddDays(15) ? today.AddDays(15) : j.EndDate;
                             if (jobLabourer == null)
                             {
                                 _context.Add(new JobLabourer
@@ -166,23 +167,6 @@ namespace labourRecruitment.Repositories
                 };
      
             }
-            Console.WriteLine("Hi");
-        }
-
-        public void Availbility()
-        {
-            var labourers = _context.Labourer.ToList();
-            labourers.ForEach(l =>
-            {
-                if (l.IsAvailable == true) {
-                    l.IsAvailable = false;
-                }
-                else
-                {
-                    l.IsAvailable = true;
-                }
-                _context.SaveChanges();
-            });
         }
 
     }
