@@ -78,8 +78,8 @@ namespace roleDemo {
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            //services.AddHangfire(_ => _.UseSqlServerStorage(Configuration.GetConnectionString("SqlConnection")));
-            services.AddHangfire(x => x.UseSQLiteStorage(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddHangfire(_ => _.UseSqlServerStorage(Configuration.GetConnectionString("SqlConnection")));
+            //services.AddHangfire(x => x.UseSQLiteStorage(Configuration.GetConnectionString("DefaultConnection")));
 
         }
 
@@ -108,12 +108,8 @@ namespace roleDemo {
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            RecurringJob.AddOrUpdate(() => Run(), "*/2 * * * *");
+           
         }
 
-        public void Run()
-        {
-            Console.WriteLine("Hi " + DateTime.Now);
-        }
     }
 }

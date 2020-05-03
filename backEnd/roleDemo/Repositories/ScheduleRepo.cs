@@ -108,7 +108,7 @@ namespace labourRecruitment.Repositories
         {
             HighestRatedRepo rated = new HighestRatedRepo(_context);
             var ratedClients = rated.GetHighestRatingClients();
-            //var ratedLabourers = rated.GetHighestRatedLabourers();
+            
             foreach(Client client in ratedClients)
             {
                 var jobs = _context.Job.Where(j => j.ClientId == client.ClientId && j.ScheduleDone != true).ToList();
@@ -118,12 +118,14 @@ namespace labourRecruitment.Repositories
                     
                     jobSkills.ForEach(js =>
                     {
-                        var labourers = rated.GetHighestRatedLabourers(js.JobId).ToList();
+                        var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
+                        List<Labourer> labourers = new List<Labourer>();
+                        labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
                         labourers.ForEach(l =>
                         {
                             var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
-                            DateTime sDate = DateTime.Now.AddDays(10);
-                            DateTime eDate = j.EndDate > DateTime.Now.AddDays(14) ? DateTime.Now.AddDays(14) : j.EndDate;
+                            DateTime sDate = DateTime.Now.AddDays(16);
+                            DateTime eDate = j.EndDate > DateTime.Now.AddDays(20) ? DateTime.Now.AddDays(20) : j.EndDate;
                             if (jobLabourer == null)
                             {
                                 _context.Add(new JobLabourer
@@ -164,6 +166,22 @@ namespace labourRecruitment.Repositories
 
                 
             }
+        }
+
+        public void Availbility()
+        {
+            var labourers = _context.Labourer.ToList();
+            labourers.ForEach(l =>
+            {
+                if (l.IsAvailable == true) {
+                    l.IsAvailable = false;
+                }
+                else
+                {
+                    l.IsAvailable = true;
+                }
+                _context.SaveChanges();
+            });
         }
 
     }

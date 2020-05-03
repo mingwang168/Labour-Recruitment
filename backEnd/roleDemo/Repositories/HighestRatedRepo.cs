@@ -19,10 +19,10 @@ namespace labourRecruitment.Repositories
         public IEnumerable<Labourer> GetHighestRatedLabourers(int id)
         {
             DateTime today = new DateTime();
-            List<Labourer> labourers = _context.LabourerSkill.Where(ls => ls.SkillId == id).Select(ols => ols.Labourer
-                       ).ToList();
-            List<Labourer> labourerScheduled = _context.LabourerAttendance.Where(l => l.Date > today).Select(l => l.Labourer).ToList();
-            List<Labourer> availableLabourers = labourers.Except(labourerScheduled).ToList();
+            List<Labourer> availableLabourers = _context.LabourerSkill.Where(ls => ls.SkillId == id).Select(ols => ols.Labourer
+                       ).Where(l=>l.IsAvailable == true).ToList();
+            //List<Labourer> labourerScheduled = _context.LabourerAttendance.Where(l => l.Date > today).Select(l => l.Labourer).ToList();
+            //List<Labourer> availableLabourers = labourers.Except(labourerScheduled).ToList();
 
             List<LabourerAssignVM> labourerAss = availableLabourers.Select(l => new LabourerAssignVM()
             {
