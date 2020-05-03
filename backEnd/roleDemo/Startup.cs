@@ -20,6 +20,7 @@ using labourRecruitment.Models.LabourRecruitment;
 using Hangfire;
 using labourRecruitment.Repositories;
 using Hangfire.SQLite;
+using Hangfire.MemoryStorage;
 
 namespace roleDemo {
     public class Startup {
@@ -58,12 +59,12 @@ namespace roleDemo {
                 = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                 };
             });
-            
+
             services.AddDefaultIdentity<IdentityUser>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
-            // Call this before AddMvc()
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -78,9 +79,15 @@ namespace roleDemo {
             });
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddHangfire(_ => _.UseSqlServerStorage(Configuration.GetConnectionString("SqlConnection")));
+            //services.AddHangfire(_ => _.UseSqlServerStorage(Configuration.GetConnectionString("SqlConnection")));
             //services.AddHangfire(x => x.UseSQLiteStorage(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddHangfire(config =>
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseDefaultTypeSerializer()
+                .UseMemoryStorage()
+                );
+            services.AddHangfireServer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,7 +109,7 @@ namespace roleDemo {
             app.UseAuthentication();
             app.UseCors("AllowAll");
             app.UseHangfireDashboard();
-            app.UseHangfireServer();
+            //app.UseHangfireServer();
             app.UseMvc(routes => {
                 routes.MapRoute(
                     name: "default",

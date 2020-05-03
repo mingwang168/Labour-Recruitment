@@ -124,8 +124,8 @@ namespace labourRecruitment.Repositories
                         labourers.ForEach(l =>
                         {
                             var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
-                            DateTime sDate = DateTime.Now.AddDays(16);
-                            DateTime eDate = j.EndDate > DateTime.Now.AddDays(20) ? DateTime.Now.AddDays(20) : j.EndDate;
+                            DateTime sDate = DateTime.Now.AddDays(15);
+                            DateTime eDate = j.EndDate > DateTime.Now.AddDays(20) ? DateTime.Now.AddDays(19) : j.EndDate;
                             if (jobLabourer == null)
                             {
                                 _context.Add(new JobLabourer
@@ -166,6 +166,7 @@ namespace labourRecruitment.Repositories
 
                 
             }
+            Console.WriteLine("Hi");
         }
 
         public void Availbility()
