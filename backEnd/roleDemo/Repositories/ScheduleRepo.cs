@@ -29,7 +29,7 @@ namespace labourRecruitment.Repositories
         {
             DateTime i = sDate;
            
-            while (DateTime.Compare(i,eDate) <= 0)
+            while (DateTime.Compare(i,eDate) < 0)
             {
                 if (i.DayOfWeek == DayOfWeek.Sunday || i.DayOfWeek == DayOfWeek.Saturday)
                 {
@@ -108,8 +108,8 @@ namespace labourRecruitment.Repositories
         {
             HighestRatedRepo rated = new HighestRatedRepo(_context);
             var ratedClients = rated.GetHighestRatingClients();
-            
-            foreach(Client client in ratedClients)
+            DateTime today = new DateTime(2020,5,8);
+            foreach (Client client in ratedClients)
             {
                 var jobs = _context.Job.Where(j => j.ClientId == client.ClientId && j.ScheduleDone != true).ToList();
                 foreach(Job j in jobs)
@@ -124,8 +124,8 @@ namespace labourRecruitment.Repositories
                         foreach(Labourer l in labourers)
                         {
                             var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
-                            DateTime sDate = DateTime.Now.AddDays(15);
-                            DateTime eDate = j.EndDate > DateTime.Now.AddDays(20) ? DateTime.Now.AddDays(19) : j.EndDate;
+                            DateTime sDate = today.AddDays(10);
+                            DateTime eDate = j.EndDate > DateTime.Now.AddDays(15) ? DateTime.Now.AddDays(15) : j.EndDate;
                             if (jobLabourer == null)
                             {
                                 _context.Add(new JobLabourer

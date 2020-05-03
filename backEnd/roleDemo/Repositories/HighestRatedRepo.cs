@@ -18,7 +18,6 @@ namespace labourRecruitment.Repositories
 
         public IEnumerable<Labourer> GetHighestRatedLabourers(int id)
         {
-            DateTime today = new DateTime();
             List<Labourer> availableLabourers = _context.LabourerSkill.Where(ls => ls.SkillId == id).Select(ols => ols.Labourer
                        ).ToList();
             //List<Labourer> labourerScheduled = _context.LabourerAttendance.Where(l => l.Date > today).Select(l => l.Labourer).ToList();
