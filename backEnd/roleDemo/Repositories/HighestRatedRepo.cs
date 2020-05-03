@@ -20,7 +20,7 @@ namespace labourRecruitment.Repositories
         {
             DateTime today = new DateTime();
             List<Labourer> availableLabourers = _context.LabourerSkill.Where(ls => ls.SkillId == id).Select(ols => ols.Labourer
-                       ).Where(l=>l.IsAvailable == true).ToList();
+                       ).ToList();
             //List<Labourer> labourerScheduled = _context.LabourerAttendance.Where(l => l.Date > today).Select(l => l.Labourer).ToList();
             //List<Labourer> availableLabourers = labourers.Except(labourerScheduled).ToList();
 
@@ -63,7 +63,7 @@ namespace labourRecruitment.Repositories
                 clientvm.averageRating = jobs.Average(avj => avj.jobAverageRating);
             }
 
-            List<Client> clientSorted = clientvms.OrderByDescending(c => c.averageRating).Select(c=>c.client).ToList();
+            List<Client> clientSorted = clientvms.OrderByDescending(c => c.averageRating).Select(c=>c.client).Distinct().ToList();
             return clientSorted;
 
         }

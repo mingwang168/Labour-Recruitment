@@ -112,16 +112,16 @@ namespace labourRecruitment.Repositories
             foreach(Client client in ratedClients)
             {
                 var jobs = _context.Job.Where(j => j.ClientId == client.ClientId && j.ScheduleDone != true).ToList();
-                jobs.ForEach(j =>
+                foreach(Job j in jobs)
                 {
                     var jobSkills = _context.JobSkill.Where(js => js.JobId == j.JobId).ToList();
                     
-                    jobSkills.ForEach(js =>
+                    foreach(JobSkill js in jobSkills)
                     {
                         var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
                         List<Labourer> labourers = new List<Labourer>();
                         labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
-                        labourers.ForEach(l =>
+                        foreach(Labourer l in labourers)
                         {
                             var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
                             DateTime sDate = DateTime.Now.AddDays(15);
@@ -158,13 +158,13 @@ namespace labourRecruitment.Repositories
 
                             }
                             PopulateLabourerAttendance(j.JobId, l.LabourerId, sDate, eDate);
-                        });
-         
-                    });
-                });
-                
+                        };
+                        _context.SaveChanges();
 
-                
+                    };
+                   
+                };
+     
             }
             Console.WriteLine("Hi");
         }

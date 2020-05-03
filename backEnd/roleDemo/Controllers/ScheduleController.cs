@@ -23,7 +23,7 @@ namespace labourRecruitment.Controllers
         {
             ScheduleRepo schedule = new ScheduleRepo(_context);
             schedule.AddWeeklySchedule();
-            return new ObjectResult("1");
+            return new ObjectResult("OK");
         }
     }
 
