@@ -108,7 +108,12 @@ namespace roleDemo {
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            RecurringJob.AddOrUpdate(() => Run(), "*/2 * * * *");
+        }
 
+        public void Run()
+        {
+            Console.WriteLine("Hi " + DateTime.Now);
         }
     }
 }
