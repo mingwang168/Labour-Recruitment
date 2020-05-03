@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using labourRecruitment.Models.LabourRecruitment;
 using Hangfire;
 using labourRecruitment.Repositories;
+using Hangfire.SQLite;
 
 namespace roleDemo {
     public class Startup {
@@ -77,6 +78,8 @@ namespace roleDemo {
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddHangfire(_ => _.UseSqlServerStorage(Configuration.GetConnectionString("SqlConnection")));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,14 +100,14 @@ namespace roleDemo {
             
             app.UseAuthentication();
             app.UseCors("AllowAll");
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
             app.UseMvc(routes => {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            app.UseHangfireDashboard("/hangfire");
-            app.UseHangfireServer();
-            //RecurringJob.AddOrUpdate<ScheduleRepo>( x => x.AddWeeklySchedule(), Cron.Weekly);
+
         }
     }
 }
