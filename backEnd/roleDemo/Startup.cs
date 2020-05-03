@@ -108,7 +108,7 @@ namespace roleDemo {
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            RecurringJob.AddOrUpdate<ScheduleRepo>(x => x.AddWeeklySchedule(), "*/5 * * * *");
+            RecurringJob.AddOrUpdate<ScheduleRepo>("weekly-schedule", x => x.AddWeeklySchedule(), "*/5 * * * *");
         }
 
     }
