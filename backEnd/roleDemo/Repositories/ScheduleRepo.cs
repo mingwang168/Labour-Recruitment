@@ -171,5 +171,13 @@ namespace labourRecruitment.Repositories
             }
         }
 
+        public void CheckIsAvailable()
+        {
+            var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > DateTime.Now).Select(l=>l.Labourer).Distinct().ToList();
+            unAvailableLabourers.ForEach(ul => ul.IsAvailable = true);
+             _context.Labourer.Except(unAvailableLabourers).ToList().ForEach(l => l.IsAvailable = false);
+            _context.SaveChanges();
+        }
+
     }
 }

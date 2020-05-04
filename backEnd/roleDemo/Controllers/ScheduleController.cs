@@ -18,7 +18,13 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-       
+        [HttpPut]
+        public IActionResult AddSchedule()
+        {
+            ScheduleRepo schedule = new ScheduleRepo(_context);
+            schedule.CheckIsAvailable();
+            return new ObjectResult("ok");
+        }
     }
 
 }
