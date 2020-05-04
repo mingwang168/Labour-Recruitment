@@ -184,13 +184,26 @@ const ClientProfile = (props) => {
 
                         {/* Jobs */}
                         <div className="card">
-                            <h5 className="card-header">Active Jobs</h5>
+                            <div className="card-header d-flex">
+                                <h4 className="card-header-title">Active Jobs</h4>
+                                <div className="toolbar ml-auto">
+                                    <Link
+                                        to="/dashboard"
+                                        className="btn btn-primary btn-sm"
+                                    >
+                                        View All
+                                    </Link>
+                                </div>
+                            </div>
+                            
                             <div className="card-body">
                             { jobs ?
                             <Table
                                 columns={JOBS_TABLE_COLUMNS}
                                 data={jobs}
+                                itemsPerRow={5}
                                 path={'/job'}
+                                searchable={false}
                                 {...props}
                             />
                             :
@@ -201,7 +214,7 @@ const ClientProfile = (props) => {
 
                         {/* Incidents */}
                         <div className="card">
-                            <h5 className="card-header">Incidents</h5>
+                            <h4 className="card-header">Incidents</h4>
                             <div className="card-body">
                             { incidents ?
                             <p>Incidents table goes here.</p>
