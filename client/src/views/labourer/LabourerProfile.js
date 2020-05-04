@@ -1,138 +1,180 @@
-import React , {useState, useEffect} from "react";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import TopNav from "../components/TopNav";
-import SideNav from "../components/SideNav";
 import * as Auth from '../../utils/Auth';
+
+import Layout from '../components/Layout';
+import AvailabilityBadge from '../components/AvailabilityBadge';
+import RatingBadge from '../components/RatingBadge';
+import Loader from '../components/Loader';
+import ErrorMessage from '../components/ErrorMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const LabourerProfile = (props) => {
-	const [labourerFirstName, setLabourerFirstName] = useState('');
-	const [labourerLastName, setLabourerLastName] = useState('');
-	const [availability, setAvailability] = useState(true);
-	const [labourerEmail, setLabourerEmail] = useState('');
-	const [averageSafety, setAverageSafety] = useState('');
-	const [averageQuality, setAverageQuality] = useState('');
-	
-	const fetchLabourerProfile = async() =>{
-		try	
-		{
-			let response = await fetch(BASE_URL + `/LabourerProfile/${Auth.getID()}`,{
-			method: 'GET',
-			headers: {
-				'Authorization': `Bearer ${Auth.getToken()}`
-			} 
-			});
-			let data = await response.json();
-			console.log(data);
-			setLabourerFirstName(data.labourer.labourerFirstName);
-			setLabourerLastName(data.labourer.labourerLastName);
-			setAvailability(data.labourer.isAvailable);
-			setLabourerEmail(data.labourer.labourerEmail);
-			setAverageSafety(data.labourer.averageSafety);
-			setAverageQuality(data.labourer.averageQuality);
-		} catch(e){
-			console.log(e);
-		}
-	}
 
-	useEffect(() => {
-		fetchLabourerProfile();
-	}, [])
+    const [loaded, setLoaded] = useState();
+    const [labourer, setLabourer] = useState();
+    const [displayEditButton, setDisplayEditButton] = useState(false);
 
-	
-	return (
-	<div className="dashboard-main-wrapper">
-		<TopNav />
-		<SideNav />
+    const fetchLabourerProfile = async(id) => {
+        // Fetch profile data
+        try {
+            let response = await fetch(BASE_URL + `/LabourerProfile/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${Auth.getToken()}`
+                }
+            });
+            
+            if(response.status !== 200) {
+                setLoaded(true);
+                throw response;
+            }
+    
+            let data = await response.json();
 
-		<div className="dashboard-wrapper">
-		<div className="container-fluid dashboard-content">
-		<div className="main-content-container container-fluid px-4">
-			<div className="page-header row no-gutters py-4">
-			<div className="col-12 col-sm-4 text-center text-sm-left mb-0">
-				<h3 className="page-title">Labourer Profile</h3>
-			</div>
-			</div>
+            console.log(data);
 
-			<div className="row">
-			<div className="col">
-			<div className="mb-4 pt-3 card card-small">
-                <div className="border-bottom text-center card-header">
-                    <h4 className="mb-1">{labourerFirstName} {labourerLastName}</h4>
-                    <span className="m-5">{availability ? 'Available' : 'Not Available'}</span>
+            setLabourer({
+                ...data.labourer,
+                qualityRating: data.averageQuality,
+                safetyRating: data.averageSafety
+            });
+            setLoaded(true);
+        } catch(e){
+            setLoaded(true);
+            console.error(e);
+        }
+
+        // Fetch job data
+
+        // Fetch incident data
+    }
+
+    useEffect(() => {
+        if(props.match.params.id) {
+            if(Number.isInteger(Number(props.match.params.id))) {
+                fetchLabourerProfile(props.match.params.id);
+            }
+        } else {
+            fetchLabourerProfile(Auth.getID());
+            setDisplayEditButton(true);
+        }
+    }, [])
+
+    const profile = labourer && (
+    <>
+    {/* Page Header */}
+    <div className="row">
+    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+    <div className="page-header">
+        <h2 className="pageheader-title">My Profile</h2>
+        <div className="page-breadcrumb">
+            <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                <li className="breadcrumb-item">
+                    <Link
+                    to="/dashboard"
+                    className="breadcrumb-link"
+                    >
+                        Home
+                    </Link>
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                    Profile
+                </li>
+            </ol>
+            </nav>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <div className="row">
+        {/* Profile */}
+        <div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div className="card">
+
+            <div className="card-body">
+                <h1 className="font-26 mb-2">
+                    {`${labourer.labourerFirstName} ${labourer.labourerLastName}`}
+                </h1>
+            </div>
+
+            <div className="card-body border-top">
+                <h3 className="font-16">Status</h3>
+                <AvailabilityBadge status={labourer.isAvailable} />
+            </div>
+
+            <div className="card-body border-top">
+                <h3 className="font-16">Quality Rating</h3>
+                <RatingBadge rating={labourer.qualityRating} />
+            </div>
+
+            <div className="card-body border-top">
+                <h3 className="font-16">Safety Rating</h3>
+                <RatingBadge rating={labourer.safetyRating} />
+            </div>
+
+            <div className="card-body border-top">
+                <h3 className="font-16">Contact Information</h3>
+                <ul className="list-unstyled icon-list mb-0">
+                    <li className="mb-2">
+                        <i className="material-icons">email</i>
+                        <span>
+                            <a href={`mailto:${labourer.labourerEmail}`}>{labourer.labourerEmail}</a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            { displayEditButton &&
+            <div className="card-body border-top">
+                <Link
+                    to="/profile/edit"
+                    className="btn btn-light"
+                >
+                    Edit Profile
+                </Link>
+            </div>
+            }
+
+        </div>
+        </div>
+
+        {/* Jobs */}
+        <div className="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div className="card">
+            <div className="card-header d-flex">
+                <h4 className="card-header-title">Active Jobs</h4>
+                <div className="toolbar ml-auto">
+                    <Link
+                        to="/dashboard"
+                        className="btn btn-primary btn-sm"
+                    >
+                        View All
+                    </Link>
                 </div>
-			</div>
-			</div>
-			</div>
+            </div>
+            <div className="card-body">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore commodi voluptate perferendis assumenda. Eligendi ullam assumenda illum! Blanditiis mollitia distinctio repellendus placeat, fugiat temporibus sed, fuga ipsam voluptatibus magni qui!</p>
+            </div>
+        </div>
+        </div>
+    </div>
+    </>
+    );
 
-			<div className="row">
-			<div className="col">
-			<div className="mb-4 card card-small">
-			<div className="border-bottom card-header d-flex justify-content-between">
-				<h6 className="m-0">Account Details</h6>
-				<span>
-					<i className="far fa-edit"></i>
-				</span>
-			</div>
-			<ul className="list-group list-group-flush">
-				<li className="p-3 list-group-item">
-					<table>
-						<tbody>
-						<tr>
-							<td className="text-muted d-block pl-4 pr-4 pb-3">
-							<strong className="text-muted d-block">
-								Email:
-							</strong>
-							</td>
-							<td className="pl-4 pr-4 pb-3">
-								{labourerEmail}
-							</td>
-						</tr>
-						</tbody>
-					</table>
-				</li>
-				<li className="p-3 pb-4 list-group-item">
-				<table className="pl-4">
-					<tbody>
-					<tr>
-						<td>
-						<strong className="text-muted d-block">
-						Average Safety Rating
-						</strong>
-						</td>
-						<td>
-						<span className="pl-4 pb-3">
-						<i className="fas fa-star mr-2"></i>
-							{averageSafety} 4.91 (18 ratings)
-						</span>
-						</td>
-					</tr>
-					<tr>
-						<td>
-						<strong className="text-muted d-block">
-							Average Quality Rating
-						</strong>
-						</td>
-						<td>
-							<span className="pl-4 pb-3">
-							<i className="fas fa-star mr-2"></i>
-								{averageQuality} 4.91 (18 ratings)
-							</span>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-				</li>
-			</ul>
-			</div>
-			</div>
-			</div>
-		</div>
-		</div>
-	    </div>
-	</div>
-	);
-};
+    const content = (
+    <>
+    <Loader loaded={loaded}>
+    { labourer ? profile : <ErrorMessage message={"No profile found."} /> }
+    </Loader>
+    </>
+    );
+
+    return <Layout content={content} />
+}
 
 export default LabourerProfile;
