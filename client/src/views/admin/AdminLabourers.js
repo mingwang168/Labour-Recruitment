@@ -35,13 +35,13 @@ const AdminLabourers = (props) => {
             let data = await response.json();
 
             if(data && data.length) {
-                setLabourers(DataSanitizer.cleanLabourersData(data))
-                setLoaded(true)
+                setLabourers(DataSanitizer.cleanLabourersData(data));
+                setLoaded(true);
             } else {
-                setLoaded(true)
+                setLoaded(true);
             }
         } catch(e) {
-            setLoaded(true)
+            setLoaded(true);
             console.error(e);
         }
     }
