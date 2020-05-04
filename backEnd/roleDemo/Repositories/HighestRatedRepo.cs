@@ -18,9 +18,9 @@ namespace labourRecruitment.Repositories
 
         public IEnumerable<Labourer> GetHighestRatedLabourers(int id)
         {
-            List<Labourer> availableLabourers = _context.LabourerSkill.Where(ls => ls.SkillId == id).Select(ols => ols.Labourer).
-                Where(l=>l.IsAvailable == true).ToList();
-            List<LabourerAssignVM> labourerAss = availableLabourers.Select(l => new LabourerAssignVM()
+            List<Labourer> labourers = _context.LabourerSkill.Where(ls => ls.SkillId == id).Select(ols => ols.Labourer).ToList();
+
+            List<LabourerAssignVM> labourerAss = labourers.Select(l => new LabourerAssignVM()
             {
                 labourer = l,
                 averageQualityRating = _context.LabourerAttendance.Where(la => la.LabourerId == l.LabourerId).Average(las => las.DailyQualityRating == null ? 0 : las.DailyQualityRating),

@@ -76,7 +76,7 @@ namespace labourRecruitment.Repositories
             HighestRatedRepo rated = new HighestRatedRepo(_context);
             foreach (JobSkill js in jobSkillSelected)
             {
-                var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
+                var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).Where(l=> l.IsAvailable == true).ToList();
                 List<Labourer> labourers = new List<Labourer>();
                 labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
 
@@ -173,7 +173,9 @@ namespace labourRecruitment.Repositories
 
         public void CheckIsAvailable()
         {
-            var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > DateTime.Now).Select(l=>l.Labourer).Distinct().ToList();
+            //Later we should change it to now
+            DateTime today = new DateTime(2020, 5, 8);
+            var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today).Select(l=>l.Labourer).Distinct().ToList();
             unAvailableLabourers.ForEach(ul => ul.IsAvailable = false);
              _context.Labourer.Except(unAvailableLabourers).ToList().ForEach(l => l.IsAvailable = true);
             _context.SaveChanges();
