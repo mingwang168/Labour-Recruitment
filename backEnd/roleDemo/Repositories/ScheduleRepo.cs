@@ -108,7 +108,6 @@ namespace labourRecruitment.Repositories
             HighestRatedRepo rated = new HighestRatedRepo(_context);
             var ratedClients = rated.GetHighestRatingClients();
 
-
             //Later we should change it to now 
             DateTime today = new DateTime(2020,5,8);
             foreach (Client client in ratedClients)
@@ -123,9 +122,9 @@ namespace labourRecruitment.Repositories
                         var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
                         var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today).Select(l => l.Labourer).Distinct().ToList();
                         var availableLabourers = _context.Labourer.Except(unAvailableLabourers).ToList();
-                        List<Labourer> labourers = new List<Labourer>();
-                        labourers.AddRange(availableLabourers.GetRange(0, js.NumberNeeded));
-                        foreach(Labourer l in labourers)
+                        List<Labourer> chosenLabourers = new List<Labourer>();
+                        chosenLabourers.AddRange(availableLabourers.GetRange(0, js.NumberNeeded));
+                        foreach(Labourer l in chosenLabourers)
                         {
                             var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
                             DateTime sDate = today.AddDays(10);
