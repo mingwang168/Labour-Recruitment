@@ -48,7 +48,7 @@ const ClientAddIncident = ({ history }) => {
 
         if(errors.length){
             setFormErrors(errors)
-        }else {
+        } else {
             submitForm()
         }
     }
@@ -136,8 +136,7 @@ const ClientAddIncident = ({ history }) => {
             }
 
             let data = await response.json();
-            //history.push('/incident/'+ data);
-            console.log(data)
+            history.push('/incident/'+ data);
         } catch(e) {
             console.error(e);
         }
