@@ -33,7 +33,7 @@ namespace labourRecruitment.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<LabourerProfileVM> GetLabourerProfile(int id)
         {
             return new LabourerProfileVMRepo(_context).GetLabourer(id);
