@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import SetDataTimeout from '../../utils/SetDataTimeout';
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
 
@@ -29,26 +28,21 @@ const AdminLabourers = (props) => {
             });
 
             if(response.status !== 200) {
-                SetDataTimeout({setLoadedState: setLoaded});
+                setLoaded(true);
                 throw response;
             }
 
             let data = await response.json();
 
             if(data && data.length) {
-                SetDataTimeout({
-                    data: DataSanitizer.cleanLabourersData(data),
-                    setData: setLabourers,
-                    setLoadedState: setLoaded
-                });
+                setLabourers(DataSanitizer.cleanLabourersData(data))
+                setLoaded(true)
             } else {
-                SetDataTimeout({
-                    setLoadingState: setLoaded
-                });
+                setLoaded(true)
             }
         } catch(e) {
+            setLoaded(true)
             console.error(e);
-            SetDataTimeout({setLoadedState: setLoaded});
         }
     }
 
