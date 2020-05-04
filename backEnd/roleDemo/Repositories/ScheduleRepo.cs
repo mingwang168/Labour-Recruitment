@@ -76,14 +76,12 @@ namespace labourRecruitment.Repositories
             HighestRatedRepo rated = new HighestRatedRepo(_context);
             foreach (JobSkill js in jobSkillSelected)
             {
-                var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
+                var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).Where(l=> l.IsAvailable == true).ToList();
                 List<Labourer> labourers = new List<Labourer>();
                 labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
 
                 foreach (Labourer labourer in labourers)
                 {
-                    _context.Labourer.FirstOrDefault(l => l.LabourerId == labourer.LabourerId).IsAvailable = false;
-
                     _context.JobLabourer.Add(new JobLabourer
                     {
                         JobId = jobId,
@@ -97,6 +95,7 @@ namespace labourRecruitment.Repositories
                         Duration = GetBusinessDays(jobSelected.StartDate, eDate)
                     });
                     PopulateLabourerAttendance(jobId, labourer.LabourerId, jobSelected.StartDate, eDate);
+                    labourer.IsAvailable = false;
                 }
                 _context.SaveChanges();
 
@@ -108,7 +107,6 @@ namespace labourRecruitment.Repositories
         {
             HighestRatedRepo rated = new HighestRatedRepo(_context);
             var ratedClients = rated.GetHighestRatingClients();
-
 
             //Later we should change it to now 
             DateTime today = new DateTime(2020,5,8);
@@ -122,9 +120,11 @@ namespace labourRecruitment.Repositories
                     foreach(JobSkill js in jobSkills)
                     {
                         var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
-                        List<Labourer> labourers = new List<Labourer>();
-                        labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
-                        foreach(Labourer l in labourers)
+                        var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today).Select(l => l.Labourer).Distinct().ToList();
+                        var availableLabourers = _context.Labourer.Except(unAvailableLabourers).ToList();
+                        List<Labourer> chosenLabourers = new List<Labourer>();
+                        chosenLabourers.AddRange(availableLabourers.GetRange(0, js.NumberNeeded));
+                        foreach(Labourer l in chosenLabourers)
                         {
                             var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
                             DateTime sDate = today.AddDays(10);
@@ -161,6 +161,7 @@ namespace labourRecruitment.Repositories
 
                             }
                             PopulateLabourerAttendance(j.JobId, l.LabourerId, sDate, eDate);
+                            l.IsAvailable = false;
                         };
                         _context.SaveChanges();
 

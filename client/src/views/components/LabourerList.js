@@ -15,7 +15,6 @@ const LabourerList = (props) => {
         props.fetchLabourers(props.selectedJob)
     }, [])
 
-    console.log(props.labourerList)
     return (
         <Select
         required
