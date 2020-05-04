@@ -44,7 +44,7 @@ namespace labourRecruitment.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetLabourerAttendanceRating([FromBody] LabourerAttendance la)
+        public IActionResult GetLabourerAttendanceRating([FromBody] LabourerAttendance la)
         {
             var labourerAttendances = _context.LabourerAttendance.Where(l => l.LabourerId == la.LabourerId && l.JobId == la.JobId && l.DailyQualityRating != null);
 
