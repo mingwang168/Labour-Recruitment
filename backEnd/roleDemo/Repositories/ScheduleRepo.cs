@@ -108,7 +108,9 @@ namespace labourRecruitment.Repositories
         {
             HighestRatedRepo rated = new HighestRatedRepo(_context);
             var ratedClients = rated.GetHighestRatingClients();
- 
+
+
+            //Later we should change it to now 
             DateTime today = new DateTime(2020,5,8);
             foreach (Client client in ratedClients)
             {

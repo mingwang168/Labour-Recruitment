@@ -18,13 +18,7 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        [HttpPut]
-        public IActionResult AddSchedule()
-        {
-            ScheduleRepo schedule = new ScheduleRepo(_context);
-            schedule.AddWeeklySchedule();
-            return new ObjectResult("OK");
-        }
+       
     }
 
 }
