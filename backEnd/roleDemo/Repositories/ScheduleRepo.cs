@@ -121,8 +121,10 @@ namespace labourRecruitment.Repositories
                     foreach(JobSkill js in jobSkills)
                     {
                         var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
+                        var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today).Select(l => l.Labourer).Distinct().ToList();
+                        var availableLabourers = _context.Labourer.Except(unAvailableLabourers).ToList();
                         List<Labourer> labourers = new List<Labourer>();
-                        labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
+                        labourers.AddRange(availableLabourers.GetRange(0, js.NumberNeeded));
                         foreach(Labourer l in labourers)
                         {
                             var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
