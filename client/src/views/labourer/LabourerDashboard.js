@@ -5,11 +5,12 @@ import Table from '../components/Table';
 // import { LABOURERS_JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
 // import { LABOURERS_JOBS_DATA } from '../JobsDummyData';
 
-const LabourDashboard = (props) => {
+const LabourerDashboard = (props) => {
 
     const viewPage = () => {
         props.history.push("/job/1");
     }
+
     return (
     <>
     <div className="row">
@@ -132,4 +133,4 @@ const LabourDashboard = (props) => {
     )
 }
 
-export default LabourDashboard;
+export default LabourerDashboard;
