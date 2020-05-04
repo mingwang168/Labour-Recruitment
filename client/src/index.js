@@ -5,6 +5,7 @@ import App from './App';
 // CSS Files
 import './assets/other/bootstrap/css/bootstrap.min.css';
 import './assets/fonts/circular-std/style.css';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import './assets/css/style.css';
 
 ReactDOM.render(
