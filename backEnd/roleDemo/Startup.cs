@@ -117,7 +117,7 @@ namespace roleDemo {
             });
             //we should change the time to every friday 
             //RecurringJob.AddOrUpdate<ScheduleRepo>("daily-check-job", x => , "*/10 * * * *");
-            RecurringJob.AddOrUpdate<ScheduleRepo>("weekly-schedule", x => x.AddWeeklySchedule(), "*/5  * * * *");
+            //RecurringJob.AddOrUpdate<ScheduleRepo>("weekly-schedule", x => x.AddWeeklySchedule(), "*/5  * * * *");
         }
 
     }
