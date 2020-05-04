@@ -57,7 +57,7 @@ const Pagination = ({
     );
 }
 
-const Table = ({ columns, data, history, path, itemsPerRow }) => {
+const Table = ({ columns, data, history, path, itemsPerRow, searchable }) => {
 
     const {
         getTableProps,
@@ -90,6 +90,7 @@ const Table = ({ columns, data, history, path, itemsPerRow }) => {
 
     return (
         <>
+        { searchable &&
         <div className="row d-flex justify-content-end">
         <div className="col col-lg-4 col-xl-3">
         <Search
@@ -99,6 +100,7 @@ const Table = ({ columns, data, history, path, itemsPerRow }) => {
         />
         </div>
         </div>
+        }
         
         <table className="table table-bordered table-striped table-hover" {...getTableProps()}>
             <thead>
