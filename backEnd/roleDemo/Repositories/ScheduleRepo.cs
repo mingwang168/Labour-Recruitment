@@ -82,8 +82,6 @@ namespace labourRecruitment.Repositories
 
                 foreach (Labourer labourer in labourers)
                 {
-                    _context.Labourer.FirstOrDefault(l => l.LabourerId == labourer.LabourerId).IsAvailable = false;
-
                     _context.JobLabourer.Add(new JobLabourer
                     {
                         JobId = jobId,
@@ -97,6 +95,7 @@ namespace labourRecruitment.Repositories
                         Duration = GetBusinessDays(jobSelected.StartDate, eDate)
                     });
                     PopulateLabourerAttendance(jobId, labourer.LabourerId, jobSelected.StartDate, eDate);
+                    labourer.IsAvailable = false;
                 }
                 _context.SaveChanges();
 
@@ -161,6 +160,7 @@ namespace labourRecruitment.Repositories
 
                             }
                             PopulateLabourerAttendance(j.JobId, l.LabourerId, sDate, eDate);
+                            l.IsAvailable = false;
                         };
                         _context.SaveChanges();
 
