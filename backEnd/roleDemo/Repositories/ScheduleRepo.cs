@@ -173,15 +173,5 @@ namespace labourRecruitment.Repositories
             }
         }
 
-        public void CheckIsAvailable()
-        {
-            //Later we should change it to now
-            DateTime today = new DateTime(2020, 5, 8);
-            var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today).Select(l=>l.Labourer).Distinct().ToList();
-            unAvailableLabourers.ForEach(ul => ul.IsAvailable = false);
-             _context.Labourer.Except(unAvailableLabourers).ToList().ForEach(l => l.IsAvailable = true);
-            _context.SaveChanges();
-        }
-
     }
 }
