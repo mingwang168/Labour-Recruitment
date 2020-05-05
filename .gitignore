@@ -5,6 +5,7 @@
 
 appsettings.json
 appsettings.Development.json
+web.config
 # User-specific files
 *.rsuser
 *.suo

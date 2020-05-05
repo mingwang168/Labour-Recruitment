@@ -18,7 +18,7 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-      
+       
     }
 
 }

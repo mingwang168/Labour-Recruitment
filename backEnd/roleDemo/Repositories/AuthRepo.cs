@@ -17,10 +17,6 @@ namespace labourRecruitment.Repositories
         private IConfiguration _config;
         private readonly SignInManager<IdentityUser> _signInManager;
         private IServiceProvider _serviceProvider;
-        private SignInManager<IdentityUser> signInManager;
-        private AutoMapper.Configuration.IConfiguration config;
-        private IServiceProvider serviceProvider;
-        private ApplicationDbContext context;
 
         public AuthRepo(SignInManager<IdentityUser> signInManager,
                                 IConfiguration config,
@@ -33,15 +29,7 @@ namespace labourRecruitment.Repositories
             _config = config;
         }
 
-        public AuthRepo(SignInManager<IdentityUser> signInManager, AutoMapper.Configuration.IConfiguration config, IServiceProvider serviceProvider, ApplicationDbContext context)
-        {
-            this.signInManager = signInManager;
-            this.config = config;
-            this.serviceProvider = serviceProvider;
-            this.context = context;
-        }
-
-        public List<Claim> AddUserRoleClaims(List<Claim> claims, string userId)
+         public List<Claim> AddUserRoleClaims(List<Claim> claims, string userId)
         {
             // Get current user's roles. 
             var userRoleList = _context.UserRoles.Where(ur => ur.UserId == userId);

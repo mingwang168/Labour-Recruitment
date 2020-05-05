@@ -13,10 +13,11 @@ namespace roleDemo.Controllers {
     public class HomeController : Controller {
 
         private readonly EmailSettings _emailSettings;
-
-        public HomeController(IOptions<EmailSettings> emailSettings)
+        private readonly ApplicationDbContext _context;
+        public HomeController(IOptions<EmailSettings> emailSettings, ApplicationDbContext context)
         {
             _emailSettings = emailSettings.Value;
+            _context = context;
         }
 
         public IActionResult Index() {
@@ -47,6 +48,12 @@ namespace roleDemo.Controllers {
             return RedirectToAction("Error");
         }
 
+        public IActionResult CheckCompletion()
+        {
+            new CheckCompletion(_context).CheckIfComplete();
+                return RedirectToAction("Index");
+
+        }
 
     }
 }
