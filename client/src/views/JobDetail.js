@@ -10,14 +10,14 @@ import ErrorMessage from './components/ErrorMessage';
 
 import * as Auth from '../utils/Auth';
 
-import { ATTENDANCE_DATES_TABLE_COLUMNS } from '../utils/TableColumns';
+import { ATTENDANCE_DATES_TABLE_COLUMNS, INCIDENTS_TABLE_COLUMNS } from '../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const JobDetail = (props) => {
 
     const [details, setDetails] = useState();
-    const [incidents, setIncidents] = useState();
+    const [incidents, setIncidents] = useState([""]);
     const [attendanceDates, setAttendanceDates] = useState();
 
     const fetchJobDetails = async(id) => {
@@ -54,9 +54,8 @@ const JobDetail = (props) => {
         } catch (err) {
             console.error(err);
         }
-    }
 
-    const fetchIncidentReports = async(id) => {
+        //Incident reports 
         try {
             let response = await fetch(BASE_URL + '/incidents/GetIncidentsByJobId/' + id, {
                 method : 'GET',
@@ -78,11 +77,11 @@ const JobDetail = (props) => {
         if(props.match.params.id) {
             if(Number.isInteger(Number(props.match.params.id))) {
                 fetchJobDetails(props.match.params.id);
-                fetchIncidentReports(props.match.params.id)
             }
         }
     }, [props.match.params.id])
-    console.log(incidents)
+
+
     return (
     <>
     <div className="dashboard-main-wrapper">
@@ -163,14 +162,10 @@ const JobDetail = (props) => {
                     <div className="card">
                     <h5 className="card-header">Incident Reports</h5>
                     <div className="card-body">
-                    { !incidents ? <p className="text-danger">No incident reports to display.</p> :
+                    { incidents.length == 0 ?  <p className="text-danger">No incident reports to display.</p> :
                         <Table 
                             data={incidents}
-                            columns={[
-                            { Header: 'Date', accessor: 'date' },
-                            { Header: 'Incident Type', accessor: 'type' },
-                            { Header: '# Affected', accessor: 'affected' },
-                            ]}
+                            columns={INCIDENTS_TABLE_COLUMNS}
                             path={"/incident"}
                             itemsPerPage={5}
                             searchable={false}

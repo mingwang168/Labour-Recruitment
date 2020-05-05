@@ -53,10 +53,6 @@ exports.LABOURERS_TABLE_COLUMNS = [
 
 exports.INCIDENTS_TABLE_COLUMNS = [
     {
-        Header: 'Job',
-        accessor: 'job',
-    },
-    {
         Header: 'Date',
         accessor: 'date',
     },
