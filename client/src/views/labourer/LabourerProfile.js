@@ -2,20 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as Auth from '../../utils/Auth';
+import * as DataSanitizer from '../../utils/DataSanitizer';
 
 import Layout from '../components/Layout';
+import Table from '../components/Table';
+import OneColumnTable from '../components/OneColumnTable';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import RatingBadge from '../components/RatingBadge';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
+import UnauthorizedMessage from '../components/UnauthorizedMessage';
+
+import { JOBS_TABLE_COLUMNS } from '../../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const LabourerProfile = (props) => {
 
+    const [authorized, setAuthorized] = useState(false);
+    const [isProfileOwner, setIsProfileOwner] = useState(false);
+
     const [loaded, setLoaded] = useState();
     const [labourer, setLabourer] = useState();
-    const [displayEditButton, setDisplayEditButton] = useState(false);
+    const [jobs, setJobs] = useState();
 
     const fetchLabourerProfile = async(id) => {
         // Fetch profile data
@@ -28,40 +37,45 @@ const LabourerProfile = (props) => {
             });
             
             if(response.status !== 200) {
-                setLoaded(true);
                 throw response;
             }
     
             let data = await response.json();
-
-            console.log(data);
 
             setLabourer({
                 ...data.labourer,
                 qualityRating: data.averageQuality,
                 safetyRating: data.averageSafety
             });
-            setLoaded(true);
         } catch(e){
-            setLoaded(true);
             console.error(e);
         }
 
         // Fetch job data
+        try {
+            let response = await fetch(BASE_URL + `/Job/GetJobByLabourerId/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${Auth.getToken()}`
+                }
+            });
+            
+            if(response.status !== 200) {
+                setLoaded(true);
+                throw response;
+            }
+    
+            let data = await response.json();
+            setJobs(DataSanitizer.cleanJobsData(data));
+        } catch(e){
+            console.error(e);
+        }
 
         // Fetch incident data
-    }
 
-    useEffect(() => {
-        if(props.match.params.id) {
-            if(Number.isInteger(Number(props.match.params.id))) {
-                fetchLabourerProfile(props.match.params.id);
-            }
-        } else {
-            fetchLabourerProfile(Auth.getID());
-            setDisplayEditButton(true);
-        }
-    }, [])
+        // Finish loading
+        setLoaded(true);
+    }
 
     const profile = labourer && (
     <>
@@ -129,7 +143,7 @@ const LabourerProfile = (props) => {
                 </ul>
             </div>
 
-            { displayEditButton &&
+            { isProfileOwner &&
             <div className="card-body border-top">
                 <Link
                     to="/profile/edit"
@@ -143,30 +157,81 @@ const LabourerProfile = (props) => {
         </div>
         </div>
 
-        {/* Jobs */}
         <div className="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
-        <div className="card">
-            <div className="card-header d-flex">
-                <h4 className="card-header-title">Active Jobs</h4>
-                <div className="toolbar ml-auto">
-                    <Link
-                        to="/dashboard"
-                        className="btn btn-primary btn-sm"
-                    >
-                        View All
-                    </Link>
+            {/* Skills */}
+            <div className="card">
+                <div className="card-header d-flex">
+                    <h4 className="card-header-title">Skills</h4>
+                    { isProfileOwner &&
+                    <div className="toolbar ml-auto">
+                        <Link
+                            to="/profile/edit"
+                            className="btn btn-light btn-sm"
+                        >
+                            Edit
+                        </Link>
+                    </div>
+                    }
+                </div>
+                <div className="card-body">
+                    <OneColumnTable
+                        data={["Drywall", "Electrical"]}
+                        header={"Name"}
+                    />
                 </div>
             </div>
-            <div className="card-body">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore commodi voluptate perferendis assumenda. Eligendi ullam assumenda illum! Blanditiis mollitia distinctio repellendus placeat, fugiat temporibus sed, fuga ipsam voluptatibus magni qui!</p>
+
+            {/* Jobs */}
+            <div className="card">
+                <div className="card-header d-flex">
+                    <h4 className="card-header-title">Active Jobs</h4>
+                    <div className="toolbar ml-auto">
+                        <Link
+                            to="/dashboard"
+                            className="btn btn-primary btn-sm"
+                        >
+                            View All
+                        </Link>
+                    </div>
+                </div>
+                <div className="card-body">
+                    { jobs &&
+                    <Table
+                        data={jobs}
+                        columns={JOBS_TABLE_COLUMNS}
+                        itemsPerPage={5}
+                        path="/job"
+                        {...props}
+                    />
+                    }
+                </div>
+            </div>
+
+            {/* Incidents */}
+            <div className="card">
+                <div className="card-header d-flex">
+                    <h4 className="card-header-title">Incident Reports</h4>
+                    <div className="toolbar ml-auto">
+                        <Link
+                            to="/incidents"
+                            className="btn btn-primary btn-sm"
+                        >
+                            View All
+                        </Link>
+                    </div>
+                </div>
+                <div className="card-body">
+                    
+                </div>
             </div>
         </div>
-        </div>
+
     </div>
     </>
     );
 
-    const content = (
+    const content = !authorized ? <UnauthorizedMessage /> :
+    (
     <>
     <Loader loaded={loaded}>
     { labourer ? profile : <ErrorMessage message={"No profile found."} /> }
@@ -174,7 +239,31 @@ const LabourerProfile = (props) => {
     </>
     );
 
-    return <Layout content={content} />
+    useEffect(() => {
+        // Check for valid params in URL
+        if(props.match.params.id && Number.isInteger(Number(props.match.params.id))) {
+            let id = props.match.params.id;
+
+            // Check if user is authorized
+            let isAuthorized = (
+                Auth.authenticateAdmin() ? true :
+                Auth.authenticateLabourer() && id === Auth.getID() ? true :
+                false
+            );
+
+            // Check if user is: an administrator,
+            // or the labourer who owns this profile
+            if(isAuthorized) {
+                fetchLabourerProfile(id);
+                setIsProfileOwner(Auth.authenticateLabourer() && id === Auth.getID());
+            }
+
+            // Set authorization state
+            setAuthorized(isAuthorized);
+        }
+    }, [])
+
+    return <Layout content={content} />;
 }
 
 export default LabourerProfile;
