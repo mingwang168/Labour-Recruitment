@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace labourRecruitment.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class IncidentsController : ControllerBase
     {
@@ -25,7 +25,7 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Incidents
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncident()
+        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncidents()
         {
             var reports = await _context.IncidentReport.ToListAsync();
             foreach (IncidentReport report in reports)
@@ -49,8 +49,8 @@ namespace labourRecruitment.Controllers
         }
 
         // GET: api/Incidents/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<IncidentReport>> GetIncident(int id)
+        [HttpGet("{id}", Name="GetIncidentByIncidenId")]
+        public async Task<ActionResult<IncidentReport>> GetIncidentByIncidentId(int id)
         {
             var incident = await _context.IncidentReport.FindAsync(id);
 
@@ -86,8 +86,8 @@ namespace labourRecruitment.Controllers
             return incident;
         }
 
-
-        //// POST: api/Incidents
+        
+        // POST: api/Incidents
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostIncident(IncidentReportVM report)
