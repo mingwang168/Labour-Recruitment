@@ -17,9 +17,7 @@ const ClientLabourerAttendance = (props) => {
 
     const [list, setList] = useState();
 
-    const changeRating = () => {
-
-    }
+    
     const getList = async(id, date) => {
         try {
             const response = await fetch(BASE_URL + `/LabourerAttendance/data?jobId=${id}&date=${date}`, {
@@ -36,14 +34,15 @@ const ClientLabourerAttendance = (props) => {
             console.error(err);
         }
     }
-
+    
     useEffect(() =>{
         if(props.match.params.id && props.match.params.date) {
             let date = props.match.params.date + "T00:00:00"
             getList(props.match.params.id, date);
         }
     }, [])
-    console.log(list)
+
+
     return (
     <div className="dashboard-main-wrapper">
         <TopNav />
@@ -68,11 +67,28 @@ const ClientLabourerAttendance = (props) => {
                <div className="card">
                    <div className="card-body">
                    { list &&
-                        <Table
-                            columns={ATTENDANCE_RATINGS_TABLE_COLUMNS}
-                            data={list}
-                            {...props}
-                        />
+                        // <Table
+                        //     columns={ATTENDANCE_RATINGS_TABLE_COLUMNS}
+                        //     data={list}
+                        //     {...props}
+                        // />
+                        <table className="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Labourer Name</th>
+                                    <th>Quality Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {list.map((l,i) => (
+                                    <tr key = {i}>
+                                        <td>{l.name}</td>
+                                        <td><RateWorkers /></td>
+                                    </tr>
+                                ))
+                            }
+                            </tbody>   
+                        </table>
                    } 
                    </div>
                </div>
