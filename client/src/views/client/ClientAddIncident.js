@@ -120,7 +120,7 @@ const ClientAddIncident = ({ history }) => {
         }
         
         try {
-            let response = await fetch(BASE_URL + '/incidents', {
+            let response = await fetch(BASE_URL + '/incidents/PostIncident', {
                 method : 'POST',
                 headers: {
                     "Accept": "application/json",
@@ -136,7 +136,7 @@ const ClientAddIncident = ({ history }) => {
             }
 
             let data = await response.json();
-            history.push('/incident/'+ data);
+            history.push('/incident/GetIncidentByIncidentId'+ data);
         } catch(e) {
             console.error(e);
         }
