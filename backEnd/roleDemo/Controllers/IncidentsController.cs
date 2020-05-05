@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace labourRecruitment.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class IncidentsController : ControllerBase
     {
@@ -84,6 +84,21 @@ namespace labourRecruitment.Controllers
                 }).ToList();
 
             return incident;
+        }
+
+       
+        [HttpGet("{jobId}", Name = "GetIncidentsByJobId")]       
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetIncidentsByJobId(int jobId)
+        { 
+       
+            var incident = _context.IncidentReport.Where(j => j.JobId == jobId).ToListAsync();
+
+            if (incident == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(incident);
         }
 
 
