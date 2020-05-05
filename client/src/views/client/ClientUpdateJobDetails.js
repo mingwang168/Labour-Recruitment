@@ -100,7 +100,18 @@ const ClientUpdateJobDetails = (props) => {
     }
 
     const validateForm = e => {
-        console.log("Validating form...")
+        e.preventDefault();
+        let errors = [];
+
+       
+        if(province === "") {
+            errors.push("Province is required.");
+        }
+        if(errors.length) {
+            setFormErrors(errors);
+        } else {
+            submitForm();
+        }
     }
 
     useEffect(() => {
@@ -140,6 +151,14 @@ const ClientUpdateJobDetails = (props) => {
             {/* Form */}
             <div className="card">
             <div className="card-body">
+            {/* Display form errors, if any */}
+            { formErrors.length > 0 &&
+            <div className="alert alert-danger">
+            <ul className="pl-3 mb-0">
+            { formErrors.map((error, i) => <li key={i}>{error}</li>) }
+            </ul>
+            </div>
+            }
             <form className="client-add-job-form">
                 <div className="form-group mb-4">
                     <label htmlFor="title">Job Title <span className="text-danger">*</span></label>
@@ -230,7 +249,7 @@ const ClientUpdateJobDetails = (props) => {
                 <div className="form-group row text-right mt-4">
                 <div className="col col-lg-12">
                     <Link to="/dashboard" className="btn btn-space btn-light btn-lg">Cancel</Link>
-                    <button onClick={submitForm} className="btn btn-space btn-primary btn-lg">Save Changes</button>
+                    <button onClick={validateForm} className="btn btn-space btn-primary btn-lg">Save Changes</button>
                 </div>
                 </div>
   
