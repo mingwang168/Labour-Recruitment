@@ -25,7 +25,7 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Incidents
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncident()
+        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetAllIncidents()
         {
             var reports = await _context.IncidentReport.ToListAsync();
             foreach (IncidentReport report in reports)
