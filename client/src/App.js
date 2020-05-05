@@ -87,7 +87,7 @@ class App extends Component {
         <ProtectedRoute exact path='/addincident' act component={ClientAddIncident} />
 
 		{/* Labourer Views */}
-        <ProtectedRoute exact path='/profile/labourer' component={LabourerProfile} />
+		
 
 		{/* Admin Views */}
 		<ProtectedRoute exact path='/admin/jobs' component={AdminJobs} />
