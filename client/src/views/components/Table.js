@@ -108,20 +108,21 @@ const Table = ({ columns, data, history, path, itemsPerPage, searchable }) => {
                 <tr {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map(column => (
                     <th {...column.getHeaderProps()}>
-                      {column.render("Header")}
+                        {column.render("Header")}
                     </th>
                   ))}
                 </tr>
               ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-              {page.map((row, i) => {
+                {page.map((row, i) => {
                 prepareRow(row);
                 return (
-                  <tr
-                    onClick={() => path && viewDetails(row.original.id)}
-                    {...row.getRowProps()}
-                    style={{cursor:'pointer'}}>
+                    <tr
+                        onClick={() => path && viewDetails(row.original.id)}
+                        {...row.getRowProps()}
+                        style={{cursor:'pointer'}}
+                    >
                     {row.cells.map((cell, i) => {
 
                         // Check if colored badge needs to be rendered
@@ -135,7 +136,7 @@ const Table = ({ columns, data, history, path, itemsPerPage, searchable }) => {
 
                         return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
                     })}
-                  </tr>
+                    </tr>
                 );
               })}
             </tbody>
