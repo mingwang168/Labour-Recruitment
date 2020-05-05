@@ -23,7 +23,7 @@ const ClientUpdateJobDetails = (props) => {
         city: "",
         duration: ""
     })
-    const { title, startdate, enddate, jobdescription, address, province, city, duration } = job;
+    const { title, startdate, enddate, description, address, province, city, duration } = job;
     const onChange = e => {
         e.preventDefault();
         setJob( {...job , [e.target.name]: e.target.value})
@@ -40,7 +40,7 @@ const ClientUpdateJobDetails = (props) => {
         let newJob = {
             ClientId: id,
             Title: title,
-            JobDescription: jobdescription,
+            JobDescription: description,
             StartDate: startdate,
             EndDate: enddate,
             Street: address,
