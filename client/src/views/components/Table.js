@@ -57,7 +57,7 @@ const Pagination = ({
     );
 }
 
-const Table = ({ columns, data, history, path, itemsPerRow, searchable }) => {
+const Table = ({ columns, data, history, path, itemsPerPage, searchable }) => {
 
     const {
         getTableProps,
@@ -78,7 +78,7 @@ const Table = ({ columns, data, history, path, itemsPerRow, searchable }) => {
         {
           columns,
           data,
-          initialState: {pageIndex: 0, pageSize: itemsPerRow ? itemsPerRow : 10}
+          initialState: {pageIndex: 0, pageSize: itemsPerPage ? itemsPerPage : 10}
         },
         useGlobalFilter,
         usePagination

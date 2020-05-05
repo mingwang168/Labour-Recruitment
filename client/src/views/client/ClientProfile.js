@@ -201,7 +201,7 @@ const ClientProfile = (props) => {
                             <Table
                                 columns={JOBS_TABLE_COLUMNS}
                                 data={jobs}
-                                itemsPerRow={5}
+                                itemsPerPage={5}
                                 path={'/job'}
                                 searchable={false}
                                 {...props}
