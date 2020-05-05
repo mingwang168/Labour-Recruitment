@@ -5,6 +5,8 @@ import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
 
 import Table from '../components/Table';
+import PageHeader from '../components/PageHeader';
+
 import { JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
@@ -40,24 +42,13 @@ const ClientDashboard = (props) => {
     <div className="row">
     <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 
-        {/* Page Header */}
-        <div className="page-header">
-            <h2 className="pageheader-title">
-                Welcome back, {props.name}!
-            </h2>
-            <div className="page-breadcrumb">
-            <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-                <li className="breadcrumb-item">
-                    <Link to="/dashboard" className="breadcrumb-link">Dashboard</Link>
-                </li>
-                <li className="breadcrumb-item active" aria-current="page">
-                    Client Dashboard
-                </li>
-            </ol>
-            </nav>
-            </div>
-        </div>
+        <PageHeader
+            title={`Welcome back, ${props.name}!`}
+            breadcrumbs={[
+                { name: "Home", path: "/dashboard" },
+                { name: "Client Dashboard" }
+            ]}
+        />
         
         {/* Stats */}
         <div className="row">
@@ -128,7 +119,8 @@ const ClientDashboard = (props) => {
             <Table
                 columns={JOBS_TABLE_COLUMNS}
                 data={jobs}
-                path={'/job'}
+                path="/job"
+                searchable={true}
                 {...props}
             />
             :
