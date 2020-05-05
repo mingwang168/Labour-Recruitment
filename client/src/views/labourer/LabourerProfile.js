@@ -26,7 +26,7 @@ const LabourerProfile = (props) => {
     const [labourer, setLabourer] = useState();
     const [jobs, setJobs] = useState();
 
-    const fetchLabourerProfile = async(id) => {
+    const fetchProfileData = async(id) => {
         // Fetch profile data
         try {
             let response = await fetch(BASE_URL + `/LabourerProfile/${id}`, {
@@ -254,7 +254,7 @@ const LabourerProfile = (props) => {
             // Check if user is: an administrator,
             // or the labourer who owns this profile
             if(isAuthorized) {
-                fetchLabourerProfile(id);
+                fetchProfileData(id);
                 setIsProfileOwner(Auth.authenticateLabourer() && id === Auth.getID());
             }
 
