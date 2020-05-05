@@ -28,7 +28,6 @@ const AdminLabourers = (props) => {
             });
 
             if(response.status !== 200) {
-                setLoaded(true);
                 throw response;
             }
 
@@ -36,14 +35,11 @@ const AdminLabourers = (props) => {
 
             if(data && data.length) {
                 setLabourers(DataSanitizer.cleanLabourersData(data));
-                setLoaded(true);
-            } else {
-                setLoaded(true);
             }
         } catch(e) {
-            setLoaded(true);
             console.error(e);
         }
+        setLoaded(true);
     }
 
     useEffect(() => {
