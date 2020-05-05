@@ -17,11 +17,11 @@ const BASE_URL = "http://localhost:5001/api";
 const JobDetail = (props) => {
 
     const [details, setDetails] = useState();
+    const [incident, setIncidents] = useState();
     const [attendanceDates, setAttendanceDates] = useState();
 
     const fetchJobDetails = async(id) => {
-        let token = Auth.getToken();
-
+       
         // Job details
         try {
             let response = await fetch(BASE_URL + '/job/getJob/' + id , {
@@ -29,11 +29,10 @@ const JobDetail = (props) => {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${ Auth.getToken()}`
                 }
             })
             let data = await response.json();
-            console.log(data)
             setDetails(data);
         } catch (err) {
             console.error(err);
@@ -57,14 +56,33 @@ const JobDetail = (props) => {
         }
     }
 
+    const fetchIncidentReports = async(id) => {
+        try {
+            let response = await fetch(BASE_URL + '/incidents/GetIncidentsByJobId/' + id, {
+                method : 'GET',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            })
+            let data = await response.json();
+            setIncidents(data);
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     useEffect(() => {
         if(props.match.params.id) {
             if(Number.isInteger(Number(props.match.params.id))) {
                 fetchJobDetails(props.match.params.id);
+                fetchIncidentReports(props.match.params.id)
             }
         }
     }, [props.match.params.id])
-
+    console.log(incident)
     return (
     <>
     <div className="dashboard-main-wrapper">
