@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
@@ -37,6 +37,7 @@ const ClientUpdateJobDetails = (props) => {
             })
             let data = await response.json();
             setJob({
+                clientId : data.clientId,
                 title : data.title,
                 startdate : data.startDate,
                 enddate : data.endDate,
@@ -62,8 +63,8 @@ const ClientUpdateJobDetails = (props) => {
         let token = Auth.getToken();
         let id = Auth.getID();
 
-        let newJob = {
-            ClientId: id,
+        let editJob = {
+            ClientId: job.clientId,
             Title: title,
             JobDescription: description,
             StartDate: startdate,
@@ -73,29 +74,36 @@ const ClientUpdateJobDetails = (props) => {
             State: province,
         }
 
-        try {
-            let response = await fetch(BASE_URL + '/job/PutJob/' + props.match.params.id, {            
-                'method': 'PUT',
-                'headers': {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(newJob)
-            })
+        if (Auth.getID() != editJob.ClientId) {
+            console.log(Auth.getID())
+            console.log(editJob.ClientId)
+            setFormErrors(["Failed to edit job. You are not allowed to edit the job."]);
+            return <Redirect to={{pathname: '/dashboard'}} />
+        } else {
+            try {
+                let response = await fetch(BASE_URL + '/job/PutJob/' + props.match.params.id, {            
+                    'method': 'PUT',
+                    'headers': {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(editJob)
+                })
 
-            // Bad response
-            if(response.status !== 200) {
-                setFormErrors(["Failed to post job. Please try again later."]);
-                throw response;
+                // Bad response
+                if(response.status !== 200) {
+                    setFormErrors(["Failed to edit job. Please try again later."]);
+                    throw response;
+                }
+
+                // Success
+                let data = await response.json();
+                console.log(data)
+                props.history.push('/job/' + data);
+            } catch(e) {
+                console.error(e);
             }
-
-            // Success
-             let data = await response.json();
-             console.log(data)
-             props.history.push('/job/' + data);
-        } catch(e) {
-            console.error(e);
         }
     }
 
@@ -121,8 +129,7 @@ const ClientUpdateJobDetails = (props) => {
             }
         }
     }, [props.match.params.id])
-
-
+ 
     return (
         <div className="dashboard-main-wrapper">
         <TopNav />
