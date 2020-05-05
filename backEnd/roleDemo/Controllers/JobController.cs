@@ -172,7 +172,7 @@ namespace labourRecruitment.Controllers
                 }
             }
 
-            return new ObjectResult(job);
+            return new ObjectResult(id);
         }
 
         private bool JobExists(int id)

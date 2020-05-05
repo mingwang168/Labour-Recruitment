@@ -93,7 +93,7 @@ const ClientUpdateJobDetails = (props) => {
             // Success
              let data = await response.json();
              console.log(data)
-            // props.history.push('/job/' + data);
+             props.history.push('/job/' + data);
         } catch(e) {
             console.error(e);
         }
