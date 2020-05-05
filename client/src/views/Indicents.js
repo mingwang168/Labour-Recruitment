@@ -13,7 +13,7 @@ const Incidents = () => {
     const fetchIncidents = async() => {
         let token = Auth.getToken()
         try {
-            let response = await fetch(BASE_URL + "/incidents" , {
+            let response = await fetch(BASE_URL + "/Incidents/GetAllIncidents" , {
                 method : "GET",
                 headers: {
                     "Accept": "application/json",
@@ -21,6 +21,11 @@ const Incidents = () => {
                     "Authorization": `Bearer ${token}`
                 }
             })
+
+            if(response.status !== 200) {
+                throw response;
+            }
+            
             let data = await response.json()
             console.log(data)
             setIncidents(data)
