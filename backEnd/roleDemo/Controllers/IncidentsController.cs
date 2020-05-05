@@ -102,6 +102,37 @@ namespace labourRecruitment.Controllers
         }
 
 
+
+        [HttpGet("{labourerId}", Name = "GetIncidentsByLabourerId")]
+        public IActionResult GetIncidentsByLabourerId(int labourerId)
+        {
+            var incident = _context.LabourerIncidentReport.Where(l => l.LabourerId == labourerId).
+                Select(l => new IncidentVM
+                {
+                    IncidentReportId = l.IncidentReportId,
+                    IncidentReportDate = l.IncidentReport.IncidentReportDate,
+                    IncidentType = l.IncidentReport.IncidentType.IncidentTypeName,
+                    JobTitle = l.IncidentReport.Job.Title
+
+                }).ToList();
+
+            if (incident == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(incident);
+        }
+
+        public class IncidentVM
+        {
+            public int? IncidentReportId { get; set; }
+            public DateTime? IncidentReportDate { get; set; }
+            public string IncidentType { get; set; }
+            public string JobTitle { get; set; }
+        }
+
+
+
         //// POST: api/Incidents
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
