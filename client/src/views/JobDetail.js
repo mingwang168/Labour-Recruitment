@@ -178,7 +178,7 @@ const JobDetail = (props) => {
                             columns={ATTENDANCE_DATES_TABLE_COLUMNS}
                             data={attendanceDates}
                             path={`/job/${props.match.params.id}/attendance`}
-                            itemsPerRow={5}
+                            itemsPerPage={5}
                             {...props}
                         />
                         }

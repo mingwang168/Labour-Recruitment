@@ -69,7 +69,7 @@ const AdminIncidents = (props) => {
                 <div className="row">
                 <div className="col">
                 <div className="card">
-                <h5 className="card-header">All Labourers</h5>
+                <h5 className="card-header">Incidents</h5>
                 <div className="card-body">
                     { incidents ?
                     <Table
