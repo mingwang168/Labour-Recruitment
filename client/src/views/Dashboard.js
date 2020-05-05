@@ -18,7 +18,7 @@ const Dashboard = (props) => {
         null
     );
 
-    return !dashboard ? Auth.forceLogout() : <Layout content={dashboard && dashboard} />;
+    return !dashboard ? Auth.forceLogout() : <Layout content={dashboard} />;
 }
 
 export default Dashboard;
