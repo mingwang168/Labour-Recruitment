@@ -49,7 +49,7 @@ namespace labourRecruitment.Controllers
         }
 
         // GET: api/Incidents/5
-        [HttpGet("{id}", Name="GetIncidentByIncidenId")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<IncidentReport>> GetIncidentByIncidentId(int id)
         {
             var incident = await _context.IncidentReport.FindAsync(id);
@@ -86,17 +86,19 @@ namespace labourRecruitment.Controllers
             return incident;
         }
 
-<<<<<<< HEAD
-        
-        // POST: api/Incidents
-=======
-       
-        [HttpGet("{jobId}", Name = "GetIncidentsByJobId")]       
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("{jobId}")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetIncidentsByJobId(int jobId)
-        { 
-       
-            var incident = _context.IncidentReport.Where(j => j.JobId == jobId).ToListAsync();
+        {
+
+            var incident = _context.IncidentReport.Where(j => j.JobId == jobId).Select(i => new IncidentReport {
+                IncidentReportId = i.IncidentReportId,
+                IncidentReportDate = i.IncidentReportDate, 
+                IncidentType = i.IncidentType,
+                LabourerIncidentReport = i.LabourerIncidentReport
+
+            }).ToList();
+           
 
             if (incident == null)
             {
@@ -107,7 +109,6 @@ namespace labourRecruitment.Controllers
 
 
         //// POST: api/Incidents
->>>>>>> 48a5f1786a3e9f23daffb43d4b5e37479b8adb97
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostIncident(IncidentReportVM report)
