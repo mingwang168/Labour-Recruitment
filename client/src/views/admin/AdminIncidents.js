@@ -18,16 +18,20 @@ const AdminIncidents = (props) => {
 
     const fetchIncidents = async() => {
         try {
-            let response = await fetch(BASE_URL + "/Incidents", {
+            let response = await fetch(BASE_URL + "/Incidents/GetAllIncidents", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${Auth.getToken()}`
                 }
             });
 
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
+
             if(data.length) {
-                console.log(data)
                 setIncidents(DataSanitizer.cleanIncidentsData(data));
             }
         } catch(e) {
