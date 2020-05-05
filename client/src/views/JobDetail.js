@@ -17,7 +17,7 @@ const BASE_URL = "http://localhost:5001/api";
 const JobDetail = (props) => {
 
     const [details, setDetails] = useState();
-    const [incident, setIncidents] = useState();
+    const [incidents, setIncidents] = useState();
     const [attendanceDates, setAttendanceDates] = useState();
 
     const fetchJobDetails = async(id) => {
@@ -67,7 +67,7 @@ const JobDetail = (props) => {
                 }
             })
             let data = await response.json();
-            setIncidents(data);
+            setIncidents(DataSanitizer.cleanIncidentsData(data));
 
         } catch (err) {
             console.error(err);
@@ -82,7 +82,7 @@ const JobDetail = (props) => {
             }
         }
     }, [props.match.params.id])
-    console.log(incident)
+    console.log(incidents)
     return (
     <>
     <div className="dashboard-main-wrapper">
@@ -163,22 +163,20 @@ const JobDetail = (props) => {
                     <div className="card">
                     <h5 className="card-header">Incident Reports</h5>
                     <div className="card-body">
-                    <table className="table table-bordered job-incidents-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Reports</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><time>Mar 3, 2020</time></td>
-                            <td><span className="badge badge-danger">Required</span></td>
-                            <td><Link to="/incident" className="badge badge-light">View Details</Link></td>
-                        </tr>
-                    </tbody>
-                    </table>
+                    { !incidents ? <p className="text-danger">No incident reports to display.</p> :
+                        <Table 
+                            data={incidents}
+                            columns={[
+                            { Header: 'Date', accessor: 'date' },
+                            { Header: 'Incident Type', accessor: 'type' },
+                            { Header: '# Affected', accessor: 'affected' },
+                            ]}
+                            path={"/incident"}
+                            itemsPerPage={5}
+                            searchable={false}
+                            {...props}
+                        />
+                    }
                     </div>
                     </div>
                 </div>
