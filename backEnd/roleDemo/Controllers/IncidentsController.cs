@@ -86,8 +86,28 @@ namespace labourRecruitment.Controllers
             return incident;
         }
 
+<<<<<<< HEAD
         
         // POST: api/Incidents
+=======
+       
+        [HttpGet("{jobId}", Name = "GetIncidentsByJobId")]       
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetIncidentsByJobId(int jobId)
+        { 
+       
+            var incident = _context.IncidentReport.Where(j => j.JobId == jobId).ToListAsync();
+
+            if (incident == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(incident);
+        }
+
+
+        //// POST: api/Incidents
+>>>>>>> 48a5f1786a3e9f23daffb43d4b5e37479b8adb97
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostIncident(IncidentReportVM report)
