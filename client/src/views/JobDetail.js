@@ -152,9 +152,11 @@ const JobDetail = (props) => {
                             <h3 className="font-16">Total Hired</h3>
                             <p>{details.totalHired} labourer(s) hired</p>
                         </div>
+                        { details.clientId == Auth.getID() ?
                         <div className="card-body border-top">
                             <Link to={`/editjob/${details.jobId}`} className="btn btn-light">Edit Job Details</Link>
-                        </div>
+                        </div> : null
+                        }
                     </div>
 
                     {/* Incidents */}

@@ -78,7 +78,6 @@ const ClientUpdateJobDetails = (props) => {
             console.log(Auth.getID())
             console.log(editJob.ClientId)
             setFormErrors(["Failed to edit job. You are not allowed to edit the job."]);
-            return <Redirect to={{pathname: '/dashboard'}} />
         } else {
             try {
                 let response = await fetch(BASE_URL + '/job/PutJob/' + props.match.params.id, {            
