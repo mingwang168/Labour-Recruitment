@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
-import SelectWorkers from '../components/SelectLabourers';
 import * as Auth from '../../utils/Auth';
 import Select from 'react-select';
 import PROVINCES from '../../utils/staticdata/Provinces';
@@ -23,7 +22,33 @@ const ClientUpdateJobDetails = (props) => {
         city: "",
         duration: ""
     })
-    const { title, startdate, enddate, description, address, province, city, duration } = job;
+    const { title, startdate, enddate, description, address, province, city } = job;
+
+    const fetchJobDetails = async(id) => {
+       
+        try {
+            let response = await fetch(BASE_URL + '/job/getJob/' + id , {
+                method : 'GET',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${ Auth.getToken()}`
+                }
+            })
+            let data = await response.json();
+            setJob({
+                title : data.title,
+                startdate : data.startDate,
+                enddate : data.endDate,
+                description : data.jobDescription,
+                address : data.street,
+                city : data.city
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     const onChange = e => {
         e.preventDefault();
         setJob( {...job , [e.target.name]: e.target.value})
@@ -78,7 +103,15 @@ const ClientUpdateJobDetails = (props) => {
         console.log("Validating form...")
     }
 
-    
+    useEffect(() => {
+        if(props.match.params.id) {
+            if(Number.isInteger(Number(props.match.params.id))) {
+                fetchJobDetails(props.match.params.id);
+            }
+        }
+    }, [props.match.params.id])
+
+
     return (
         <div className="dashboard-main-wrapper">
         <TopNav />
@@ -114,6 +147,7 @@ const ClientUpdateJobDetails = (props) => {
                         required
                         name="title"
                         type="text"
+                        value={ title }
                         placeholder="Enter job title"
                         className="form-control form-control-lg"
                         onChange={e => onChange(e)}
@@ -135,6 +169,7 @@ const ClientUpdateJobDetails = (props) => {
                         <input
                             required
                             name="enddate"
+                            value={ enddate }
                             type="date"
                             className="form-control form-control-lg"
                             onChange={e => onChange(e)}
@@ -147,6 +182,7 @@ const ClientUpdateJobDetails = (props) => {
                     <textarea
                         name="description"
                         type="text"
+                        value={ description }
                         placeholder="Enter job description"
                         rows="3"
                         className="form-control form-control-lg"
@@ -160,6 +196,7 @@ const ClientUpdateJobDetails = (props) => {
                             required
                             name="address"
                             type="text"
+                            value={ address }
                             placeholder="Enter address"
                             className="form-control form-control-lg"
                             onChange={e => onChange(e)}
@@ -182,6 +219,7 @@ const ClientUpdateJobDetails = (props) => {
                             maxLength="30"
                             name="city"
                             type="text"
+                            value={ city }
                             placeholder="Enter city"
                             className="form-control form-control-lg"
                             onChange={e => onChange(e)}
