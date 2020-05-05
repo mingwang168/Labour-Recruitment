@@ -146,17 +146,18 @@ namespace labourRecruitment.Controllers
 
         // PUT: api/Job/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutJob(int id, Job job)
+        public async Task<IActionResult> PutJob(int id, [FromBody]Job job)
         {
-            if (id != job.JobId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(job).State = EntityState.Modified;
+           
+            var jobSelected = _context.Job.Where(j => j.JobId == id).FirstOrDefault();
 
             try
             {
+                jobSelected.Title = job.Title;
+                jobSelected.JobDescription = job.JobDescription;
+                jobSelected.Street = job.Street;
+                jobSelected.State = job.State;
+                jobSelected.City = job.City;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

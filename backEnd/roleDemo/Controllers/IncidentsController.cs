@@ -93,7 +93,8 @@ namespace labourRecruitment.Controllers
 
             var incident = _context.IncidentReport.Where(j => j.JobId == jobId).Select(i => new IncidentReport {
                 IncidentReportId = i.IncidentReportId,
-                IncidentReportDate = i.IncidentReportDate, 
+                IncidentReportDate = i.IncidentReportDate,
+                Job = i.Job,
                 IncidentType = i.IncidentType,
                 LabourerIncidentReport = i.LabourerIncidentReport
 

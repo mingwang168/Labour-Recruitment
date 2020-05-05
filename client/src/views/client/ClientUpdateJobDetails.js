@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import TopNav from '../components/TopNav';
@@ -12,79 +12,73 @@ const BASE_URL = "http://localhost:5001/api";
 
 const ClientUpdateJobDetails = (props) => {
 
+    const [formErrors, setFormErrors] = useState([]);
     const [job, setJob] = useState({
-        "Title" : "",
-        "JobDescription" : "",
-        "StartDate" : "",
-        "EndDate" : "",
-        "InProgress" : true , 
-		"IsComplete" :  false, 
-        "Street" : "",
-        "City" : "",
-        "State" : "",
+        title: "",
+        startdate: "",
+        enddate: "",
+        jobdescription: "",
+        address: "",
+        province: "",
+        city: "",
+        duration: ""
     })
-
-    
-    const [jobSkills, setJobSkills] = useState([])
-  
-    const {title,startdate,enddate,description,address,province,city} = job
-
+    const { title, startdate, enddate, jobdescription, address, province, city, duration } = job;
     const onChange = e => {
         e.preventDefault();
         setJob( {...job , [e.target.name]: e.target.value})
     }
 
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        let token = sessionStorage.getItem("auth_token");
-        let id
-        if(sessionStorage.getItem("user_id") && sessionStorage.getItem("user_role") !== 'Labourer'){
-            id = sessionStorage.getItem("user_id")
-        } else {
-            Auth.forceLogout()
-            return
-        }
+    const onChangeProvince = e => {
+        setJob({ ...job, province: e.label })
+    }
+
+    const submitForm = async () => {
+        let token = Auth.getToken();
+        let id = Auth.getID();
 
         let newJob = {
-            "ClientId" : id,
-            title,
-            "jobDescription" : description,
-            startdate,
-            enddate,
-            "InProgress" : true , 
-            "IsComplete" :  false, 
-            "street" : address,
-            city,
-            "state" : province
+            ClientId: id,
+            Title: title,
+            JobDescription: jobdescription,
+            StartDate: startdate,
+            EndDate: enddate,
+            Street: address,
+            City: city,
+            State: province,
         }
 
         try {
-            let response = await fetch(BASE_URL + '/job/' + props.match.params.id, {            
+            let response = await fetch(BASE_URL + '/job/PutJob/' + props.match.params.id, {            
                 'method': 'PUT',
                 'headers': {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({"Job": newJob, "JobSkill": jobSkills})
+                body: JSON.stringify(newJob)
             })
 
-            let data = await response.json();
-            if(data){
-                props.history.push('/job/' + data.jobId);
-                window.location.reload();
+            // Bad response
+            if(response.status !== 200) {
+                setFormErrors(["Failed to post job. Please try again later."]);
+                throw response;
             }
 
-        } catch (e){
-            console.error(e)
+            // Success
+             let data = await response.json();
+             console.log(data)
+            // props.history.push('/job/' + data);
+        } catch(e) {
+            console.error(e);
         }
     }
 
-    
-    const validateForm = _ => {
+    const validateForm = e => {
         console.log("Validating form...")
     }
 
+    
     return (
         <div className="dashboard-main-wrapper">
         <TopNav />
@@ -113,7 +107,7 @@ const ClientUpdateJobDetails = (props) => {
             {/* Form */}
             <div className="card">
             <div className="card-body">
-            <form className="client-add-job-form" onSubmit={(e) => onSubmit(e)}>
+            <form className="client-add-job-form">
                 <div className="form-group mb-4">
                     <label htmlFor="title">Job Title <span className="text-danger">*</span></label>
                     <input
@@ -177,34 +171,28 @@ const ClientUpdateJobDetails = (props) => {
                             required
                             name="province"
                             options={PROVINCES}
-                            onChange={e => onChange(e)}
+                            onChange={e => onChangeProvince(e)}
                         />
                             
                     </div>
                     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
                         <label htmlFor="city">City <span className="text-danger">*</span></label>
-                        <select
+                        <input
                             required
+                            maxLength="30"
                             name="city"
+                            type="text"
+                            placeholder="Enter city"
                             className="form-control form-control-lg"
                             onChange={e => onChange(e)}
-                        >
-                            <option defaultValue="" disabled>Select city</option>
-                            <option value="toronto">Toronto</option>
-                            <option value="montreal">Montreal</option>
-                            <option value="vancouver">Vancouver</option>
-                            <option value="ottawa">Ottawa</option>
-                            <option value="calgary">Calgary</option>
-                        </select>
+                        />
                     </div>
                 </div>
 
-                
-               
                 <div className="form-group row text-right mt-4">
                 <div className="col col-lg-12">
                     <Link to="/dashboard" className="btn btn-space btn-light btn-lg">Cancel</Link>
-                    <button onClick={() => validateForm()} className="btn btn-space btn-primary btn-lg">Create New Job</button>
+                    <button onClick={submitForm} className="btn btn-space btn-primary btn-lg">Save Changes</button>
                 </div>
                 </div>
   
