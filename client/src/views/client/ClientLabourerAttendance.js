@@ -10,12 +10,16 @@ import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
 
 import { ATTENDANCE_RATINGS_TABLE_COLUMNS } from '../../utils/TableColumns';
+import RateWorkers from '../components/RateWorkers';
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientLabourerAttendance = (props) => {
 
     const [list, setList] = useState();
 
+    const changeRating = () => {
+
+    }
     const getList = async(id, date) => {
         try {
             const response = await fetch(BASE_URL + `/LabourerAttendance/data?jobId=${id}&date=${date}`, {
@@ -39,7 +43,7 @@ const ClientLabourerAttendance = (props) => {
             getList(props.match.params.id, date);
         }
     }, [])
-
+    console.log(list)
     return (
     <div className="dashboard-main-wrapper">
         <TopNav />
@@ -69,7 +73,7 @@ const ClientLabourerAttendance = (props) => {
                             data={list}
                             {...props}
                         />
-                    } 
+                   } 
                    </div>
                </div>
                 

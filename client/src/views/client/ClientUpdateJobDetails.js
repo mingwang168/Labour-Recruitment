@@ -39,8 +39,6 @@ const ClientUpdateJobDetails = (props) => {
             setJob({
                 clientId : data.clientId,
                 title : data.title,
-                startdate : data.startDate,
-                enddate : data.endDate,
                 description : data.jobDescription,
                 address : data.street,
                 city : data.city
@@ -61,14 +59,11 @@ const ClientUpdateJobDetails = (props) => {
 
     const submitForm = async () => {
         let token = Auth.getToken();
-        let id = Auth.getID();
-
+        
         let editJob = {
             ClientId: job.clientId,
             Title: title,
             JobDescription: description,
-            StartDate: startdate,
-            EndDate: enddate,
             Street: address,
             City: city,
             State: province,
@@ -177,30 +172,6 @@ const ClientUpdateJobDetails = (props) => {
                         className="form-control form-control-lg"
                         onChange={e => onChange(e)}
                     />
-                </div>
-                <div className="form-row mb-4">
-                    <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                        <label htmlFor="startdate">Start Date <span className="text-danger">*</span></label>
-                        <input
-                            required
-                            name="startdate"
-                            type="date"
-                            className="form-control form-control-lg"
-                            onChange={e => onChange(e)}
-                        />
-                    </div>
-                    <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-2">
-                    <label htmlFor="enddate">End Date <span className="text-danger">*</span></label>
-                        <input
-                            required
-                            name="enddate"
-                            value={ enddate }
-                            type="date"
-                            className="form-control form-control-lg"
-                            onChange={e => onChange(e)}
-                        />
-                    </div>
-                    
                 </div>
                 <div className="form-group mb-4">
                     <label htmlFor="description">Job Description</label>

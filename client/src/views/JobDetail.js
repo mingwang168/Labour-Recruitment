@@ -232,7 +232,7 @@ const JobDetail = (props) => {
                     </div>
 
                     {/* Safety Ratings */}
-                    <div className="card" id="safetyratings">
+                    {/* <div className="card" id="safetyratings">
                         <h5 className="card-header">Safety Ratings</h5>
                         <div className="card-body">
                             <p>Give hired labourers a rating, based on their safety-wise performance on this job.</p>
@@ -262,7 +262,7 @@ const JobDetail = (props) => {
                             </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             </>
