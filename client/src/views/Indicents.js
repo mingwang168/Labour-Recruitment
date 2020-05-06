@@ -6,8 +6,9 @@ import * as DataSanitizer from '../utils/DataSanitizer';
 
 import Layout from './components/Layout';
 import PageHeader from './components/PageHeader';
-import Loader from './components/Loader';
 import Table from './components/Table';
+import Loader from './components/Loader';
+import ErrorMessage from './components/ErrorMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -100,6 +101,7 @@ const Incidents = (props) => {
         </div>
         <div className="card-body">
             <Loader loaded={loaded}>
+                { !incidents ? <ErrorMessage message={"No incidents to display."} /> :
                 <Table
                     data={incidents}
                     columns={incidentsTableColumns}
@@ -108,6 +110,7 @@ const Incidents = (props) => {
                     striped={true}
                     {...props}
                 />
+                }
             </Loader>
         </div>
     </div>
