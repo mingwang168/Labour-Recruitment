@@ -23,14 +23,7 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        public class IncidentVM
-        {
-            public int? IncidentReportId { get; set; }
-            public DateTime? IncidentReportDate { get; set; }
-            public string IncidentType { get; set; }
-            public string JobTitle { get; set; }
-        }
-
+       
         // GET: api/Incidents
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IncidentReport>>> GetAllIncidents()
