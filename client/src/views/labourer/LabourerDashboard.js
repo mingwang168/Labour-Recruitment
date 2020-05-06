@@ -47,6 +47,7 @@ const LabourerDashboard = (props) => {
             
             // Process response data
             let data = await response.json();
+
             if(data.length) {
                 let formattedData = data.map(d => ({
                     id: d.jobId,
@@ -65,6 +66,7 @@ const LabourerDashboard = (props) => {
                 ]);
                 setAssignedJobsStat(data.length);
             }
+
         } catch (e) {
             console.error(e);
         }
@@ -126,7 +128,6 @@ const LabourerDashboard = (props) => {
 
     return (
     <Loader loaded={loaded}>
-    { !jobs ? <ErrorMessage message={"No data available."} /> : 
     <div className="row">
     <div className="col-12">
 
@@ -139,6 +140,10 @@ const LabourerDashboard = (props) => {
             ]}
         />
 
+        { !jobs ? <ErrorMessage message={"You have not been assigned any jobs yet."} /> :
+        <>
+
+        {/* Warning for low ratings */}
         {
             (overallRatingStat && overallRatingStat <= 70) &&
             <ErrorMessage
@@ -149,7 +154,6 @@ const LabourerDashboard = (props) => {
                 }
             />
         }
-        
         
         {/* Stats */}
         <div className="row">
@@ -228,10 +232,10 @@ const LabourerDashboard = (props) => {
         </div>
         </div>
         </div>
-
-    </div>
-    </div>
+    </>
     }
+    </div>
+    </div>
     </Loader>
     );
 }
