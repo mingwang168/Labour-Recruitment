@@ -14,10 +14,13 @@ const BASE_URL = "http://localhost:5001/api";
 const Incidents = (props) => {
 
     // Authorization
-    const [authorized] = useState(Auth.authenticateClient() || Auth.authenticateLabourer());
+    const [authorized] = useState(
+        Auth.authenticateClient() || Auth.authenticateLabourer()
+    );
 
     // Component
     const [loaded, setLoaded] = useState(false);
+    const [isClient, setIsClient] = useState(false);
 
     // Data
     const [incidents, setIncidents] = useState();
@@ -84,6 +87,7 @@ const Incidents = (props) => {
     <div className="card">
         <div className="card-header d-flex">
             <h4 className="card-header-title">Incidents</h4>
+            { isClient &&
             <div className="toolbar ml-auto">
                 <Link
                     to="/addincident"
@@ -92,6 +96,7 @@ const Incidents = (props) => {
                     Add New
                 </Link>
             </div>
+            }
         </div>
         <div className="card-body">
             <Loader loaded={loaded}>
@@ -112,7 +117,10 @@ const Incidents = (props) => {
     );
 
     useEffect(() => {
-        if(authorized) fetchIncidents(Auth.getID());
+        if(authorized) {
+            fetchIncidents(Auth.getID());
+            setIsClient(Auth.authenticateClient());
+        }
     }, [])
 
     return <Layout content={content} />;
