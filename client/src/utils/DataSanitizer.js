@@ -98,7 +98,8 @@ exports.cleanAttendanceRatingsData = (data) => {
         sanitizedData.push({
             name: `${d.labourer.labourerFirstName} ${d.labourer.labourerLastName}`,
             rating: d.dailyQualityRating,
-            labourerId : d.labourer.labourerId
+            labourerId : d.labourer.labourerId,
+            clientId: d.job.clientId
         })
     });
 

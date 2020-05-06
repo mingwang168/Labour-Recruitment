@@ -55,7 +55,6 @@ const ClientLabourerAttendance = (props) => {
                 }
             })
             let data = await response.json();
-            console.log(data)
             setList(DataSanitizer.cleanAttendanceRatingsData(data));
         } catch (err) {
             console.error(err);
@@ -111,7 +110,7 @@ const ClientLabourerAttendance = (props) => {
                                     <tr key = {i}>
                                         <td>{l.name}</td>
                                         <td>
-                                            <RateWorkers  changeRating={changeRating} rating={l.DailyQualityRating} />
+                                            <RateWorkers  changeRating={changeRating} rating={l.DailyQualityRating} clientId={l.clientId} />
                                         </td>
                                     </tr>
                                 ))
