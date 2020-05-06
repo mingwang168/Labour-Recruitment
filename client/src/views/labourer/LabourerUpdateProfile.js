@@ -1,171 +1,337 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
-import DAYS from '../../utils/staticdata/Days';
-import Select from 'react-select';
+import * as Auth from '../../utils/Auth';
+import * as FormValidator from '../../utils/FormValidator';
 
+import Select from 'react-select';
+import PageHeader from '../components/PageHeader';
+import Loader from '../components/Loader';
+import FormErrors from '../components/FormErrors';
+import ErrorMessage from '../components/ErrorMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
-
 const LabourerUpdateProfile = (props) => {
 
-    const validateForm = _ => {
-        console.log("Validating form...")
+    // Authorization
+    const [id] = useState(Auth.getID());
+
+    // Component
+    const [loaded, setLoaded] = useState();
+    const [profileExists, setProfileExists] = useState(false);
+    const [skillOptions, setSkillOptions] = useState();
+    const [formErrors, setFormErrors] = useState([]);
+
+    // Form Data
+    const [selectedSkills, setSelectedSkills] = useState([]);
+    const [formData, setFormData] = useState({
+        firstname: "",
+        lastname: "",
+        email: "",
+        isAvailable: null
+    });
+
+    const {
+        firstname,
+        lastname,
+        email,
+        isAvailable
+    } = formData;
+
+    const fetchProfileData = async() => {
+        try {
+            const URI = BASE_URL + `/LabourerProfile/${id}`;
+            let response = await fetch(URI, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${Auth.getToken()}`
+                }
+            });
+            
+            if(response.status !== 200) {
+                throw response;
+            }
+    
+            let data = await response.json();
+
+            if(data.labourer) {
+                setProfileExists(true);
+
+                // Set profile data
+                let profile = data.labourer;
+                setFormData({
+                    firstname: profile.labourerFirstName,
+                    lastname: profile.labourerLastName,
+                    email: profile.labourerEmail,
+                    isAvailable: profile.isAvailable
+                });
+            }
+        } catch(e){
+            console.error(e);
+        }
+
+        try {
+            const URI = BASE_URL + `/SkillsLabourer/${id}`;
+            let response = await fetch(URI, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${Auth.getToken()}`
+                }
+            });
+            
+            if(response.status !== 200) {
+                throw response;
+            }
+    
+            let data = await response.json();
+
+            if(data.length) {
+                setSelectedSkills(data.map((d) => ({
+                    value: d.skill.skillId,
+                    label: d.skill.skillName
+                })));
+            }
+        } catch(e){
+            console.error(e);
+        }
+        
+        // Set loading state
+        setLoaded(true);
     }
 
-    const [skillOptions, setSkillOptions] = useState([]);
-    const [selectedSkills, setSelectedSkills] = useState([]);
-    const [selectedDays, setSelectedDays] = useState([]);
-
-    const fetchSkillOptions = async () => {
+    const fetchSkillOptions = async() => {
         try {
-            const response = await fetch(BASE_URL + '/skills');
+            const URI = BASE_URL + '/Skills/GetAllSkills';
+            const response = await fetch(URI);
+
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
-            setSkillOptions(data);
-        } catch (error) {
-            console.log(error);
+
+            if(data.length) {
+                setSkillOptions(data);
+            }
+        } catch (e) {
+            console.error(e);
         }
+    }
+
+    const validateForm = e => {
+        e.preventDefault();
+        let errors = [];
+
+        if(!FormValidator.name(firstname)) {
+            errors.push("Invalid first name entered.");
+        }
+
+        if(!FormValidator.name(lastname)) {
+            console.log(lastname)
+            errors.push("Invalid last name entered.");
+        }
+
+        if(!FormValidator.email(email)) {
+            errors.push("Invalid email entered.");
+        }
+
+        if(!selectedSkills.length) {
+            errors.push("You must select at least one skill.")
+        }
+        
+        if(errors.length) {
+            setFormErrors(errors);
+        } else {
+            submitForm();
+        }
+    }
+
+    const submitForm = async() => {
+        // Format selected skills data
+        let selected = [];
+
+        selectedSkills.forEach(skill => {
+            if(typeof(skill) === "object") {
+                selected.push(skill.value)
+            } else {
+                selected.push(skill)
+            }
+        });
+
+        try {
+            let URI = BASE_URL + "/LabourerProfile";
+            let response = await fetch(URI, {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                },
+                body: JSON.stringify({
+                    Labourer: {
+                        LabourerId: id,
+                        LabourerFirstName: firstname,
+                        LabourerLastName: lastname,
+                        LabourerEmail: email,
+                        IsAvailable: isAvailable
+                    }
+                })
+            })
+
+            if(response.status !== 204) {
+                throw response;
+            } else {
+                props.history.push(`/profile/labourer/${id}`);
+            }
+        } catch(e){
+            console.error(e);
+        }
+    }
+
+    const onChange = e => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 
     const onChangeSkill = (skills) => {
-        if (skills) {
+        if(skills.length) {
             skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]));
+        } else {
+            setSelectedSkills([]);
         }
     }
 
-    const onChangeAvailability = (days) => {
-        if(days){
-            days.forEach(day => setSelectedDays([...selectedDays, day.value]))
-        }
+    const onChangeAvailability = _ => {
+        setFormData({...formData, isAvailable: isAvailable ? false : true});
     }
-
 
     useEffect(() => {
+        fetchProfileData();
         fetchSkillOptions();
-    })
+    }, [])
+
+    const form = profileExists && (
+    <>
+    <PageHeader
+        title={`Update Profile`}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Update Profile" }
+        ]}
+    />
+
+    <div className="card">
+    <div className="card-body">
+    { formErrors.length > 0 && <FormErrors errors={formErrors} /> }
+    <form onSubmit={e => validateForm(e)}>
+        <div className="form-group">
+            <label htmlFor="title">
+                First Name <span className="text-danger">*</span>
+            </label>
+            <input
+                required
+                onChange={e => onChange(e)}
+                value={firstname}
+                name="firstname"
+                type="text"
+                maxLength="40"
+                className="form-control form-control-lg"
+            />
+        </div>
+
+        <div className="form-group">
+            <label htmlFor="title">
+                Last Name <span className="text-danger">*</span>
+            </label>
+            <input
+                required
+                onChange={e => onChange(e)}
+                value={lastname}
+                name="lastname"
+                type="text"
+                maxLength="40"
+                className="form-control form-control-lg"
+            />
+        </div>
+
+        <div className="form-group">
+            <label htmlFor="title">
+                Email Address <span className="text-danger">*</span>
+            </label>
+            <input
+                required
+                onChange={e => onChange(e)}
+                value={email}
+                name="email"
+                type="email"
+                className="form-control form-control-lg"
+            />
+        </div>
+
+        <div className="form-group">
+            <label className="d-block" htmlFor="skills">
+                Select Skills <span className="text-danger">*</span>
+            </label>
+            <Select
+                defaultValue={selectedSkills}
+                options={
+                    skillOptions && skillOptions.map(skill => {
+                        return {
+                            value: skill.skillId,
+                            label: skill.skillName
+                        }
+                    })
+                }
+                onChange={onChangeSkill} 
+                isMulti 
+            />
+        </div>
+
+        <div className="form-group">
+            <label className="mt-2 mr-3">
+                Are you available for work?
+            </label>
+            <div className="switch-button switch-button-success">
+                <input
+                    checked={isAvailable}
+                    type="checkbox"
+                    name="switch16"
+                    id="switch16"
+                    onChange={onChangeAvailability}
+                />
+                <span><label htmlFor="switch16"></label></span>
+            </div>
+        </div>
+
+        <div className="form-group row text-right mt-3">
+        <div className="col col-lg-12">
+            <Link
+                to={`/profile/labourer/${id}`}
+                className="btn btn-light btn-lg"
+            >
+                Cancel
+            </Link>
+            <button
+                type="submit"
+                onClick={e => validateForm(e)}
+                className="btn btn-primary btn-lg ml-2"
+            >
+                Save Changes
+            </button>
+        </div>
+        </div>
+
+    </form>  
+    </div>
+    </div>
+    </>
+    );
 
     return (
-        <div className="dashboard-main-wrapper">
-            <TopNav />
-            <SideNav />
-
-            <div className="dashboard-wrapper">
-                <div className="container-fluid dashboard-content">
-
-                    {/* Page Header */}
-                    <div className="row">
-                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div className="page-header">
-                                <h2 className="pageheader-title">Update Labourer Profile</h2>
-                                <div className="page-breadcrumb">
-                                    <nav aria-label="breadcrumb">
-                                        <ol className="breadcrumb">
-                                            <li className="breadcrumb-item"><a href="/profile/client" className="breadcrumb-link">Labourer Profile</a></li>
-                                            <li className="breadcrumb-item active" aria-current="page">Update Labourer Profile</li>
-                                        </ol>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    {/* Form */}
-                    <div className="card">
-                        <div className="card-body">
-                            <form className="labourer-update-form">
-
-                                <div className="row">
-                                    <div className="col">
-                                        <div className="border-bottom text-center card-header">
-                                            <h4 className="mb-1">Sierra Brooks</h4>
-                                            <span className="m-5"><i class="fas fa-star mr-2"></i>Available</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="form-group p-2 col">
-                                        <label htmlFor="description">Description<span className="text-danger">*</span></label>
-                                        <textarea
-                                            name="description"
-                                            type="text"
-                                            placeholder="Enter your description"
-                                            rows="4"
-                                            className="form-control form-control-lg"
-                                            value="Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio eaque, quidem, commodi soluta qui quae minima obcaecati quod dolorum sint alias, possimus illum assumenda eligendi cumque. Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio eaque, quidem, commodi soluta qui quae minima obcaecati quod dolorum sint alias, possimus illum assumenda eligendi cumque"
-                                        />
-                                    </div>
-                                </div>
-
-
-                                <div className="form-row">
-                                    <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
-                                        <label htmlFor="email">Email<span className="text-danger">*</span></label>
-                                        <input
-                                            required
-                                            name="email"
-                                            placeholder="Enter email"
-                                            type="text"
-                                            className="form-control form-control-lg"
-                                            value="sierra.brooks@gmail.ca"
-                                        />
-                                    </div>
-
-                                    <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
-                                        <label htmlFor="telephone">Telephone<span className="text-danger">*</span></label>
-                                        <input
-                                            required
-                                            name="telephone"
-                                            placeholder="Enter telephone number"
-                                            type="text"
-                                            className="form-control form-control-lg"
-                                            value="(604)778-8888"
-                                        />
-                                    </div>
-                                </div>
-
-                            <div className="form-row">
-                                <div className="form-group col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
-                                    <label className="d-block" htmlFor="skills">Select Skills<span className="text-danger">*</span></label>
-                                    <Select
-                                        options={skillOptions &&
-                                            skillOptions.map(skill => {
-                                                return { value: skill.skillId, label: skill.skillName }
-                                            })
-                                        }
-                                        onChange={onChangeSkill}
-                                        isMulti
-                                    />
-                                </div>
-                                <div className="form-group col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
-                                    <label className="d-block" htmlFor="availability">Select Availability<span className="text-danger">*</span></label>
-                                    <Select
-                                        options={DAYS}
-                                        onChange={onChangeAvailability}
-                                        isMulti
-                                    />
-                                </div>
-                            </div>
-
-
-
-                                <div className="form-group row text-right mt-4">
-                                    <div className="col col-lg-12">
-                                        <Link to="/profile/client" className="btn btn-space btn-light btn-lg">Cancel</Link>
-                                        <button onClick={() => validateForm()} className="btn btn-space btn-primary btn-lg">Update Client</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div >
-    )
+    <Loader loaded={loaded}>
+    { form ? form : <ErrorMessage message={"No profile found."} /> }
+    </Loader>
+    );
 }
 
 export default LabourerUpdateProfile;
