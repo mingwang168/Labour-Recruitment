@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
 import Footer from '../components/Footer';
-import Table from '../components/Table';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
@@ -16,7 +15,8 @@ const ClientLabourerAttendance = (props) => {
 
     const [list, setList] = useState();
     const [rating, setRating] = useState();
-    const changeRating = async(newRating) => {
+
+    const changeRating = async(newRating, labourerId) => {
         let token = Auth.getToken()
         if (token == null) {
             Auth.forceLogout()
@@ -31,7 +31,7 @@ const ClientLabourerAttendance = (props) => {
                 }, 
                 body : JSON.stringify({
                     JobId : props.match.params.id,
-                    LabourerId : list.labourerId,
+                    LabourerId : labourerId,
                     DailyQualityRating : newRating,
                     Date : props.match.params.date + "T00:00:00"
                 })
@@ -60,7 +60,7 @@ const ClientLabourerAttendance = (props) => {
             console.error(err);
         }
     }
-    
+    console.log(list)
     useEffect(() =>{
         if(props.match.params.id && props.match.params.date) {
             let date = props.match.params.date + "T00:00:00"
@@ -93,11 +93,6 @@ const ClientLabourerAttendance = (props) => {
                <div className="card">
                    <div className="card-body">
                    { list &&
-                        // <Table
-                        //     columns={ATTENDANCE_RATINGS_TABLE_COLUMNS}
-                        //     data={list}
-                        //     {...props}
-                        // />
                         <table className="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
@@ -110,7 +105,10 @@ const ClientLabourerAttendance = (props) => {
                                     <tr key = {i}>
                                         <td>{l.name}</td>
                                         <td>
-                                            <RateWorkers  changeRating={changeRating} rating={l.DailyQualityRating} clientId={l.clientId} />
+                                            <RateWorkers  changeRating={changeRating} 
+                                                          rating={l.rating} 
+                                                          clientId={l.clientId} 
+                                                          labourerId={l.labourerId} />
                                         </td>
                                     </tr>
                                 ))

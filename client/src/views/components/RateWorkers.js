@@ -2,16 +2,16 @@ import React, { useState } from 'react'
 import Ratings from 'react-ratings-declarative';
 import * as Auth from '../../utils/Auth';
 
-const BASE_URL = "http://localhost:5001/api";
+
 const RateWorkers = (props) => {
     
     const changeRating = async(newRating) => {
-        props.changeRating(newRating)
+        props.changeRating(newRating, props.labourerId)
     }
     
     return (
         <Ratings
-            rating= {5}
+            rating= {props.rating}
             widgetDimensions="14px"
             name = "rating"
             changeRating = { 
