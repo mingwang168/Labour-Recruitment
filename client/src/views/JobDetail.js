@@ -9,7 +9,7 @@ import Table from './components/Table';
 import ErrorMessage from './components/ErrorMessage';
 
 import * as Auth from '../utils/Auth';
-import * as Checkbox from '../utils/GetCheckBoxClass';
+
 
 import { ATTENDANCE_DATES_TABLE_COLUMNS, INCIDENTS_TABLE_COLUMNS } from '../utils/TableColumns';
 
@@ -206,8 +206,15 @@ const JobDetail = (props) => {
                             <fieldset>
                             {details.jobLabourer.map((jLabourer,i) => (
                                 <div className="custom-control mb-1" key={i}>
-                                <input type="checkbox" className="custom-control-input" id="formsCheckboxDefault" />
-                                <label className="custom-control-label" htmlFor="formsCheckboxDefault">{jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}</label>
+                                { jLabourer.safetyMeetingCompleted ? 
+                                <input type="checkbox" className="custom-control-input" 
+                                      id= "formsCheckboxDefault"  checked /> :
+                                <input type="checkbox" className="custom-control-input" 
+                                      id= "formsCheckboxDefault"  />
+                                }
+                                <label className="custom-control-label" htmlFor= "formsCheckboxDefault">
+                                    {jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}
+                                </label>
                               </div>
                             ))
                             }
