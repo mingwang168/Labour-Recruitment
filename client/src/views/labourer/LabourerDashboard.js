@@ -125,7 +125,8 @@ const LabourerDashboard = (props) => {
     }, [])
 
     return (
-    <>
+    <Loader loaded={loaded}>
+    { !jobs ? <ErrorMessage message={"No data available."} /> : 
     <div className="row">
     <div className="col-12">
 
@@ -213,7 +214,7 @@ const LabourerDashboard = (props) => {
         <div className="card">
             <h4 className="card-header">All Jobs</h4>
             <div className="card-body">
-                <Loader loaded={loaded}>
+                { jobs &&
                     <Table
                         data={jobs}
                         columns={jobsTableColumns}
@@ -222,7 +223,7 @@ const LabourerDashboard = (props) => {
                         striped={true}
                         {...props}
                     />
-                </Loader>
+                }
             </div>
         </div>
         </div>
@@ -230,8 +231,9 @@ const LabourerDashboard = (props) => {
 
     </div>
     </div>
-    </>
-    )
+    }
+    </Loader>
+    );
 }
 
 export default LabourerDashboard;
