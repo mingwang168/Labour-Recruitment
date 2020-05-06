@@ -10,6 +10,7 @@ import SideNav from '../components/SideNav';
 import Footer from '../components/Footer';
 
 import { INCIDENTS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+
 const BASE_URL = "http://localhost:5001/api";
 
 const AdminIncidents = (props) => {
