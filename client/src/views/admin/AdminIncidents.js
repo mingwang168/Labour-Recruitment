@@ -10,6 +10,7 @@ import SideNav from '../components/SideNav';
 import Footer from '../components/Footer';
 
 import { INCIDENTS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+
 const BASE_URL = "http://localhost:5001/api";
 
 const AdminIncidents = (props) => {
@@ -18,16 +19,20 @@ const AdminIncidents = (props) => {
 
     const fetchIncidents = async() => {
         try {
-            let response = await fetch(BASE_URL + "/Incidents", {
+            let response = await fetch(BASE_URL + "/Incidents/GetAllIncidents", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${Auth.getToken()}`
                 }
             });
 
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
+
             if(data.length) {
-                console.log(data)
                 setIncidents(DataSanitizer.cleanIncidentsData(data));
             }
         } catch(e) {

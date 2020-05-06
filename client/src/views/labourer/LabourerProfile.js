@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
+import { isWholeNumber } from '../../utils/IsWholeNumber';
 
 import Layout from '../components/Layout';
+import PageHeader from '../components/PageHeader';
 import Table from '../components/Table';
 import OneColumnTable from '../components/OneColumnTable';
 import AvailabilityBadge from '../components/AvailabilityBadge';
@@ -13,23 +15,43 @@ import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
 import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
-import { JOBS_TABLE_COLUMNS } from '../../utils/TableColumns';
-
 const BASE_URL = "http://localhost:5001/api";
 
 const LabourerProfile = (props) => {
 
-    const [authorized, setAuthorized] = useState(false);
-    const [isProfileOwner, setIsProfileOwner] = useState(false);
+    // Authorization
+    const [id] = useState(
+        props.match.params.id && isWholeNumber(props.match.params.id) ? props.match.params.id : null
+    );
 
+    const [authorized] = useState(
+        Auth.authenticateLabourer() && Auth.getID() === id ? true :
+        Auth.authenticateAdmin() ? true :
+        false
+    );
+
+    const [isProfileOwner] = useState(
+        authorized && Auth.authenticateLabourer()
+    );
+
+    // Component
     const [loaded, setLoaded] = useState();
-    const [labourer, setLabourer] = useState();
-    const [jobs, setJobs] = useState();
 
-    const fetchLabourerProfile = async(id) => {
+    // Data
+    const [labourer, setLabourer] = useState();
+    const [skills, setSkills] = useState();
+    const [jobs, setJobs] = useState();
+    const [incidents, setIncidents] = useState();
+
+    // Table Columns
+    const [jobsTableColumns, setJobsTableColumns] = useState();
+    const [incidentsTableColumns, setIncidentsTableColumns] = useState();
+
+    const fetchProfileData = async(id) => {
         // Fetch profile data
         try {
-            let response = await fetch(BASE_URL + `/LabourerProfile/${id}`, {
+            const URI = BASE_URL + `/LabourerProfile/${id}`;
+            let response = await fetch(URI, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${Auth.getToken()}`
@@ -42,18 +64,44 @@ const LabourerProfile = (props) => {
     
             let data = await response.json();
 
-            setLabourer({
-                ...data.labourer,
-                qualityRating: data.averageQuality,
-                safetyRating: data.averageSafety
+            if(data) {
+                setLabourer({
+                    ...data.labourer,
+                    qualityRating: data.averageQuality,
+                    safetyRating: data.averageSafety
+                });
+            }
+        } catch(e){
+            console.error(e);
+        }
+
+        // Fetch skills data
+        try {
+            const URI = BASE_URL + `/Skills/GetSkillNamesByLabourerId/${id}`;
+            let response = await fetch(URI, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${Auth.getToken()}`
+                }
             });
+            
+            if(response.status !== 200) {
+                throw response;
+            }
+    
+            let data = await response.json();
+
+            if(data.length) {
+                setSkills(data);
+            }
         } catch(e){
             console.error(e);
         }
 
         // Fetch job data
         try {
-            let response = await fetch(BASE_URL + `/Job/GetJobByLabourerId/${id}`, {
+            const URI = BASE_URL + `/Job/GetJobByLabourerId/${id}`;
+            let response = await fetch(URI, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${Auth.getToken()}`
@@ -61,49 +109,80 @@ const LabourerProfile = (props) => {
             });
             
             if(response.status !== 200) {
-                setLoaded(true);
                 throw response;
             }
     
             let data = await response.json();
-            setJobs(DataSanitizer.cleanJobsData(data));
+
+            if(data.length) {
+                let formattedData = data.map(d => ({
+                    id: d.jobId,
+                    title: d.title,
+                    startdate: DataSanitizer.formatDateString(d.startDate),
+                    enddate: DataSanitizer.formatDateString(d.endDate),
+                    status: d.isComplete ? "Complete" : "In Progress"
+                }));
+
+                setJobsTableColumns([
+                    {Header: 'Job Title', accessor: 'title'},
+                    {Header: 'Start Date', accessor: 'startdate'},
+                    {Header: 'End Date', accessor: 'enddate'},
+                    {Header: 'Completion Status', accessor: 'status'},
+                ]);
+                setJobs(formattedData);
+            }
         } catch(e){
             console.error(e);
         }
 
         // Fetch incident data
+        try {
+            const URI = BASE_URL + `/Incidents/GetIncidentsByLabourerId/${id}`;
+            let response = await fetch(URI, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${Auth.getToken()}`
+                }
+            });
+            
+            if(response.status !== 200) {
+                throw response;
+            }
+    
+            let data = await response.json();
 
-        // Finish loading
+            if(data.length) {
+                let formattedData = data.map(d => ({
+                    id: d.incidentReportId,
+                    job: d.jobTitle,
+                    date: DataSanitizer.formatDateString(d.incidentReportDate),
+                    type: d.incidentType
+                }));
+
+                setIncidents(formattedData);
+                setIncidentsTableColumns([
+                    {Header: 'Date', accessor: 'date'},
+                    {Header: 'Job', accessor: 'job'},
+                    {Header: 'Incident Type', accessor: 'type'}
+                ]);
+            }
+        } catch(e){
+            console.error(e);
+        }
+
+        // Set loading state
         setLoaded(true);
     }
 
     const profile = labourer && (
     <>
-    {/* Page Header */}
-    <div className="row">
-    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-    <div className="page-header">
-        <h2 className="pageheader-title">My Profile</h2>
-        <div className="page-breadcrumb">
-            <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-                <li className="breadcrumb-item">
-                    <Link
-                    to="/dashboard"
-                    className="breadcrumb-link"
-                    >
-                        Home
-                    </Link>
-                </li>
-                <li className="breadcrumb-item active" aria-current="page">
-                    Profile
-                </li>
-            </ol>
-            </nav>
-        </div>
-    </div>
-    </div>
-    </div>
+    <PageHeader
+        title={`Labourer Profile`}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Labourer Profile" }
+        ]}
+    />
 
     <div className="row">
         {/* Profile */}
@@ -174,10 +253,12 @@ const LabourerProfile = (props) => {
                     }
                 </div>
                 <div className="card-body">
+                    { !skills ? <ErrorMessage message={"No skills found."} /> :
                     <OneColumnTable
-                        data={["Drywall", "Electrical"]}
+                        data={skills}
                         header={"Name"}
                     />
+                    }
                 </div>
             </div>
 
@@ -185,6 +266,7 @@ const LabourerProfile = (props) => {
             <div className="card">
                 <div className="card-header d-flex">
                     <h4 className="card-header-title">Active Jobs</h4>
+                    { isProfileOwner &&
                     <div className="toolbar ml-auto">
                         <Link
                             to="/dashboard"
@@ -193,12 +275,13 @@ const LabourerProfile = (props) => {
                             View All
                         </Link>
                     </div>
+                    }
                 </div>
                 <div className="card-body">
-                    { jobs &&
+                    { !jobs ? <ErrorMessage message={"No jobs to display."} /> :
                     <Table
                         data={jobs}
-                        columns={JOBS_TABLE_COLUMNS}
+                        columns={jobsTableColumns}
                         itemsPerPage={5}
                         path="/job"
                         {...props}
@@ -211,6 +294,7 @@ const LabourerProfile = (props) => {
             <div className="card">
                 <div className="card-header d-flex">
                     <h4 className="card-header-title">Incident Reports</h4>
+                    { isProfileOwner &&
                     <div className="toolbar ml-auto">
                         <Link
                             to="/incidents"
@@ -219,9 +303,19 @@ const LabourerProfile = (props) => {
                             View All
                         </Link>
                     </div>
+                    }
                 </div>
                 <div className="card-body">
-                    
+                    { !incidents ? <ErrorMessage message={"No incidents to display."} /> :
+                    <Table
+                        data={incidents}
+                        columns={incidentsTableColumns}
+                        path="/incident"
+                        itemsPerPage={5}
+                        searchable={false}
+                        {...props}
+                    />
+                    }
                 </div>
             </div>
         </div>
@@ -240,27 +334,7 @@ const LabourerProfile = (props) => {
     );
 
     useEffect(() => {
-        // Check for valid params in URL
-        if(props.match.params.id && Number.isInteger(Number(props.match.params.id))) {
-            let id = props.match.params.id;
-
-            // Check if user is authorized
-            let isAuthorized = (
-                Auth.authenticateAdmin() ? true :
-                Auth.authenticateLabourer() && id === Auth.getID() ? true :
-                false
-            );
-
-            // Check if user is: an administrator,
-            // or the labourer who owns this profile
-            if(isAuthorized) {
-                fetchLabourerProfile(id);
-                setIsProfileOwner(Auth.authenticateLabourer() && id === Auth.getID());
-            }
-
-            // Set authorization state
-            setAuthorized(isAuthorized);
-        }
+        if(authorized) fetchProfileData(id);
     }, [])
 
     return <Layout content={content} />;

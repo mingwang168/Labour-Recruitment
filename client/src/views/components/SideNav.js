@@ -12,7 +12,7 @@ const SideNav = () => {
         },
         {
             name: "Profile",
-            path: "/profile/client",
+            path: `/profile/client/${Auth.getID()}`,
             icon: "account_box"
         },
         {

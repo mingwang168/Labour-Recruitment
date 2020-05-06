@@ -79,7 +79,6 @@ class App extends Component {
 		<ProtectedRoute exact path='/profile/labourer/:id' component={LabourerProfile} />
 
 		{/* Client Only Views */}
-		<ProtectedRoute exact path='/profile/client' component={ClientProfile} />
 		<ProtectedRoute exact path='/profile/edit' component={ClientUpdateProfile} />
         <ProtectedRoute exact path='/addjob' component={ClientAddJob} />
 		<ProtectedRoute exact path='/editjob/:id' act component={ClientUpdateJobDetails} />

@@ -23,9 +23,17 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
+        public class IncidentVM
+        {
+            public int? IncidentReportId { get; set; }
+            public DateTime? IncidentReportDate { get; set; }
+            public string IncidentType { get; set; }
+            public string JobTitle { get; set; }
+        }
+
         // GET: api/Incidents
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncidents()
+        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetAllIncidents()
         {
             var reports = await _context.IncidentReport.ToListAsync();
             foreach (IncidentReport report in reports)
@@ -48,7 +56,7 @@ namespace labourRecruitment.Controllers
             return reports;
         }
 
-        // GET: api/Incidents/5
+        // GET: api/Incidents/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<IncidentReport>> GetIncidentByIncidentId(int id)
         {
@@ -86,8 +94,8 @@ namespace labourRecruitment.Controllers
             return incident;
         }
 
+        // GET: api/Incidents/GetIncidentsByJobId/{jobId}
         [HttpGet("{jobId}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetIncidentsByJobId(int jobId)
         {
 
@@ -108,8 +116,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(incident);
         }
 
-
-
+        // GET: api/Incidents/GetIncidentsByLabourerId/{labourerId}
         [HttpGet("{labourerId}", Name = "GetIncidentsByLabourerId")]
         public IActionResult GetIncidentsByLabourerId(int labourerId)
         {
@@ -130,26 +137,20 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(incident);
         }
 
-        public class IncidentVM
-        {
-            public int? IncidentReportId { get; set; }
-            public DateTime? IncidentReportDate { get; set; }
-            public string IncidentType { get; set; }
-            public string JobTitle { get; set; }
-        }
-
+        // GET: api/Incidents/GetIncidentsByClientId/{clientId}
         [HttpGet("{clientId}", Name = "GetIncidentsByClientId")]
         public IActionResult GetIncidentsByClientId(int clientId)
         {
-            var incident = _context.LabourerIncidentReport.Where(l => l.IncidentReport.Job.Client.ClientId == clientId).
-                Select(l => new IncidentVM
+            var incident = _context.LabourerIncidentReport.Where(l => l.IncidentReport.Job.Client.ClientId == clientId)
+                .Select(l => new IncidentVM
                 {
                     IncidentReportId = l.IncidentReportId,
                     IncidentReportDate = l.IncidentReport.IncidentReportDate,
                     IncidentType = l.IncidentReport.IncidentType.IncidentTypeName,
                     JobTitle = l.IncidentReport.Job.Title
 
-                }).Distinct();
+                })
+                .Distinct();
 
             if (incident == null)
             {
@@ -158,10 +159,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(incident);
         }
 
-    
-
-
-        //// POST: api/Incidents
+        // POST: api/Incidents
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostIncident(IncidentReportVM report)
@@ -176,8 +174,5 @@ namespace labourRecruitment.Controllers
             _context.SaveChanges();
             return new ObjectResult(report.IncidentReport.IncidentReportId);
         }
-
-
-        
     }
 }

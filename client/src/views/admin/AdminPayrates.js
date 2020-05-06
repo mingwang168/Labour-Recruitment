@@ -18,7 +18,8 @@ const AdminPayrates = (props) => {
 
     const fetchSkills = async() => {
         try {
-            let response = await fetch(BASE_URL + "/skills", {
+            const URI = BASE_URL + "/Skills/GetAllSkills";
+            let response = await fetch(URI, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${Auth.getToken()}`

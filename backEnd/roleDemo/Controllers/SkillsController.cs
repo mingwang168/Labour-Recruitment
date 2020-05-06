@@ -21,10 +21,8 @@ namespace labourRecruitment.Controllers
         }
 
         // GET: api/Skills
-        // tested in postman: ok
-
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Skill>>> GetSkill()
+        public async Task<ActionResult<IEnumerable<Skill>>> GetAllSkills()
         {
             return await _context.Skill.ToListAsync();
         }
@@ -43,10 +41,10 @@ namespace labourRecruitment.Controllers
             return skill;
         }
 
-        [HttpGet("{labourerId}", Name = "GetSkillNameByLabourerId")]
-        public ActionResult GetSkillNameByLabourerId(int labourerId)
+        // GET: api/Skills/GetSkillNamesByLabourerId
+        [HttpGet("{labourerId}", Name = "GetSkillNamesByLabourerId")]
+        public ActionResult GetSkillNamesByLabourerId(int labourerId)
         {
-
             var skillname = _context.LabourerSkill.Where(ls => ls.LabourerId == labourerId).Select(ols => ols.Skill.SkillName).ToArray();
 
             if (skillname == null)
