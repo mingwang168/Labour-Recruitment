@@ -32,9 +32,18 @@ const RegisterLabourer = ({ history }) => {
     
     const fetchSkillOptions = async() => {
         try {
-            const response = await fetch(BASE_URL + '/skills');
+            const URI = BASE_URL + '/Skills/GetAllSkills';
+            const response = await fetch(URI);
+
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
-            setSkillOptions(data);
+
+            if(data.length) {
+                setSkillOptions(data);
+            }
         } catch (e) {
             console.error(e);
         }
