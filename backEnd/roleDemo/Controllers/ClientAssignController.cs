@@ -51,17 +51,6 @@ namespace labourRecruitment.Controllers
 
             clientvms = clientvms.OrderByDescending(c => c.averageRating).ToList();
 
-            //var clientsorted = clientvms.Select(cvm => cvm.client).Select(oc => new Client { 
-            //ClientCity =oc.ClientCity,
-            //ClientDescription = oc.ClientDescription,
-            //ClientEmail = oc.ClientEmail,
-            //ClientId = oc.ClientId,
-            //ClientName = oc.ClientName,
-            //ClientPhoneNumber = oc.ClientPhoneNumber,
-            //ClientState = oc.ClientState,
-            //UserId = oc.UserId
-            //}).ToList();
-
             var clientsorted = clientvms.Select(cvm => new ClientVM
             {
                 ClientCity = cvm.client.ClientCity,
