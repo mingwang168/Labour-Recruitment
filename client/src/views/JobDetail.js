@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Checkbox from 'react-simple-checkbox';
 import * as DataSanitizer from '../utils/DataSanitizer';
 
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
 import Table from './components/Table';
+import CheckSafetyMetting from './components/CheckSafetyMeeting';
 import ErrorMessage from './components/ErrorMessage';
 
 import * as Auth from '../utils/Auth';
@@ -74,11 +74,7 @@ const JobDetail = (props) => {
             console.error(err);
         }
     }
-
-    const changeSafetyMeetingCompleted = (newVal) => {
-       setSafetyMeeting(newVal)
-    }
-
+    
     useEffect(() => {
         if(props.match.params.id) {
             if(Number.isInteger(Number(props.match.params.id))) {
@@ -210,15 +206,9 @@ const JobDetail = (props) => {
                         <div className="card-body">
                             <p>Safety meetings are mandatory. Please check off the dates where safety meetings were completed.</p>
                             {details.jobLabourer.map((jLabourer,i) => (
-                                <div>
-                                {/* <input type="checkbox" class="custom-control-input" value={safetyMeeting} 
-                                        checked={safetyMeeting} 
-                                        onChange={changeSafetyMeetingCompleted} /> */}
-                                <Checkbox size="3" tickSize="2" color="#5969ff" onChange={changeSafetyMeetingCompleted} checked={safetyMeeting} />
-                                <span className="ml-2">
-                                    {jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}
-                                </span>
-                              </div>
+                            <CheckSafetyMetting firstname={jLabourer.labourer.labourerFirstName}
+                                                lastname={jLabourer.labourer.labourerLastName} 
+                                                safetyMeeting={jLabourer.safetyMeetingCompleted} /> 
                             ))
                             }
                         </div>
