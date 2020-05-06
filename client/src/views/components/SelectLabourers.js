@@ -9,17 +9,27 @@ const SelectLabourers = ({requiredLabourers, setRequiredLabourers}) => {
     const [selectedSkill, setSelectedSkill] = useState();
     const [selectedNumLabourers, setSelectedNumLabourers] = useState('');
 
-    useEffect (() => {
+    useEffect(() => {
         const fetchSkills = async() => {
             try {
-                const response = await fetch(BASE_URL + '/skills');
+                const URI = BASE_URL + '/Skills/GetAllSkills';
+                const response = await fetch(URI);
+
+                if(response.status !== 200) {
+                    throw response;
+                }
+
                 let data = await response.json();
-                setSkills(data);
+
+                if(data.length) {
+                    setSkills(data);
+                }
             } catch (e) {
                 console.error(e);
             }
         }
-        fetchSkills()
+
+        fetchSkills();
     }, [])
 
     const addLabourers = () => {
@@ -27,8 +37,8 @@ const SelectLabourers = ({requiredLabourers, setRequiredLabourers}) => {
             if(requiredLabourers.length && (requiredLabourers.findIndex(i => i.SkillName === selectedSkill)) != -1) {
                 let indexOfExistingSkill = requiredLabourers.findIndex(i => i.SkillName === selectedSkill);
                 if(indexOfExistingSkill > -1) {
-                    let skillUpdated = [...requiredLabourers]                   
-                    skillUpdated[indexOfExistingSkill].NumberNeeded = parseInt(selectedNumLabourers) + parseInt(requiredLabourers[indexOfExistingSkill].NumberNeeded) ;
+                    let skillUpdated = [...requiredLabourers];
+                    skillUpdated[indexOfExistingSkill].NumberNeeded = selectedNumLabourers;
                     setRequiredLabourers(skillUpdated)
                 } else {
                     setRequiredLabourers(requiredLabourers => [ ...requiredLabourers, {SkillName: selectedSkill, SkillId: getSkillIdByName(selectedSkill), NumberNeeded : selectedNumLabourers}])
