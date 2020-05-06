@@ -61,6 +61,7 @@ namespace labourRecruitment.Controllers
 
             incident.Job = _context.Job.Where(j => j.JobId == incident.JobId).Select(j => new Job
             {
+                ClientId = j .ClientId,
                 Title = j.Title,
                 Street = j.Street,
                 City = j.City,
@@ -68,6 +69,7 @@ namespace labourRecruitment.Controllers
                 Client = j.Client,
                 JobLabourer = j.JobLabourer.Select(jl => new JobLabourer
                 {
+                    LabourerSafetyRating = jl.LabourerSafetyRating,
                     Labourer = jl.Labourer,
                     Skill = jl.Skill
                 }).ToList()

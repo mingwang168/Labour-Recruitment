@@ -34,7 +34,7 @@ namespace labourRecruitment.Controllers
         }
 
         [HttpPut]
-       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PutSafetyMeetingCompeleted([FromBody]JobLabourer jobLabourer)
         {
             var joblabourers = _context.JobLabourer.Where(jl => jl.JobId == jobLabourer.JobId && jl.LabourerId == jobLabourer.LabourerId).ToList();

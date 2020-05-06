@@ -215,39 +215,7 @@ const JobDetail = (props) => {
                             }
                         </div>
                     </div>
-
-                    {/* Safety Ratings */}
-                    {/* <div className="card" id="safetyratings">
-                        <h5 className="card-header">Safety Ratings</h5>
-                        <div className="card-body">
-                            <p>Give hired labourers a rating, based on their safety-wise performance on this job.</p>
-                            <table className="table table-bordered job-safetyratings-table">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Work Type</th>
-                                <th>Rating</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {details.jobLabourer.map((jLabourer,i) => 
-                                <tr key = {i}>
-                                <td className ="text-capitalize">{jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}</td>
-                                <td>{jLabourer.skill.skillName}</td>
-                                <td>
-                                    <RateWorkers
-                                        jobId = {details.jobId}
-                                        rating = {jLabourer.labourerSafetyRating} 
-                                        labourerId = {jLabourer.labourerId}
-                                        clientName = {details.client.clientName}
-                                    />
-                                </td>
-                            </tr>
-                            )}
-                            </tbody>
-                            </table>
-                        </div>
-                    </div> */}
+                
                 </div>
             </div>
             </>

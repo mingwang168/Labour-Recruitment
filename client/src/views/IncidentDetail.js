@@ -36,7 +36,7 @@ const IncidentDetail = (props) => {
         fetchIncidentDetails(props.match.params.id)
     }, [])
 
-   
+   console.log(details)
     return (
         <>
         {details && 
@@ -105,8 +105,38 @@ const IncidentDetail = (props) => {
                                 </div>
                                 </div>
                                 {/* Display this only if the job owner is viewing this page */}
-                                <div className="card-body border-top">
+                                {/* <div className="card-body border-top">
                                     <Link to="/editincident" className="btn btn-light">Edit Incident Details</Link>
+                                </div> */}
+                                 {/* Safety Ratings */}
+                                <div className="card" id="safetyratings">
+                                    <h5 className="card-header">Safety Ratings</h5>
+                                    <div className="card-body">
+                                        <p>Give hired labourers a rating, based on their safety-wise performance on this job.</p>
+                                        <table className="table table-bordered table-striped table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Rating</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {/* {details.labourerIncidentReport.map((r,i) => 
+                                            <tr key = {i}>
+                                            <td>{r.labourer.labourerFirstName} {r.labourer.labourerLastName}</td>
+                                            <td>
+                                                <RateWorkers
+                                                    jobId = {details.jobId}
+                                                    rating = {jLabourer.labourerSafetyRating} 
+                                                    labourerId = {jLabourer.labourerId}
+                                                    clientName = {details.client.clientName}
+                                                />
+                                            </td>
+                                        </tr>
+                                        )} */}
+                                        </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
