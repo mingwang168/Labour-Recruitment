@@ -138,6 +138,27 @@ namespace labourRecruitment.Controllers
             public string JobTitle { get; set; }
         }
 
+        [HttpGet("{clientId}", Name = "GetIncidentsByClientId")]
+        public IActionResult GetIncidentsByClientId(int clientId)
+        {
+            var incident = _context.LabourerIncidentReport.Where(l => l.IncidentReport.Job.Client.ClientId == clientId).
+                Select(l => new IncidentVM
+                {
+                    IncidentReportId = l.IncidentReportId,
+                    IncidentReportDate = l.IncidentReport.IncidentReportDate,
+                    IncidentType = l.IncidentReport.IncidentType.IncidentTypeName,
+                    JobTitle = l.IncidentReport.Job.Title
+
+                }).ToList();
+
+            if (incident == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(incident);
+        }
+
+    
 
 
         //// POST: api/Incidents
