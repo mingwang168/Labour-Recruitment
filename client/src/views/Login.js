@@ -84,6 +84,7 @@ const Login = ({ history }) => {
             <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input
+                    autoFocus
                     required
                     type="email"
                     name="email"

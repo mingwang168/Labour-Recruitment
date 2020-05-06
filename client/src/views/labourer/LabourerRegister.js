@@ -1,18 +1,21 @@
 import React , {useState, useEffect} from 'react';
 import { Link, Redirect } from 'react-router-dom';
+
 import * as FormValidator from '../../utils/FormValidator';
 import * as Auth from '../../utils/Auth';
 
 import Select from 'react-select';
 import FormErrors from '../components/FormErrors';
-import DAYS from '../../utils/staticdata/Days';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const RegisterLabourer = ({ history }) => {
 
+    // Form Options
     const [formErrors, setFormErrors] = useState([]);
     const [skillOptions, setSkillOptions] = useState([]);
+
+    // Input Data
     const [labourer, setLabourer] = useState({
         firstname: "",
         lastname: "",
@@ -20,6 +23,9 @@ const RegisterLabourer = ({ history }) => {
         password: "",
         confirmpassword: ""
     });
+
+    const [selectedSkills, setSelectedSkills] = useState([]);
+
     const {
         firstname,
         lastname,
@@ -27,14 +33,21 @@ const RegisterLabourer = ({ history }) => {
         password,
         confirmpassword
     } = labourer;
-    const [selectedDays, setSelectedDays] = useState([]);
-    const [selectedSkills, setSelectedSkills] = useState([]);
     
     const fetchSkillOptions = async() => {
         try {
-            const response = await fetch(BASE_URL + '/skills');
+            const URI = BASE_URL + '/Skills/GetAllSkills';
+            const response = await fetch(URI);
+
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
-            setSkillOptions(data);
+
+            if(data.length) {
+                setSkillOptions(data);
+            }
         } catch (e) {
             console.error(e);
         }
@@ -48,14 +61,6 @@ const RegisterLabourer = ({ history }) => {
     const onChangeSkill = (skills) => {
         if(skills) {
             skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]));
-        }
-    }
-
-    const onChangeAvailability = (days) => {
-        if(days) {
-            days.forEach(element => {
-                setSelectedDays([ ...selectedDays,element.value]);
-            });
         }
     }
 
@@ -83,9 +88,6 @@ const RegisterLabourer = ({ history }) => {
         if(!selectedSkills.length) {
             errors.push("You must select at least one skill.")
         }
-        if(!selectedDays.length) {
-            errors.push("You must select at least one available day.")
-        }
         if(errors.length) {
             setFormErrors(errors);
         } else {
@@ -110,7 +112,6 @@ const RegisterLabourer = ({ history }) => {
                         LabourerFirstName: firstname,
                         LabourerLastName: lastname
                     },
-                    AvailableDays: selectedDays,
                     Skills: selectedSkills
                 })
             });
@@ -122,6 +123,7 @@ const RegisterLabourer = ({ history }) => {
 
             // Success
             let data = await response.json();
+
             if(data.token && data.token !== "") {
                 Auth.setSessionData(data, history);
             } else {
@@ -213,14 +215,6 @@ const RegisterLabourer = ({ history }) => {
                         skillOptions.map(skill => {return {value: skill.skillId, label: skill.skillName}}) 
                     } 
                     onChange={onChangeSkill} 
-                    isMulti 
-                />
-            </div>
-            <div className="form-group">
-                <label className="d-block" htmlFor="availability">Select Availability <span className="text-danger">*</span></label>
-                <Select 
-                    options={DAYS}
-                    onChange = {onChangeAvailability} 
                     isMulti 
                 />
             </div>

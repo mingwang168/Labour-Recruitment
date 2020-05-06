@@ -23,9 +23,17 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
+        public class IncidentVM
+        {
+            public int? IncidentReportId { get; set; }
+            public DateTime? IncidentReportDate { get; set; }
+            public string IncidentType { get; set; }
+            public string JobTitle { get; set; }
+        }
+
         // GET: api/Incidents
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncidents()
+        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetAllIncidents()
         {
             var reports = await _context.IncidentReport.ToListAsync();
             foreach (IncidentReport report in reports)
@@ -48,7 +56,7 @@ namespace labourRecruitment.Controllers
             return reports;
         }
 
-        // GET: api/Incidents/5
+        // GET: api/Incidents/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<IncidentReport>> GetIncidentByIncidentId(int id)
         {
@@ -61,12 +69,17 @@ namespace labourRecruitment.Controllers
 
             incident.Job = _context.Job.Where(j => j.JobId == incident.JobId).Select(j => new Job
             {
-                ClientId = j .ClientId,
                 Title = j.Title,
                 Street = j.Street,
                 City = j.City,
                 State = j.State,
                 Client = j.Client,
+                JobLabourer = j.JobLabourer.Select(jl => new JobLabourer
+                {
+                    Labourer = jl.Labourer,
+                    Skill = jl.Skill
+                }).ToList()
+
             }).FirstOrDefault();
             incident.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == incident.IncidentTypeId).Select(i => new IncidentType
             {
@@ -77,21 +90,12 @@ namespace labourRecruitment.Controllers
                 {
                     Labourer = l.Labourer
                 }).ToList();
-            //var labourers = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == incident.IncidentReportId).
-            //    Select(l => l.Labourer).ToList();
-
-            //List<JobLabourer> jobLabourers = new List<JobLabourer>();
-            //foreach (Labourer l in labourers)
-            //{
-            //    jobLabourers.Add( _context.JobLabourer.Where(jb => jb.LabourerId == l.LabourerId).FirstOrDefault());
-            //}
-
 
             return incident;
         }
 
+        // GET: api/Incidents/GetIncidentsByJobId/{jobId}
         [HttpGet("{jobId}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetIncidentsByJobId(int jobId)
         {
 
@@ -112,6 +116,48 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(incident);
         }
 
+        // GET: api/Incidents/GetIncidentsByLabourerId/{labourerId}
+        [HttpGet("{labourerId}", Name = "GetIncidentsByLabourerId")]
+        public IActionResult GetIncidentsByLabourerId(int labourerId)
+        {
+            var incident = _context.LabourerIncidentReport.Where(l => l.LabourerId == labourerId).
+                Select(l => new IncidentVM
+                {
+                    IncidentReportId = l.IncidentReportId,
+                    IncidentReportDate = l.IncidentReport.IncidentReportDate,
+                    IncidentType = l.IncidentReport.IncidentType.IncidentTypeName,
+                    JobTitle = l.IncidentReport.Job.Title
+
+                }).ToList();
+
+            if (incident == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(incident);
+        }
+
+        // GET: api/Incidents/GetIncidentsByClientId/{clientId}
+        [HttpGet("{clientId}", Name = "GetIncidentsByClientId")]
+        public IActionResult GetIncidentsByClientId(int clientId)
+        {
+            var incident = _context.LabourerIncidentReport.Where(l => l.IncidentReport.Job.Client.ClientId == clientId)
+                .Select(l => new IncidentVM
+                {
+                    IncidentReportId = l.IncidentReportId,
+                    IncidentReportDate = l.IncidentReport.IncidentReportDate,
+                    IncidentType = l.IncidentReport.IncidentType.IncidentTypeName,
+                    JobTitle = l.IncidentReport.Job.Title
+
+                })
+                .Distinct();
+
+            if (incident == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(incident);
+        }
 
         // POST: api/Incidents
         [HttpPost]
@@ -128,8 +174,5 @@ namespace labourRecruitment.Controllers
             _context.SaveChanges();
             return new ObjectResult(report.IncidentReport.IncidentReportId);
         }
-
-
-        
     }
 }

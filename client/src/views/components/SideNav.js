@@ -12,7 +12,7 @@ const SideNav = () => {
         },
         {
             name: "Profile",
-            path: "/profile/client",
+            path: `/profile/client/${Auth.getID()}`,
             icon: "account_box"
         },
         {
@@ -40,18 +40,13 @@ const SideNav = () => {
         },
         {
             name: "My Profile",
-            path: "/profile/labourer",
+            path: `/profile/labourer/${Auth.getID()}`,
             icon: "account_box"
         },
         {
             name: "Incidents",
             path: "/incidents",
             icon: "report_problem"
-        },
-        {
-            name: "Invoices",
-            path: "/invoices",
-            icon: "receipt"
         }
     ];
     

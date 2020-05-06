@@ -37,8 +37,19 @@ const TopNav = () => {
                     </h5>
                 </Link>
                 <div className="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
-                    <a className="dropdown-item mt-1" href="/profile/client">Settings</a>
-                    <Link to="/" onClick={Auth.logout} className="dropdown-item">Logout</Link>
+                    <Link
+                        to="/profile/edit"
+                        className="dropdown-item mt-1"
+                    >
+                        Settings
+                    </Link>
+                    <Link
+                        to="/"
+                        onClick={Auth.logout}
+                        className="dropdown-item"
+                    >
+                        Logout
+                    </Link>
                 </div>
             </li>
         </ul>

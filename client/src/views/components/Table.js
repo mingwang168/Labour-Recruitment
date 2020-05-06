@@ -57,7 +57,7 @@ const Pagination = ({
     );
 }
 
-const Table = ({ columns, data, history, path, itemsPerRow }) => {
+const Table = ({ columns, data, history, path, itemsPerPage, searchable, striped }) => {
 
     const {
         getTableProps,
@@ -78,7 +78,7 @@ const Table = ({ columns, data, history, path, itemsPerRow }) => {
         {
           columns,
           data,
-          initialState: {pageIndex: 0, pageSize: itemsPerRow ? itemsPerRow : 10}
+          initialState: {pageIndex: 0, pageSize: itemsPerPage ? itemsPerPage : 10}
         },
         useGlobalFilter,
         usePagination
@@ -90,6 +90,7 @@ const Table = ({ columns, data, history, path, itemsPerRow }) => {
 
     return (
         <>
+        { searchable &&
         <div className="row d-flex justify-content-end">
         <div className="col col-lg-4 col-xl-3">
         <Search
@@ -99,27 +100,32 @@ const Table = ({ columns, data, history, path, itemsPerRow }) => {
         />
         </div>
         </div>
+        }
         
-        <table className="table table-bordered table-striped table-hover" {...getTableProps()}>
+        <table
+            className={`table table-bordered ${striped && "table-striped"} table-hover`}
+            {...getTableProps()}
+        >
             <thead>
               {headerGroups.map(headerGroup => (
                 <tr {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map(column => (
                     <th {...column.getHeaderProps()}>
-                      {column.render("Header")}
+                        {column.render("Header")}
                     </th>
                   ))}
                 </tr>
               ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-              {page.map((row, i) => {
+                {page.map((row, i) => {
                 prepareRow(row);
                 return (
-                  <tr
-                    onClick={() => path && viewDetails(row.original.id)}
-                    {...row.getRowProps()}
-                    style={{cursor:'pointer'}}>
+                    <tr
+                        onClick={() => path && viewDetails(row.original.id)}
+                        {...row.getRowProps()}
+                        style={{cursor:'pointer'}}
+                    >
                     {row.cells.map((cell, i) => {
 
                         // Check if colored badge needs to be rendered
@@ -133,7 +139,7 @@ const Table = ({ columns, data, history, path, itemsPerRow }) => {
 
                         return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
                     })}
-                  </tr>
+                    </tr>
                 );
               })}
             </tbody>

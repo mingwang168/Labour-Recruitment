@@ -24,7 +24,7 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        //GET: api/Job/GetAllActiveJobs
+        // GET: api/Job/GetAllActiveJobs
         [HttpGet]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
@@ -32,14 +32,15 @@ namespace labourRecruitment.Controllers
             return await _context.Job.ToListAsync();
         }
 
-        //GET: api/Job/GetAllActiveJobs
+        // GET: api/Job/GetAllActiveJobs
         [HttpGet]
-       [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetAllActiveJobs()
         {
             return await _context.Job.Where(job => job.InProgress == true).ToListAsync();
         }
 
+        // GET: api/Job/GetJob/{id}
         [HttpGet("{id}", Name = "GetJob")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetJob(int id)
@@ -77,6 +78,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(job);
         }
 
+        // GET: api/Job/GetJobByClientId
         [HttpGet("{clientId}", Name = "GetJobByClientId")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetJobByClientId(int clientId)
@@ -93,6 +95,7 @@ namespace labourRecruitment.Controllers
             }).ToListAsync();
         }
 
+        // GET: api/Job/GetClientIDByJobID
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetClientIDByJobID(int id)
@@ -105,6 +108,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(client);
         }
 
+        // GET: api/Job/GetJobByLabourerId
         [HttpGet("{labourerId}", Name = "GetJobByLabourerId")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetJobByLabourerId(int labourerId)
@@ -120,8 +124,6 @@ namespace labourRecruitment.Controllers
                 JobLabourer = jl.Job.JobLabourer
             }).ToListAsync();
         }
-
-
 
         // POST: api/Job
         [HttpPost]
