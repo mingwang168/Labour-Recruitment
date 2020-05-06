@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Checkbox from 'react-simple-checkbox';
 import * as DataSanitizer from '../utils/DataSanitizer';
 
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
-import RateWorkers from './components/RateWorkers'
 import Table from './components/Table';
 import ErrorMessage from './components/ErrorMessage';
 
@@ -20,6 +20,8 @@ const JobDetail = (props) => {
     const [details, setDetails] = useState();
     const [incidents, setIncidents] = useState([""]);
     const [attendanceDates, setAttendanceDates] = useState();
+    const [safetyMeeting, setSafetyMeeting] = useState();
+    
     const fetchJobDetails = async(id) => {
        
         // Job details
@@ -71,6 +73,10 @@ const JobDetail = (props) => {
         } catch (err) {
             console.error(err);
         }
+    }
+
+    const changeSafetyMeetingCompleted = (newVal) => {
+       setSafetyMeeting(newVal)
     }
 
     useEffect(() => {
@@ -203,22 +209,18 @@ const JobDetail = (props) => {
                         <h5 className="card-header">Safety Meetings</h5>
                         <div className="card-body">
                             <p>Safety meetings are mandatory. Please check off the dates where safety meetings were completed.</p>
-                            <fieldset>
                             {details.jobLabourer.map((jLabourer,i) => (
-                                <div className="custom-control mb-1" key={i}>
-                                { jLabourer.safetyMeetingCompleted ? 
-                                <input type="checkbox" className="custom-control-input" 
-                                      id= "formsCheckboxDefault"  checked /> :
-                                <input type="checkbox" className="custom-control-input" 
-                                      id= "formsCheckboxDefault"  />
-                                }
-                                <label className="custom-control-label" htmlFor= "formsCheckboxDefault">
+                                <div>
+                                {/* <input type="checkbox" class="custom-control-input" value={safetyMeeting} 
+                                        checked={safetyMeeting} 
+                                        onChange={changeSafetyMeetingCompleted} /> */}
+                                <Checkbox size="3" tickSize="2" color="#5969ff" onChange={changeSafetyMeetingCompleted} checked={safetyMeeting} />
+                                <span className="ml-2">
                                     {jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}
-                                </label>
+                                </span>
                               </div>
                             ))
                             }
-                          </fieldset>
                         </div>
                     </div>
 
