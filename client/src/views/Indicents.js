@@ -9,8 +9,6 @@ import PageHeader from './components/PageHeader';
 import Loader from './components/Loader';
 import Table from './components/Table';
 
-import { INCIDENTS_TABLE_COLUMNS } from '../utils/TableColumns';
-
 const BASE_URL = "http://localhost:5001/api";
 
 const Incidents = (props) => {
@@ -19,40 +17,55 @@ const Incidents = (props) => {
 
     const [loaded, setLoaded] = useState(false);
     const [incidents, setIncidents] = useState();
+    const [incidentsTableColumns, setIncidentsTableColumns] = useState();
 
-    const fetchIncidents = async() => {
-        let token = Auth.getToken()
+    const fetchIncidents = async(id) => {
         try {
-            let response = await fetch(BASE_URL + "/Incidents/GetAllIncidents" , {
-                method : "GET",
+            // URI for either Client or Labourer role
+            const URI = `${BASE_URL}/Incidents/GetIncidentsBy${Auth.getRole()}Id/${id}`;
+
+            // Fetch
+            let response = await fetch(URI, {
+                method: "GET",
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${Auth.getToken()}`
                 }
             })
 
+            // Check for valid response
             if(response.status !== 200) {
                 throw response;
             }
             
+            // Process response data
             let data = await response.json();
-
             if(data.length) {
-                setIncidents(DataSanitizer.cleanIncidentsData(data));
+                let formattedData = data.map(d => ({
+                    id: d.incidentReportId,
+                    date: DataSanitizer.formatDateString(d.incidentReportDate),
+                    job: d.jobTitle,
+                    type: d.incidentType
+                }));
+
+                setIncidentsTableColumns([
+                    {Header: 'Date', accessor: 'date'},
+                    {Header: 'Incident Type', accessor: 'type'},
+                    {Header: 'Job Title', accessor: 'job'},
+                ]);
+
+                setIncidents(formattedData);
             }
         } catch (e) {
             console.error(e);
         }
+
+        // Set loading state
         setLoaded(true);
     }
 
-    useEffect(() => {
-        fetchIncidents();
-    }, [])
-
-    const content = !authorized ? <Redirect to="/dashboard" />  :
-    (
+    const content = !authorized ? <Redirect to="/dashboard" /> : (
     <>
     <PageHeader
         title={"Incidents"}
@@ -80,9 +93,9 @@ const Incidents = (props) => {
             <Loader loaded={loaded}>
                 <Table
                     data={incidents}
-                    columns={INCIDENTS_TABLE_COLUMNS}
+                    columns={incidentsTableColumns}
                     path="/incident"
-                    searchable="true"
+                    searchable={true}
                     {...props}
                 />
             </Loader>
@@ -92,6 +105,10 @@ const Incidents = (props) => {
     </div>
     </>
     );
+
+    useEffect(() => {
+        if(authorized) fetchIncidents(Auth.getID());
+    }, [])
 
     return <Layout content={content} />;
 }
