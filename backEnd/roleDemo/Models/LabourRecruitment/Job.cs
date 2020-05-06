@@ -25,7 +25,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public string City { get; set; }
         public string State { get; set; }
         public string PostalCode { get; set; }
-        public int? TotalHired { get; set; }
+        public int TotalHired { get; set; }
         public bool? ScheduleDone { get; set; }
 
         public virtual Client Client { get; set; }

@@ -9,15 +9,41 @@ import Table from '../components/Table';
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
 
-import { ATTENDANCE_RATINGS_TABLE_COLUMNS } from '../../utils/TableColumns';
 import RateWorkers from '../components/RateWorkers';
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientLabourerAttendance = (props) => {
 
     const [list, setList] = useState();
-
-    
+    const [rating, setRating] = useState();
+    const changeRating = async(newRating) => {
+        let token = Auth.getToken()
+        if (token == null) {
+            Auth.forceLogout()
+        }
+        try{
+            const response = await fetch(BASE_URL + '/LabourerAttendance', {
+                method : 'PUT',
+                headers : {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                }, 
+                body : JSON.stringify({
+                    JobId : props.match.params.id,
+                    LabourerId : list.labourerId,
+                    DailyQualityRating : newRating,
+                    Date : props.match.params.date + "T00:00:00"
+                })
+            })
+            const data = await response.json()
+            // if (data) {
+            //     setRating(data.labourerSafetyRating)
+            // }
+        } catch (err) {
+            console.error(err);
+        }
+    }
     const getList = async(id, date) => {
         try {
             const response = await fetch(BASE_URL + `/LabourerAttendance/data?jobId=${id}&date=${date}`, {
@@ -29,6 +55,7 @@ const ClientLabourerAttendance = (props) => {
                 }
             })
             let data = await response.json();
+            console.log(data)
             setList(DataSanitizer.cleanAttendanceRatingsData(data));
         } catch (err) {
             console.error(err);
@@ -83,7 +110,9 @@ const ClientLabourerAttendance = (props) => {
                                 {list.map((l,i) => (
                                     <tr key = {i}>
                                         <td>{l.name}</td>
-                                        <td><RateWorkers /></td>
+                                        <td>
+                                            <RateWorkers  changeRating={changeRating} rating={l.DailyQualityRating} />
+                                        </td>
                                     </tr>
                                 ))
                             }

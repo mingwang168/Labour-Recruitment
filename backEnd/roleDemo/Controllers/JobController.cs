@@ -24,17 +24,17 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        // GET: api/Job/GetAllJobs
+        //GET: api/Job/GetAllActiveJobs
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
         {
             return await _context.Job.ToListAsync();
         }
 
-        // GET: api/Job/GetAllActiveJobs
+        //GET: api/Job/GetAllActiveJobs
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+       [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetAllActiveJobs()
         {
             return await _context.Job.Where(job => job.InProgress == true).ToListAsync();
@@ -44,7 +44,7 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetJob(int id)
         {
-           
+
             var job = await _context.Job.FindAsync(id);
             job.JobSkill = await _context.JobSkill.Where(js => js.JobId == id).Select(ojs => new JobSkill()
             {
