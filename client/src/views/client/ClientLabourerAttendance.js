@@ -104,10 +104,12 @@ const ClientLabourerAttendance = (props) => {
                                     <tr key = {i}>
                                         <td>{l.name}</td>
                                         <td>
-                                            <RateWorkers  changeRating={changeRating} 
-                                                          rating={l.rating} 
-                                                          clientId={l.clientId} 
-                                                          labourerId={l.labourerId} />
+                                            <RateWorkers  
+                                                changeRating={changeRating} 
+                                                rating={l.rating} 
+                                                clientId={l.clientId} 
+                                                labourerId={l.labourerId} 
+                                            />
                                         </td>
                                     </tr>
                                 ))
