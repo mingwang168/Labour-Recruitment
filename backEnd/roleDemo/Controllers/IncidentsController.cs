@@ -66,6 +66,7 @@ namespace labourRecruitment.Controllers
                 Street = j.Street,
                 City = j.City,
                 State = j.State,
+                ClientId = j.ClientId,
                 Client = j.Client,
             }).FirstOrDefault();
 
