@@ -57,7 +57,7 @@ const Pagination = ({
     );
 }
 
-const Table = ({ columns, data, history, path, itemsPerPage, searchable }) => {
+const Table = ({ columns, data, history, path, itemsPerPage, searchable, striped }) => {
 
     const {
         getTableProps,
@@ -102,7 +102,10 @@ const Table = ({ columns, data, history, path, itemsPerPage, searchable }) => {
         </div>
         }
         
-        <table className="table table-bordered table-striped table-hover" {...getTableProps()}>
+        <table
+            className={`table table-bordered ${striped && "table-striped"} table-hover`}
+            {...getTableProps()}
+        >
             <thead>
               {headerGroups.map(headerGroup => (
                 <tr {...headerGroup.getHeaderGroupProps()}>
