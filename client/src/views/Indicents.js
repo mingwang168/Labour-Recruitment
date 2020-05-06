@@ -22,7 +22,6 @@ const Incidents = () => {
                 }
             })
             let data = await response.json()
-            console.log(data)
             setIncidents(data)
         } catch (e) {
             console.error(e);

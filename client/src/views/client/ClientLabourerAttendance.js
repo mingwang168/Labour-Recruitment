@@ -9,8 +9,8 @@ import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
 
 import RateWorkers from '../components/RateWorkers';
-const BASE_URL = "http://localhost:5001/api";
 
+const BASE_URL = "http://localhost:5001/api";
 const ClientLabourerAttendance = (props) => {
 
     const [list, setList] = useState();

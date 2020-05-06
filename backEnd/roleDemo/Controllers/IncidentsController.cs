@@ -67,13 +67,6 @@ namespace labourRecruitment.Controllers
                 City = j.City,
                 State = j.State,
                 Client = j.Client,
-                JobLabourer = j.JobLabourer.Select(jl => new JobLabourer
-                {
-                    LabourerSafetyRating = jl.LabourerSafetyRating,
-                    Labourer = jl.Labourer,
-                    Skill = jl.Skill
-                }).ToList()
-
             }).FirstOrDefault();
             incident.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == incident.IncidentTypeId).Select(i => new IncidentType
             {
@@ -84,6 +77,15 @@ namespace labourRecruitment.Controllers
                 {
                     Labourer = l.Labourer
                 }).ToList();
+            //var labourers = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == incident.IncidentReportId).
+            //    Select(l => l.Labourer).ToList();
+
+            //List<JobLabourer> jobLabourers = new List<JobLabourer>();
+            //foreach (Labourer l in labourers)
+            //{
+            //    jobLabourers.Add( _context.JobLabourer.Where(jb => jb.LabourerId == l.LabourerId).FirstOrDefault());
+            //}
+
 
             return incident;
         }
@@ -111,7 +113,7 @@ namespace labourRecruitment.Controllers
         }
 
 
-        //// POST: api/Incidents
+        // POST: api/Incidents
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostIncident(IncidentReportVM report)
