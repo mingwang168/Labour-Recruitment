@@ -173,8 +173,7 @@ const LabourerUpdateProfile = (props) => {
                         LabourerId: id,
                         LabourerFirstName: firstname,
                         LabourerLastName: lastname,
-                        LabourerEmail: email,
-                        IsAvailable: isAvailable
+                        LabourerEmail: email
                     }
                 })
             })
