@@ -11,7 +11,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public int? LabourerId { get; set; }
         public double? ClientQualityRating { get; set; }
         public double? LabourerSafetyRating { get; set; }
-        public bool? SafetyMeetingCompleted { get; set; }
+        public bool SafetyMeetingCompleted { get; set; }
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
         public int Duration { get; set; }

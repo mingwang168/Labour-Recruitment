@@ -33,5 +33,18 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(labourers);
         }
 
+        [HttpPut]
+       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult PutSafetyMeetingCompeleted([FromBody]JobLabourer jobLabourer)
+        {
+            var joblabourers = _context.JobLabourer.Where(jl => jl.JobId == jobLabourer.JobId && jl.LabourerId == jobLabourer.LabourerId).ToList();
+            foreach(JobLabourer jl in joblabourers)
+            {
+                jl.SafetyMeetingCompleted = jobLabourer.SafetyMeetingCompleted;
+                
+            };
+            _context.SaveChanges();
+            return new ObjectResult(jobLabourer);
+        }
     }
 }
