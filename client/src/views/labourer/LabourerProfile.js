@@ -6,6 +6,7 @@ import * as DataSanitizer from '../../utils/DataSanitizer';
 import { isWholeNumber } from '../../utils/IsWholeNumber';
 
 import Layout from '../components/Layout';
+import PageHeader from '../components/PageHeader';
 import Table from '../components/Table';
 import OneColumnTable from '../components/OneColumnTable';
 import AvailabilityBadge from '../components/AvailabilityBadge';
@@ -33,8 +34,10 @@ const LabourerProfile = (props) => {
         authorized && Auth.authenticateLabourer()
     );
 
-    // Data
+    // Component
     const [loaded, setLoaded] = useState();
+
+    // Data
     const [labourer, setLabourer] = useState();
     const [skills, setSkills] = useState();
     const [jobs, setJobs] = useState();
@@ -173,31 +176,13 @@ const LabourerProfile = (props) => {
 
     const profile = labourer && (
     <>
-    {/* Page Header */}
-    <div className="row">
-    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-    <div className="page-header">
-        <h2 className="pageheader-title">My Profile</h2>
-        <div className="page-breadcrumb">
-            <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-                <li className="breadcrumb-item">
-                    <Link
-                    to="/dashboard"
-                    className="breadcrumb-link"
-                    >
-                        Home
-                    </Link>
-                </li>
-                <li className="breadcrumb-item active" aria-current="page">
-                    Profile
-                </li>
-            </ol>
-            </nav>
-        </div>
-    </div>
-    </div>
-    </div>
+    <PageHeader
+        title={`Labourer Profile`}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Labourer Profile" }
+        ]}
+    />
 
     <div className="row">
         {/* Profile */}
@@ -281,6 +266,7 @@ const LabourerProfile = (props) => {
             <div className="card">
                 <div className="card-header d-flex">
                     <h4 className="card-header-title">Active Jobs</h4>
+                    { isProfileOwner &&
                     <div className="toolbar ml-auto">
                         <Link
                             to="/dashboard"
@@ -289,6 +275,7 @@ const LabourerProfile = (props) => {
                             View All
                         </Link>
                     </div>
+                    }
                 </div>
                 <div className="card-body">
                     { !jobs ? <ErrorMessage message={"No jobs to display."} /> :
@@ -307,6 +294,7 @@ const LabourerProfile = (props) => {
             <div className="card">
                 <div className="card-header d-flex">
                     <h4 className="card-header-title">Incident Reports</h4>
+                    { isProfileOwner &&
                     <div className="toolbar ml-auto">
                         <Link
                             to="/incidents"
@@ -315,9 +303,10 @@ const LabourerProfile = (props) => {
                             View All
                         </Link>
                     </div>
+                    }
                 </div>
                 <div className="card-body">
-                    { !incidents ? <p>No incidents to display.</p> :
+                    { !incidents ? <ErrorMessage message={"No incidents to display."} /> :
                     <Table
                         data={incidents}
                         columns={incidentsTableColumns}
