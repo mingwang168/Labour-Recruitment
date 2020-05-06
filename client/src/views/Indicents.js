@@ -13,9 +13,13 @@ const BASE_URL = "http://localhost:5001/api";
 
 const Incidents = (props) => {
 
+    // Authorization
     const [authorized] = useState(Auth.authenticateClient() || Auth.authenticateLabourer());
 
+    // Component
     const [loaded, setLoaded] = useState(false);
+
+    // Data
     const [incidents, setIncidents] = useState();
     const [incidentsTableColumns, setIncidentsTableColumns] = useState();
 
