@@ -95,7 +95,6 @@ namespace labourRecruitment.Controllers
         }
 
         [HttpGet("{jobId}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetIncidentsByJobId(int jobId)
         {
 
@@ -151,8 +150,5 @@ namespace labourRecruitment.Controllers
             _context.SaveChanges();
             return new ObjectResult(report.IncidentReport.IncidentReportId);
         }
-
-
-        
     }
 }
