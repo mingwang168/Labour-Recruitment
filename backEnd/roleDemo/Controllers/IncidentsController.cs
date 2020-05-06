@@ -25,7 +25,7 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Incidents
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncident()
+        public async Task<ActionResult<IEnumerable<IncidentReport>>> GetIncidents()
         {
             var reports = await _context.IncidentReport.ToListAsync();
             foreach (IncidentReport report in reports)
@@ -50,7 +50,7 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Incidents/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IncidentReport>> GetIncident(int id)
+        public async Task<ActionResult<IncidentReport>> GetIncidentByIncidentId(int id)
         {
             var incident = await _context.IncidentReport.FindAsync(id);
 
@@ -86,13 +86,20 @@ namespace labourRecruitment.Controllers
             return incident;
         }
 
-       
-        [HttpGet("{jobId}", Name = "GetIncidentsByJobId")]       
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("{jobId}")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetIncidentsByJobId(int jobId)
-        { 
-       
-            var incident = _context.IncidentReport.Where(j => j.JobId == jobId).ToListAsync();
+        {
+
+            var incident = _context.IncidentReport.Where(j => j.JobId == jobId).Select(i => new IncidentReport {
+                IncidentReportId = i.IncidentReportId,
+                IncidentReportDate = i.IncidentReportDate,
+                Job = i.Job,
+                IncidentType = i.IncidentType,
+                LabourerIncidentReport = i.LabourerIncidentReport
+
+            }).ToList();
+           
 
             if (incident == null)
             {

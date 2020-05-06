@@ -13,7 +13,7 @@ const Incidents = () => {
     const fetchIncidents = async() => {
         let token = Auth.getToken()
         try {
-            let response = await fetch(BASE_URL + "/incidents" , {
+            let response = await fetch(BASE_URL + "/incidents/GetIncidents" , {
                 method : "GET",
                 headers: {
                     "Accept": "application/json",

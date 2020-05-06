@@ -53,10 +53,6 @@ exports.LABOURERS_TABLE_COLUMNS = [
 
 exports.INCIDENTS_TABLE_COLUMNS = [
     {
-        Header: 'Job',
-        accessor: 'job',
-    },
-    {
         Header: 'Date',
         accessor: 'date',
     },
@@ -89,7 +85,8 @@ exports.ATTENDANCE_DATES_TABLE_COLUMNS = [
     { Header: 'Date', accessor: 'date' }
 ]
 
+
 exports.ATTENDANCE_RATINGS_TABLE_COLUMNS = [
     { Header: 'Labourer Name', accessor: 'name' },
-    { Header: 'Quality Rating', accessor: 'rating' },
+    { Header: 'Quality Rating', accessor: 'rating'},
 ]

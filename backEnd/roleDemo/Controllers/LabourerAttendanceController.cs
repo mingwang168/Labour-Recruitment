@@ -37,7 +37,8 @@ namespace labourRecruitment.Controllers
             {
                 DailyQualityRating = l.DailyQualityRating,
                 Date = l.Date,
-                Labourer = l.Labourer
+                Labourer = l.Labourer,
+                Job = l.Job
             });
             return new ObjectResult(labourers);
         }
