@@ -1,19 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
 
+import Loader from '../components/Loader';
 import Table from '../components/Table';
 import PageHeader from '../components/PageHeader';
-
-import { JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+import ErrorMessage from '../components/ErrorMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientDashboard = (props) => {
 
-    const [jobs, setJobs] = useState([]);
+    // Components
+    const [loaded, setLoaded] = useState(false);
+
+    // Data
+    const [jobs, setJobs] = useState();
+    const [jobsTableColumns, setJobsTableColumns] = useState();
 
     const fetchJobs = async() => {
         try {
@@ -24,13 +28,35 @@ const ClientDashboard = (props) => {
                 }
             });
 
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
+
             if(data.length) {
-                setJobs(DataSanitizer.cleanJobsData(data));
+                let formattedData = data.map(d => ({
+                    id: d.jobId,
+                    title: d.title,
+                    startdate: DataSanitizer.formatDateString(d.startDate),
+                    enddate: DataSanitizer.formatDateString(d.endDate),
+                    status: d.isComplete ? "Complete" : "In Progress"
+                }));
+
+                setJobs(formattedData);
+                setJobsTableColumns([
+                    {Header: 'Job Title', accessor: 'title'},
+                    {Header: 'Start Date', accessor: 'startdate'},
+                    {Header: 'End Date', accessor: 'enddate'},
+                    {Header: 'Completion Status', accessor: 'status'},
+                ]);
             }
         } catch(e) {
             console.error(e);
         }
+
+        // Set loading state
+        setLoaded(true);
     }
 
     useEffect(() => {
@@ -38,7 +64,7 @@ const ClientDashboard = (props) => {
     }, [])
 
     return (
-    <>
+    <Loader loaded={loaded}>
     <div className="row">
     <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 
@@ -49,7 +75,11 @@ const ClientDashboard = (props) => {
                 { name: "Client Dashboard" }
             ]}
         />
-        
+
+        {/* Display dashboard data if jobs exist */}
+        { !jobs ?
+        <ErrorMessage message={"You have not created any jobs yet."} /> :
+        <>
         {/* Stats */}
         <div className="row">
             <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -115,25 +145,24 @@ const ClientDashboard = (props) => {
         <div className="card">
         <h5 className="card-header">All Jobs</h5>
         <div className="card-body">
-            { jobs.length ?
+            { jobs &&
             <Table
-                columns={JOBS_TABLE_COLUMNS}
                 data={jobs}
+                columns={jobsTableColumns}
                 path="/job"
                 searchable={true}
                 {...props}
             />
-            :
-            <p className="lead">No jobs to display.</p>
             }
         </div>
         </div>
         </div>
         </div>
-
+        </>
+        }
     </div>
     </div>
-    </>
+    </Loader>
     )
 }
 
