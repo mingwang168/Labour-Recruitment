@@ -149,7 +149,7 @@ namespace labourRecruitment.Controllers
                     IncidentType = l.IncidentReport.IncidentType.IncidentTypeName,
                     JobTitle = l.IncidentReport.Job.Title
 
-                }).ToList();
+                }).Distinct();
 
             if (incident == null)
             {
