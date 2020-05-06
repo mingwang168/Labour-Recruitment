@@ -14,8 +14,7 @@ const BASE_URL = "http://localhost:5001/api";
 const ClientLabourerAttendance = (props) => {
 
     const [list, setList] = useState();
-    const [rating, setRating] = useState();
-
+    
     const changeRating = async(newRating, labourerId) => {
         let token = Auth.getToken()
         if (token == null) {
@@ -37,9 +36,9 @@ const ClientLabourerAttendance = (props) => {
                 })
             })
             const data = await response.json()
-            // if (data) {
-            //     setRating(data.labourerSafetyRating)
-            // }
+            if (data) {
+                console.log(data)
+            }
         } catch (err) {
             console.error(err);
         }
@@ -60,7 +59,7 @@ const ClientLabourerAttendance = (props) => {
             console.error(err);
         }
     }
-    console.log(list)
+
     useEffect(() =>{
         if(props.match.params.id && props.match.params.date) {
             let date = props.match.params.date + "T00:00:00"
