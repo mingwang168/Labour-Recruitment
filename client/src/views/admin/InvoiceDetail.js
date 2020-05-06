@@ -12,7 +12,7 @@ import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
-const AdminInvoiceDetail = (props) => {
+const InvoiceDetail = (props) => {
 
     // Authorization
     const [authorized, setAuthorized] = useState(
@@ -136,4 +136,4 @@ const AdminInvoiceDetail = (props) => {
     return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
-export default AdminInvoiceDetail;
+export default InvoiceDetail;
