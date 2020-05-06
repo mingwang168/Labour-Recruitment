@@ -38,7 +38,7 @@ const TopNav = () => {
                 </Link>
                 <div className="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                     <Link
-                        to="/editprofile"
+                        to="/profile/edit"
                         className="dropdown-item mt-1"
                     >
                         Settings
