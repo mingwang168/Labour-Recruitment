@@ -6,7 +6,7 @@ import * as Auth from '../../utils/Auth';
 const RateWorkers = (props) => {
     const [rating, setRating] = useState(props.rating)
     const changeRating = async(newRating) => {
-        props.changeRating(newRating, props.labourerId)
+        props.changeRating(newRating, props.labourerId, props.jobId)
         setRating(newRating)
     }
     

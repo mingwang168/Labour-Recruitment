@@ -8,6 +8,7 @@ import * as Auth from '../utils/Auth'
 
 const BASE_URL = "http://localhost:5001/api";
 const IncidentDetail = (props) => {
+
     const [report, setReport] = useState()
     const [jobLabourer, setJobLabourer] = useState()
 
@@ -33,12 +34,41 @@ const IncidentDetail = (props) => {
             console.error(e);
         }
     }
+   
+    const changeRating = async(newRating, labourerId, jobId) => {
+        let token = Auth.getToken()
+        if (token == null) {
+            Auth.forceLogout()
+        }
+
+        try{
+            const response = await fetch(BASE_URL + '/JobHistory/LabourerSafety', {
+                method : 'PUT',
+                headers : {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                }, 
+                body : JSON.stringify({
+                    JobId : jobId,
+                    LabourerId : labourerId,
+                    LabourerSafetyRating : newRating,
+                })
+            })
+            const data = await response.json()
+            if (data) {
+                console.log(data)
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
     
     useEffect(() =>{
         fetchIncidentDetails(props.match.params.id)
     }, [])
 
-   console.log(jobLabourer)
+
     return (
         <>
         {report && 
@@ -113,7 +143,9 @@ const IncidentDetail = (props) => {
                                             <td>{j.labourer.labourerFirstName} {j.labourer.labourerLastName}</td>
                                             <td>
                                                 <RateWorkers
+                                                   changeRating={changeRating}
                                                    clientId={report.job.clientId} 
+                                                   jobId={report.jobId}
                                                    labourerId={j.labourer.labourerId}
                                                    rating={j.labourerSafetyRating}
                                                 />
