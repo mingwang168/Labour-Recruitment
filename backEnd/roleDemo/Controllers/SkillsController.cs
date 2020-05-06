@@ -22,7 +22,7 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Skills
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Skill>>> GetSkill()
+        public async Task<ActionResult<IEnumerable<Skill>>> GetAllSkills()
         {
             return await _context.Skill.ToListAsync();
         }
@@ -45,7 +45,6 @@ namespace labourRecruitment.Controllers
         [HttpGet("{labourerId}", Name = "GetSkillNamesByLabourerId")]
         public ActionResult GetSkillNamesByLabourerId(int labourerId)
         {
-
             var skillname = _context.LabourerSkill.Where(ls => ls.LabourerId == labourerId).Select(ols => ols.Skill.SkillName).ToArray();
 
             if (skillname == null)
