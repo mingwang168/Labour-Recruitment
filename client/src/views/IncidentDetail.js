@@ -13,7 +13,7 @@ const IncidentDetail = (props) => {
     const fetchIncidentDetails = async(id) => {
         let token = Auth.getToken()
         try {
-            const response = await fetch(BASE_URL + "/incidents/"+ id , {
+            const response = await fetch(BASE_URL + "/incidents/GetIncidentByIncidentId/"+ id , { 
                 method : "GET", 
                 headers : {
                     "Accept": "application/json",

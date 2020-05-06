@@ -50,7 +50,7 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Incidents/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IncidentReport>> GetIncident(int id)
+        public async Task<ActionResult<IncidentReport>> GetIncidentByIncidentId(int id)
         {
             var incident = await _context.IncidentReport.FindAsync(id);
 
@@ -86,13 +86,20 @@ namespace labourRecruitment.Controllers
             return incident;
         }
 
-       
-        [HttpGet("{jobId}", Name = "GetIncidentsByJobId")]       
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("{jobId}")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetIncidentsByJobId(int jobId)
-        { 
-       
-            var incident = _context.IncidentReport.Where(j => j.JobId == jobId).ToListAsync();
+        {
+
+            var incident = _context.IncidentReport.Where(j => j.JobId == jobId).Select(i => new IncidentReport {
+                IncidentReportId = i.IncidentReportId,
+                IncidentReportDate = i.IncidentReportDate,
+                Job = i.Job,
+                IncidentType = i.IncidentType,
+                LabourerIncidentReport = i.LabourerIncidentReport
+
+            }).ToList();
+           
 
             if (incident == null)
             {
@@ -100,6 +107,37 @@ namespace labourRecruitment.Controllers
             }
             return new ObjectResult(incident);
         }
+
+
+
+        [HttpGet("{labourerId}", Name = "GetIncidentsByLabourerId")]
+        public IActionResult GetIncidentsByLabourerId(int labourerId)
+        {
+            var incident = _context.LabourerIncidentReport.Where(l => l.LabourerId == labourerId).
+                Select(l => new IncidentVM
+                {
+                    IncidentReportId = l.IncidentReportId,
+                    IncidentReportDate = l.IncidentReport.IncidentReportDate,
+                    IncidentType = l.IncidentReport.IncidentType.IncidentTypeName,
+                    JobTitle = l.IncidentReport.Job.Title
+
+                }).ToList();
+
+            if (incident == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(incident);
+        }
+
+        public class IncidentVM
+        {
+            public int? IncidentReportId { get; set; }
+            public DateTime? IncidentReportDate { get; set; }
+            public string IncidentType { get; set; }
+            public string JobTitle { get; set; }
+        }
+
 
 
         //// POST: api/Incidents

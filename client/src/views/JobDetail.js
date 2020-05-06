@@ -10,18 +10,18 @@ import ErrorMessage from './components/ErrorMessage';
 
 import * as Auth from '../utils/Auth';
 
-import { ATTENDANCE_DATES_TABLE_COLUMNS } from '../utils/TableColumns';
+import { ATTENDANCE_DATES_TABLE_COLUMNS, INCIDENTS_TABLE_COLUMNS } from '../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const JobDetail = (props) => {
 
     const [details, setDetails] = useState();
+    const [incidents, setIncidents] = useState([""]);
     const [attendanceDates, setAttendanceDates] = useState();
 
     const fetchJobDetails = async(id) => {
-        let token = Auth.getToken();
-
+       
         // Job details
         try {
             let response = await fetch(BASE_URL + '/job/getJob/' + id , {
@@ -29,11 +29,10 @@ const JobDetail = (props) => {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${ Auth.getToken()}`
                 }
             })
             let data = await response.json();
-            console.log(data)
             setDetails(data);
         } catch (err) {
             console.error(err);
@@ -52,6 +51,23 @@ const JobDetail = (props) => {
             if(data.length) {
                 setAttendanceDates(DataSanitizer.cleanAttendanceDatesData(data));
             }
+        } catch (err) {
+            console.error(err);
+        }
+
+        //Incident reports 
+        try {
+            let response = await fetch(BASE_URL + '/incidents/GetIncidentsByJobId/' + id, {
+                method : 'GET',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            })
+            let data = await response.json();
+            setIncidents(DataSanitizer.cleanIncidentsData(data));
+
         } catch (err) {
             console.error(err);
         }
@@ -136,31 +152,27 @@ const JobDetail = (props) => {
                             <h3 className="font-16">Total Hired</h3>
                             <p>{details.totalHired} labourer(s) hired</p>
                         </div>
+                        { details.clientId == Auth.getID() ?
                         <div className="card-body border-top">
                             <Link to={`/editjob/${details.jobId}`} className="btn btn-light">Edit Job Details</Link>
-                        </div>
+                        </div> : null
+                        }
                     </div>
 
                     {/* Incidents */}
                     <div className="card">
                     <h5 className="card-header">Incident Reports</h5>
                     <div className="card-body">
-                    <table className="table table-bordered job-incidents-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Reports</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><time>Mar 3, 2020</time></td>
-                            <td><span className="badge badge-danger">Required</span></td>
-                            <td><Link to="/incident" className="badge badge-light">View Details</Link></td>
-                        </tr>
-                    </tbody>
-                    </table>
+                    { incidents.length == 0 ?  <p className="text-danger">No incident reports to display.</p> :
+                        <Table 
+                            data={incidents}
+                            columns={INCIDENTS_TABLE_COLUMNS}
+                            path={"/incident"}
+                            itemsPerPage={5}
+                            searchable={false}
+                            {...props}
+                        />
+                    }
                     </div>
                     </div>
                 </div>
@@ -220,7 +232,7 @@ const JobDetail = (props) => {
                     </div>
 
                     {/* Safety Ratings */}
-                    <div className="card" id="safetyratings">
+                    {/* <div className="card" id="safetyratings">
                         <h5 className="card-header">Safety Ratings</h5>
                         <div className="card-body">
                             <p>Give hired labourers a rating, based on their safety-wise performance on this job.</p>
@@ -250,7 +262,7 @@ const JobDetail = (props) => {
                             </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             </>

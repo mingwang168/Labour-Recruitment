@@ -24,17 +24,17 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        // GET: api/Job/GetAllJobs
+        //GET: api/Job/GetAllActiveJobs
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
         {
             return await _context.Job.ToListAsync();
         }
 
-        // GET: api/Job/GetAllActiveJobs
+        //GET: api/Job/GetAllActiveJobs
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+       [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetAllActiveJobs()
         {
             return await _context.Job.Where(job => job.InProgress == true).ToListAsync();
@@ -44,7 +44,7 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetJob(int id)
         {
-           
+
             var job = await _context.Job.FindAsync(id);
             job.JobSkill = await _context.JobSkill.Where(js => js.JobId == id).Select(ojs => new JobSkill()
             {
@@ -146,17 +146,18 @@ namespace labourRecruitment.Controllers
 
         // PUT: api/Job/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutJob(int id, Job job)
+        public async Task<IActionResult> PutJob(int id, [FromBody]Job job)
         {
-            if (id != job.JobId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(job).State = EntityState.Modified;
+           
+            var jobSelected = _context.Job.Where(j => j.JobId == id).FirstOrDefault();
 
             try
             {
+                jobSelected.Title = job.Title;
+                jobSelected.JobDescription = job.JobDescription;
+                jobSelected.Street = job.Street;
+                jobSelected.State = job.State;
+                jobSelected.City = job.City;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -171,7 +172,7 @@ namespace labourRecruitment.Controllers
                 }
             }
 
-            return new ObjectResult(job);
+            return new ObjectResult(id);
         }
 
         private bool JobExists(int id)
