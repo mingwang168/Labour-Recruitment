@@ -83,7 +83,7 @@ const JobDetail = (props) => {
         }
     }, [props.match.params.id])
 
-    console.log(details)
+    
     return (
     <>
     <div className="dashboard-main-wrapper">
@@ -205,8 +205,8 @@ const JobDetail = (props) => {
                         <h5 className="card-header">Safety Meetings</h5>
                         <div className="card-body">
                             <p>Safety meetings are mandatory. Please check off the dates where safety meetings were completed.</p>
-                            {details.jobLabourer.map((jLabourer,i) => (
-                            <CheckSafetyMetting firstname={jLabourer.labourer.labourerFirstName}
+                            {details.jobLabourer.map((jLabourer, i) => (
+                            <CheckSafetyMetting firstname={jLabourer.labourer.labourerFirstName} key={i}
                                                 lastname={jLabourer.labourer.labourerLastName} 
                                                 safetyMeeting={jLabourer.safetyMeetingCompleted} 
                                                 labourerId={jLabourer.labourerId} 
