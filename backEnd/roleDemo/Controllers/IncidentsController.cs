@@ -136,7 +136,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(incident);
         }
 
-        //// POST: api/Incidents
+        // POST: api/Incidents
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PostIncident(IncidentReportVM report)
