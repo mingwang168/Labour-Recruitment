@@ -34,6 +34,7 @@ import AdminClients from "./views/admin/AdminClients";
 import AdminLabourers from "./views/admin/AdminLabourers";
 import AdminIncidents from "./views/admin/AdminIncidents";
 import AdminInvoices from "./views/admin/AdminInvoices";
+import AdminInvoiceDetail from "./views/admin/AdminInvoiceDetail";
 import AdminPayrates from "./views/admin/AdminPayrates";
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
@@ -94,6 +95,7 @@ class App extends Component {
 		<ProtectedRoute exact path='/admin/labourers' component={AdminLabourers} />
 		<ProtectedRoute exact path='/admin/incidents' component={AdminIncidents} />
 		<ProtectedRoute exact path='/admin/invoices' component={AdminInvoices} />
+		<ProtectedRoute exact path='/invoice/:id' component={AdminInvoiceDetail} />
 		<ProtectedRoute exact path='/admin/payrates' component={AdminPayrates} />
 
 		<Route component={PageNotFound} />
