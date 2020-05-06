@@ -9,6 +9,7 @@ import Table from './components/Table';
 import ErrorMessage from './components/ErrorMessage';
 
 import * as Auth from '../utils/Auth';
+import * as Checkbox from '../utils/GetCheckBoxClass';
 
 import { ATTENDANCE_DATES_TABLE_COLUMNS, INCIDENTS_TABLE_COLUMNS } from '../utils/TableColumns';
 
@@ -19,7 +20,6 @@ const JobDetail = (props) => {
     const [details, setDetails] = useState();
     const [incidents, setIncidents] = useState([""]);
     const [attendanceDates, setAttendanceDates] = useState();
-
     const fetchJobDetails = async(id) => {
        
         // Job details
@@ -203,7 +203,15 @@ const JobDetail = (props) => {
                         <h5 className="card-header">Safety Meetings</h5>
                         <div className="card-body">
                             <p>Safety meetings are mandatory. Please check off the dates where safety meetings were completed.</p>
-                            
+                            <fieldset>
+                            {details.jobLabourer.map((jLabourer,i) => (
+                                <div className="custom-control mb-1" key={i}>
+                                <input type="checkbox" className="custom-control-input" id="formsCheckboxDefault" />
+                                <label className="custom-control-label" htmlFor="formsCheckboxDefault">{jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}</label>
+                              </div>
+                            ))
+                            }
+                          </fieldset>
                         </div>
                     </div>
 
