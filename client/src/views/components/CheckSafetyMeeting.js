@@ -34,7 +34,7 @@ const CheckSafetyMeeting = (props) => {
     return (
         <div>
             <Checkbox size="3" tickSize="0" color="#5969ff" 
-                onChange={changeSafetyMeetingCompleted} 
+                onChange={ Auth.getID() == props.clientId && changeSafetyMeetingCompleted } 
                 checked={completed} />
             <span className="ml-2">
                 {props.firstname} {props.lastname}
