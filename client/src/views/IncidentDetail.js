@@ -3,32 +3,64 @@ import { Link } from 'react-router-dom';
 
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
+import RateWorkers from './components/RateWorkers';
 import * as Auth from '../utils/Auth'
 
 const BASE_URL = "http://localhost:5001/api";
-
 const IncidentDetail = (props) => {
-    const [details, setDetails] = useState()
+
+    const [report, setReport] = useState()
+    const [jobLabourer, setJobLabourer] = useState()
 
     const fetchIncidentDetails = async(id) => {
-        let token = Auth.getToken()
+  
         try {
             const response = await fetch(BASE_URL + "/incidents/GetIncidentByIncidentId/"+ id , { 
                 method : "GET", 
                 headers : {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${Auth.getToken()}`
                 }
             })
             const data = await response.json()
             
             if (data) {
-                setDetails(data)
+                setReport(data.incidentReport)
+                setJobLabourer(data.jobLabourers)
             }
 
         } catch (e) {
             console.error(e);
+        }
+    }
+   
+    const changeRating = async(newRating, labourerId, jobId) => {
+        let token = Auth.getToken()
+        if (token == null) {
+            Auth.forceLogout()
+        }
+
+        try{
+            const response = await fetch(BASE_URL + '/JobHistory/LabourerSafety', {
+                method : 'PUT',
+                headers : {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                }, 
+                body : JSON.stringify({
+                    JobId : jobId,
+                    LabourerId : labourerId,
+                    LabourerSafetyRating : newRating,
+                })
+            })
+            const data = await response.json()
+            if (data) {
+                console.log(data)
+            }
+        } catch (err) {
+            console.error(err);
         }
     }
     
@@ -36,10 +68,10 @@ const IncidentDetail = (props) => {
         fetchIncidentDetails(props.match.params.id)
     }, [])
 
-   
+
     return (
         <>
-        {details && 
+        {report && 
         <div className="dashboard-main-wrapper">
             <TopNav />
             <SideNav />
@@ -71,42 +103,66 @@ const IncidentDetail = (props) => {
                         <div className="col col-md-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <h1 className="font-26 mb-0">{details.job.title}</h1>
-                                    <p>{details.job.client.clientName}</p>
-                                    <p>{details.job.street}<br/>{details.job.city}, {details.job.state}</p>
+                                    <h1 className="font-26 mb-0">{report.job.title}</h1>
+                                    <p>{report.job.client.clientName}</p>
+                                    <p>{report.job.street}<br/>{report.job.city}, {report.job.state}</p>
                                 </div>
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Date of Incident</h3>
-                                    <time>{details.incidentReportDate.split('T')[0]}</time>
-                                </div>
-                                <div className="card-body border-top">
-                                    <h3 className="font-16">Affected labourer name(s)</h3>
-                                    {details.labourerIncidentReport.map((r, i) => (
-                                        <ul key={i} className="list-unstyled mb-0">
-                                            <li>{r.labourer.labourerFirstName} {r.labourer.labourerLastName}</li>
-                                        </ul>
-                                    ))
-                                    }
+                                    <time>{report.incidentReportDate.split('T')[0]}</time>
                                 </div>
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Incident type</h3>
-                                    <p>{details.incidentType.incidentTypeName}</p>
+                                    <p>{report.incidentType.incidentTypeName}</p>
                                 </div>
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Incident description</h3>
-                                    <p>{details.incidentReportDescription}</p>
+                                    <p>{report.incidentReportDescription}</p>
                                 </div>
                                 
+                                {/* Display this only if the job owner is viewing this page */}
+                                {/* <div className="card-body border-top">
+                                    <Link to="/editincident" className="btn btn-light">Edit Incident report</Link>
+                                </div> */}
+                                 {/* Safety Ratings */}
+                                {jobLabourer && 
+                                <div className="card" id="safetyratings">
+                                    <h5 className="card-header">Safety Ratings</h5>
+                                    <div className="card-body">
+                                        <p>Give effected labourers a rating, based on their safety-wise performance on this job.</p>
+                                        <table className="table table-bordered table-striped table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Rating</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {jobLabourer.map((j,i) => 
+                                            <tr key = {i}>
+                                            <td>{j.labourer.labourerFirstName} {j.labourer.labourerLastName}</td>
+                                            <td>
+                                                <RateWorkers
+                                                   changeRating={changeRating}
+                                                   clientId={report.job.clientId} 
+                                                   jobId={report.jobId}
+                                                   labourerId={j.labourer.labourerId}
+                                                   rating={j.labourerSafetyRating}
+                                                />
+                                            </td>
+                                        </tr>
+                                        )}
+                                        </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                }
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Incident file</h3>
                                     <div className="custom-file">
                                     <input type="file" className="custom-file-input" id="customFile"></input>
                                     <label className="custom-file-label" htmlFor="customFile">Choose incident file</label>
                                 </div>
-                                </div>
-                                {/* Display this only if the job owner is viewing this page */}
-                                <div className="card-body border-top">
-                                    <Link to="/editincident" className="btn btn-light">Edit Incident Details</Link>
                                 </div>
                             </div>
                         </div>

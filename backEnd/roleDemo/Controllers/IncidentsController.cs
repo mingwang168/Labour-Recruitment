@@ -23,14 +23,7 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        public class IncidentVM
-        {
-            public int? IncidentReportId { get; set; }
-            public DateTime? IncidentReportDate { get; set; }
-            public string IncidentType { get; set; }
-            public string JobTitle { get; set; }
-        }
-
+       
         // GET: api/Incidents
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IncidentReport>>> GetAllIncidents()
@@ -58,7 +51,7 @@ namespace labourRecruitment.Controllers
 
         // GET: api/Incidents/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<IncidentReport>> GetIncidentByIncidentId(int id)
+        public async Task<ActionResult<IncidentDetailVM>> GetIncidentByIncidentId(int id)
         {
             var incident = await _context.IncidentReport.FindAsync(id);
 
@@ -73,25 +66,34 @@ namespace labourRecruitment.Controllers
                 Street = j.Street,
                 City = j.City,
                 State = j.State,
+                ClientId = j.ClientId,
                 Client = j.Client,
-                JobLabourer = j.JobLabourer.Select(jl => new JobLabourer
-                {
-                    Labourer = jl.Labourer,
-                    Skill = jl.Skill
-                }).ToList()
-
             }).FirstOrDefault();
+
             incident.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == incident.IncidentTypeId).Select(i => new IncidentType
             {
                 IncidentTypeName = i.IncidentTypeName
             }).FirstOrDefault();
-            incident.LabourerIncidentReport = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == incident.IncidentReportId).
-                Select(l => new LabourerIncidentReport
-                {
-                    Labourer = l.Labourer
-                }).ToList();
 
-            return incident;
+          
+            var labourers = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == id).Select(l => l.LabourerId).ToList();
+            List<JobLabourer> jobLabourers = new List<JobLabourer>();
+            labourers.ForEach(l =>
+            {
+                var jobLabourer = _context.JobLabourer.Where(jl => jl.LabourerId == l).Select(jl => new JobLabourer
+                {
+                    LabourerSafetyRating = jl.LabourerSafetyRating,
+                    LabourerId = jl.LabourerId,
+                    Labourer = jl.Labourer
+                }).FirstOrDefault();
+                jobLabourers.Add(jobLabourer);
+            });
+
+            return new IncidentDetailVM
+            {
+                IncidentReport = incident,
+                JobLabourers = jobLabourers
+            };
         }
 
         // GET: api/Incidents/GetIncidentsByJobId/{jobId}
