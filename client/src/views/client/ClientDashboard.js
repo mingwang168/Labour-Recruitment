@@ -145,7 +145,7 @@ const ClientDashboard = (props) => {
         <div className="card">
         <h5 className="card-header">All Jobs</h5>
         <div className="card-body">
-            { jobs &&
+            { !jobs ? <ErrorMessage message={"No jobs to display."} /> :
             <Table
                 data={jobs}
                 columns={jobsTableColumns}
