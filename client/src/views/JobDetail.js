@@ -81,6 +81,7 @@ const JobDetail = (props) => {
         }
     }, [props.match.params.id])
 
+    console.log(details)
     return (
     <>
     <div className="dashboard-main-wrapper">
@@ -202,32 +203,7 @@ const JobDetail = (props) => {
                         <h5 className="card-header">Safety Meetings</h5>
                         <div className="card-body">
                             <p>Safety meetings are mandatory. Please check off the dates where safety meetings were completed.</p>
-                            <table className="table table-bordered job-safetymeetings-table">
-                            <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Apr 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
-                                    <td><Link to="/job" className="badge badge-light">Change</Link></td>
-                                </tr>
-                                <tr>
-                                    <td>Apr 2, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><Link to="/job" className="badge badge-light">Change</Link></td>
-                                </tr>
-                                <tr>
-                                    <td>Apr 1, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><Link to="/job" className="badge badge-light">Change</Link></td>
-                                </tr>
-                            </tbody>
-                            </table>
+                            
                         </div>
                     </div>
 

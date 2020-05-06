@@ -65,6 +65,7 @@ namespace labourRecruitment.Controllers
                 LabourerId = ojl.LabourerId,
                 ClientQualityRating = ojl.ClientQualityRating,
                 LabourerSafetyRating = ojl.LabourerSafetyRating,
+                SafetyMeetingCompleted =ojl.SafetyMeetingCompleted,
                 Labourer = ojl.Labourer,
                 Skill = ojl.Skill
             }).ToListAsync();

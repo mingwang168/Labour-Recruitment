@@ -22,10 +22,10 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-      
+
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetLabourerByJobId(int id)
+        public IActionResult GetLabourerByJobId(int id)
         {
             List<Labourer> labourers = _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => ojl.Labourer).ToList();
 
