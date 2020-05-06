@@ -16,14 +16,14 @@ const BASE_URL = "http://localhost:5001/api";
 const ClientUpdateProfile = (props) => {
 
     // Authorization
-    const [id] = Auth.getID();
+    const [id] = useState(Auth.getID());
 
     // Component
     const [loaded, setLoaded] = useState();
+    const [profileExists, setProfileExists] = useState(false);
     const [formErrors, setFormErrors] = useState([]);
 
     // Form Data
-    const [profileExists, setProfileExists] = useState(false);
     const [formData, setFormData] = useState({
         companyname: "",
         email: "",
@@ -121,7 +121,7 @@ const ClientUpdateProfile = (props) => {
                 },
                 body: JSON.stringify({
                     Client: {
-                        ClientId: Auth.getID(),
+                        ClientId: id,
                         ClientName: companyname,
                         ClientEmail: email,
                         ClientPhoneNumber: phonenumber,
