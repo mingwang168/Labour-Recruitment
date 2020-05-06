@@ -140,9 +140,10 @@ const LabourerDashboard = (props) => {
             ]}
         />
 
-        { !jobs ? <ErrorMessage message={"You have not been assigned any jobs yet."} /> :
+        {/* Display dashboard data if jobs exist */}
+        { !jobs ?
+        <ErrorMessage message={"You have not been assigned any jobs yet."} /> :
         <>
-
         {/* Warning for low ratings */}
         {
             (overallRatingStat && overallRatingStat <= 70) &&
