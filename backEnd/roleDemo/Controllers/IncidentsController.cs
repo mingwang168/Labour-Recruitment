@@ -56,7 +56,7 @@ namespace labourRecruitment.Controllers
             return reports;
         }
 
-        // GET: api/Incidents/5
+        // GET: api/Incidents/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<IncidentReport>> GetIncidentByIncidentId(int id)
         {
@@ -94,6 +94,7 @@ namespace labourRecruitment.Controllers
             return incident;
         }
 
+        // GET: api/Incidents/GetIncidentsByJobId/{jobId}
         [HttpGet("{jobId}")]
         public IActionResult GetIncidentsByJobId(int jobId)
         {
@@ -115,6 +116,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(incident);
         }
 
+        // GET: api/Incidents/GetIncidentsByLabourerId/{labourerId}
         [HttpGet("{labourerId}", Name = "GetIncidentsByLabourerId")]
         public IActionResult GetIncidentsByLabourerId(int labourerId)
         {
@@ -127,6 +129,28 @@ namespace labourRecruitment.Controllers
                     JobTitle = l.IncidentReport.Job.Title
 
                 }).ToList();
+
+            if (incident == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(incident);
+        }
+
+        // GET: api/Incidents/GetIncidentsByClientId/{clientId}
+        [HttpGet("{clientId}", Name = "GetIncidentsByClientId")]
+        public IActionResult GetIncidentsByClientId(int clientId)
+        {
+            var incident = _context.LabourerIncidentReport.Where(l => l.IncidentReport.Job.Client.ClientId == clientId)
+                .Select(l => new IncidentVM
+                {
+                    IncidentReportId = l.IncidentReportId,
+                    IncidentReportDate = l.IncidentReport.IncidentReportDate,
+                    IncidentType = l.IncidentReport.IncidentType.IncidentTypeName,
+                    JobTitle = l.IncidentReport.Job.Title
+
+                })
+                .Distinct();
 
             if (incident == null)
             {
