@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 import * as Auth from '../../utils/Auth';
-import * as DataSanitizer from '../../utils/DataSanitizer';
 
+import Loader from '../components/Loader';
+import Layout from '../components/Layout';
+import PageHeader from '../components/PageHeader';
 import Table from '../components/Table';
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
-import Footer from '../components/Footer';
+import ErrorMessage from '../components/ErrorMessage';
+import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
-import { PAYRATES_TABLE_COLUMNS   } from '../../utils/TableColumns';
 const BASE_URL = "http://localhost:5001/api";
 
 const AdminPayrates = (props) => {
 
+    // Authorization
+    const [authorized] = useState(Auth.authenticateAdmin());
+
+    // Component
+    const [loaded, setLoaded] = useState(false);
+
+    // Data
     const [skills, setSkills] = useState();
+    const [skillsTableColumns, setSkillsTableColumns] = useState();
 
     const fetchSkills = async() => {
         try {
@@ -26,70 +33,75 @@ const AdminPayrates = (props) => {
                 }
             });
 
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
-            if(data.length) {
-                setSkills(DataSanitizer.cleanPayratesData(data));
+
+            if(data && data.length) {
+                let formattedData = data.map(d => {
+                    let rate = (Math.floor(Math.random() * 10) + 20).toFixed(2);
+                    let adminRate = (rate * 1.2).toFixed(2);
+                    return {
+                        id: d.skillId,
+                        name: d.skillName,
+                        labourerReceives: `$${rate}/hr`,
+                        adminReceives: `$${adminRate}/hr`
+                    }
+                });
+
+                setSkills(formattedData);
+                setSkillsTableColumns([
+                    {Header: 'Name', accessor: 'name',},
+                    {Header: 'Labourer Receives', accessor: 'labourerReceives',},
+                    {Header: 'Admin Receives (20% cut)', accessor: 'adminReceives'}
+                ]);
             }
         } catch(e) {
             console.error(e);
         }
+
+        // Set loading state
+        setLoaded(true);
     }
 
     useEffect(() => {
-        fetchSkills();
+        if(authorized) fetchSkills();
     }, [])
 
-    return (
-    <div className="dashboard-main-wrapper">
-        <TopNav />
-        <SideNav />
+    const content = (
+    <>
+    <PageHeader
+        title={`Manage Skill Payrates`}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Skill Payrates" }
+        ]}
+    />
     
-        <div className="dashboard-wrapper">
-            <div className="container-fluid dashboard-content">
-                {/* Page Header */}
-                <div className="page-header">
-                <h2 className="pageheader-title">
-                    Manage Skill Payrates
-                </h2>
-                <div className="page-breadcrumb">
-                <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                        <Link to="/dashboard" className="breadcrumb-link">Home</Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                        Skills
-                    </li>
-                </ol>
-                </nav>
-                </div>
-                </div>
-
-                {/* Incidents Table */}
-                <div className="row">
-                <div className="col">
-                <div className="card">
-                <h5 className="card-header">All Skills</h5>
-                <div className="card-body">
-                    { skills ?
-                    <Table
-                        columns={PAYRATES_TABLE_COLUMNS}
-                        data={skills}
-                        path={"/skill"}
-                        {...props}
-                    />
-                    :
-                    <p className="lead">No skills to display.</p>
-                    }
-                </div>
-                </div>
-                </div>
-                </div>
+    <Loader loaded={loaded}>
+        <div className="row">
+        <div className="col">
+        <div className="card">
+            <h4 className="card-header">All Skills</h4>
+            <div className="card-body">
+            { !skills ? <ErrorMessage message={"No payrates to display."} /> :
+            <Table
+                data={skills}
+                columns={skillsTableColumns}
+                {...props}
+            />
+            }
             </div>
-            <Footer />
         </div>
-    </div>
+        </div>
+        </div>
+    </Loader>
+    </>
     );
+
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
 export default AdminPayrates;
