@@ -9,7 +9,7 @@ using labourRecruitment.Models.LabourRecruitment;
 
 namespace labourRecruitment.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class SkillsController : ControllerBase
     {
@@ -41,6 +41,19 @@ namespace labourRecruitment.Controllers
             }
 
             return skill;
+        }
+
+        [HttpGet("{labourerId}", Name = "GetSkillNameByLabourerId")]
+        public ActionResult GetSkillNameByLabourerId(int labourerId)
+        {
+
+            var skillname = _context.LabourerSkill.Where(ls => ls.LabourerId == labourerId).Select(ols => ols.Skill.SkillName).ToArray();
+
+            if (skillname == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(skillname);
         }
 
         // PUT: api/Skills/5
