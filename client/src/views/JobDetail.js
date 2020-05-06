@@ -208,7 +208,9 @@ const JobDetail = (props) => {
                             {details.jobLabourer.map((jLabourer,i) => (
                             <CheckSafetyMetting firstname={jLabourer.labourer.labourerFirstName}
                                                 lastname={jLabourer.labourer.labourerLastName} 
-                                                safetyMeeting={jLabourer.safetyMeetingCompleted} /> 
+                                                safetyMeeting={jLabourer.safetyMeetingCompleted} 
+                                                labourerId={jLabourer.labourerId} 
+                                                jobId={details.jobId} clientId={details.clientId} /> 
                             ))
                             }
                         </div>
