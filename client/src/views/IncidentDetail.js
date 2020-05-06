@@ -82,15 +82,6 @@ const IncidentDetail = (props) => {
                                     <time>{report.incidentReportDate.split('T')[0]}</time>
                                 </div>
                                 <div className="card-body border-top">
-                                    <h3 className="font-16">Affected labourer name(s)</h3>
-                                    {report.labourerIncidentReport.map((r, i) => (
-                                        <ul key={i} className="list-unstyled mb-0">
-                                            <li>{r.labourer.labourerFirstName} {r.labourer.labourerLastName}</li>
-                                        </ul>
-                                    ))
-                                    }
-                                </div>
-                                <div className="card-body border-top">
                                     <h3 className="font-16">Incident type</h3>
                                     <p>{report.incidentType.incidentTypeName}</p>
                                 </div>
@@ -104,6 +95,7 @@ const IncidentDetail = (props) => {
                                     <Link to="/editincident" className="btn btn-light">Edit Incident report</Link>
                                 </div> */}
                                  {/* Safety Ratings */}
+                                {jobLabourer && 
                                 <div className="card" id="safetyratings">
                                     <h5 className="card-header">Safety Ratings</h5>
                                     <div className="card-body">
@@ -116,13 +108,14 @@ const IncidentDetail = (props) => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {report.labourerIncidentReport.map((r,i) => 
+                                        {jobLabourer.map((j,i) => 
                                             <tr key = {i}>
-                                            <td>{r.labourer.labourerFirstName} {r.labourer.labourerLastName}</td>
+                                            <td>{j.labourer.labourerFirstName} {j.labourer.labourerLastName}</td>
                                             <td>
                                                 <RateWorkers
                                                    clientId={report.job.clientId} 
-                                                   labourerId={r.labourer.labourerId}
+                                                   labourerId={j.labourer.labourerId}
+                                                   rating={j.labourerSafetyRating}
                                                 />
                                             </td>
                                         </tr>
@@ -131,6 +124,7 @@ const IncidentDetail = (props) => {
                                         </table>
                                     </div>
                                 </div>
+                                }
                                 <div className="card-body border-top">
                                     <h3 className="font-16">Incident file</h3>
                                     <div className="custom-file">
