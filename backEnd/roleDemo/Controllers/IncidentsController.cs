@@ -74,12 +74,7 @@ namespace labourRecruitment.Controllers
                 IncidentTypeName = i.IncidentTypeName
             }).FirstOrDefault();
 
-            incident.LabourerIncidentReport = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == incident.IncidentReportId).
-                Select(l => new LabourerIncidentReport
-                {
-                    Labourer = l.Labourer
-                }).ToList();
-
+          
             var labourers = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == id).Select(l => l.LabourerId).ToList();
             List<JobLabourer> jobLabourers = new List<JobLabourer>();
             labourers.ForEach(l =>
@@ -87,7 +82,8 @@ namespace labourRecruitment.Controllers
                 var jobLabourer = _context.JobLabourer.Where(jl => jl.LabourerId == l).Select(jl => new JobLabourer
                 {
                     LabourerSafetyRating = jl.LabourerSafetyRating,
-                    LabourerId = jl.LabourerId
+                    LabourerId = jl.LabourerId,
+                    Labourer = jl.Labourer
                 }).FirstOrDefault();
                 jobLabourers.Add(jobLabourer);
             });
