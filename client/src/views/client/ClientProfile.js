@@ -3,28 +3,48 @@ import { Link } from 'react-router-dom';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
+import { isWholeNumber } from '../../utils/IsWholeNumber';
 
 import Layout from '../components/Layout';
+import PageHeader from '../components/PageHeader';
 import Table from '../components/Table';
 import RatingBadge from '../components/RatingBadge';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
 import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
-import { JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
-
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientProfile = (props) => {
 
-    const [authorized, setAuthorized] = useState(false);
-    const [isProfileOwner, setIsProfileOwner] = useState(false);
-    const [isAdministrator, setIsAdministrator] = useState(false);
+    // Authorization
+    const [id] = useState(
+        props.match.params.id && isWholeNumber(props.match.params.id) ? props.match.params.id : null
+    );
 
+    const [authorized] = useState(
+        Auth.authenticateClient() && Auth.getID() === id ? true :
+        Auth.authenticateAdmin() ? true :
+        false
+    );
+
+    const [isProfileOwner] = useState(
+        authorized && Auth.authenticateClient()
+    );
+
+    const [isAdministrator] = useState(Auth.authenticateAdmin());
+
+    // Component
     const [loaded, setLoaded] = useState();
+
+    // Data
     const [client, setClient] = useState();
     const [jobs, setJobs] = useState();
     const [incidents, setIncidents] = useState();
+
+    // Table Columns
+    const [jobsTableColumns, setJobsTableColumns] = useState();
+    const [incidentsTableColumns, setIncidentsTableColumns] = useState();
 
     const fetchProfileData = async(id) => {
         // Get client profile
@@ -42,10 +62,8 @@ const ClientProfile = (props) => {
 
             let data = await response.json();
 
-            if(response.status === 200 && data.client) {
+            if(data.client) {
                 setClient({...data.client, rating: data.averageRating});
-            } else {
-                throw response;
             }
         } catch(e) {
             console.error(e);
@@ -60,17 +78,67 @@ const ClientProfile = (props) => {
                 }
             });
 
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
 
-            if(response.status === 200 && data) {
-                setJobs(DataSanitizer.cleanJobsData(data));
+            if(data.length) {
+                let formattedData = data.map(d => ({
+                    id: d.jobId,
+                    title: d.title,
+                    startdate: DataSanitizer.formatDateString(d.startDate),
+                    enddate: DataSanitizer.formatDateString(d.endDate),
+                    status: d.isComplete ? "Complete" : "In Progress"
+                }));
+
+                setJobsTableColumns([
+                    {Header: 'Job Title', accessor: 'title'},
+                    {Header: 'Start Date', accessor: 'startdate'},
+                    {Header: 'End Date', accessor: 'enddate'},
+                    {Header: 'Completion Status', accessor: 'status'},
+                ]);
+                setJobs(formattedData);
             }
         } catch(e) {
             console.error(e);
         }
 
         // Get client incidents
-        
+        try {
+            const URI = BASE_URL + `/Incidents/GetIncidentsByClientId/${id}`;
+            let response = await fetch(URI, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${Auth.getToken()}`
+                }
+            });
+            
+            if(response.status !== 200) {
+                throw response;
+            }
+    
+            let data = await response.json();
+
+            if(data.length) {
+                let formattedData = data.map(d => ({
+                    id: d.incidentReportId,
+                    job: d.jobTitle,
+                    date: DataSanitizer.formatDateString(d.incidentReportDate),
+                    type: d.incidentType
+                }));
+
+                setIncidents(formattedData);
+                setIncidentsTableColumns([
+                    {Header: 'Date', accessor: 'date'},
+                    {Header: 'Job', accessor: 'job'},
+                    {Header: 'Incident Type', accessor: 'type'}
+                ]);
+            }
+        } catch(e){
+            console.error(e);
+        }
 
         // Set loading state
         setLoaded(true);
@@ -78,31 +146,13 @@ const ClientProfile = (props) => {
 
     const profile = client && (
     <>
-    {/* Page Header */}
-    <div className="row">
-    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-    <div className="page-header">
-        <h2 className="pageheader-title">My Profile</h2>
-        <div className="page-breadcrumb">
-            <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-                <li className="breadcrumb-item">
-                    <Link
-                    to="/dashboard"
-                    className="breadcrumb-link"
-                    >
-                        Home
-                    </Link>
-                </li>
-                <li className="breadcrumb-item active" aria-current="page">
-                    Profile
-                </li>
-            </ol>
-            </nav>
-        </div>
-    </div>
-    </div>
-    </div>
+    <PageHeader
+        title={`Client Profile`}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Client Profile" }
+        ]}
+    />
 
     <div className="row">
         {/* Profile */}
@@ -161,6 +211,7 @@ const ClientProfile = (props) => {
             <div className="card">
                 <div className="card-header d-flex">
                     <h4 className="card-header-title">Active Jobs</h4>
+                    { isProfileOwner &&
                     <div className="toolbar ml-auto">
                         <Link
                             to="/dashboard"
@@ -169,32 +220,48 @@ const ClientProfile = (props) => {
                             View All
                         </Link>
                     </div>
+                    }
                 </div>   
                 <div className="card-body">
-                    { jobs ?
+                    { !jobs ? <ErrorMessage message={"No jobs to display."} /> :
                     <Table
-                        columns={JOBS_TABLE_COLUMNS}
                         data={jobs}
+                        columns={jobsTableColumns}
                         itemsPerPage={5}
                         path={'/job'}
                         searchable={false}
                         {...props}
                     />
-                    :
-                    <p className="lead">No jobs to display.</p>
                     }
                 </div>
             </div>
 
             {/* Incidents */}
             <div className="card">
-            <h4 className="card-header">Incidents</h4>
+            <div className="card-header d-flex">
+                <h4 className="card-header-title">Incidents</h4>
+                { isProfileOwner &&
+                    <div className="toolbar ml-auto">
+                        <Link
+                            to="/dashboard"
+                            className="btn btn-primary btn-sm"
+                        >
+                            View All
+                        </Link>
+                    </div>
+                } 
+            </div>
             <div className="card-body">
-            { incidents ?
-            <p>Incidents table goes here.</p>
-            :
-            <p className="lead">No incidents to display.</p>
-            }
+                { !incidents ? <ErrorMessage message={"No incidents to display."} /> :
+                    <Table
+                        data={incidents}
+                        columns={incidentsTableColumns}
+                        path="/incident"
+                        itemsPerPage={5}
+                        searchable={false}
+                        {...props}
+                    />
+                }
             </div>
             </div>
         </div>
@@ -212,29 +279,7 @@ const ClientProfile = (props) => {
     );
 
     useEffect(() => {
-        // Check for valid params in URL
-        if(props.match.params.id && Number.isInteger(Number(props.match.params.id))) {
-            let id = props.match.params.id;
-
-            // Check if user is authorized
-            let isAuthorized = (
-                Auth.authenticateAdmin() ? true :
-                Auth.authenticateClient() && id === Auth.getID() ? true :
-                false
-            );
-
-            // Fetch data
-            // Check if user is: an administrator,
-            // or the client who owns this profile
-            if(isAuthorized) {
-                fetchProfileData(id);
-                setIsProfileOwner(Auth.authenticateClient() && id === Auth.getID());
-                setIsAdministrator(Auth.authenticateAdmin());
-            }
-
-            // Set authorization state
-            setAuthorized(isAuthorized);
-        }
+        if(authorized) fetchProfileData(id);
     }, [])
 
     return <Layout content={content} />;
