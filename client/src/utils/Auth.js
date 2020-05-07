@@ -5,32 +5,32 @@ const USER_ROLE = "user_role";
 const TOKEN_EXP = "token_exp";
 
 exports.setSessionData = (data, history) => {
-    sessionStorage.setItem(AUTH_TOKEN, data.token);
-    sessionStorage.setItem(TOKEN_EXP, this.setTokenExpiration());
-    sessionStorage.setItem(USER_ROLE, data.role);
-    sessionStorage.setItem(USER_ID, data.id);
+    localStorage.setItem(AUTH_TOKEN, data.token);
+    localStorage.setItem(TOKEN_EXP, this.setTokenExpiration());
+    localStorage.setItem(USER_ROLE, data.role);
+    localStorage.setItem(USER_ID, data.id);
     if(data.role === "Admin") {
-        sessionStorage.setItem(USER_NAME, "Admin");
+        localStorage.setItem(USER_NAME, "Admin");
     } else {
-        sessionStorage.setItem(USER_NAME, data.name);
+        localStorage.setItem(USER_NAME, data.name);
     }
     history.push("/dashboard");
 }
 
 exports.authenticateUser = _ => {
     let authenticated =
-    sessionStorage.getItem(AUTH_TOKEN) &&
-    sessionStorage.getItem(AUTH_TOKEN) !== "" &&
-    sessionStorage.getItem(USER_ROLE) &&
+    localStorage.getItem(AUTH_TOKEN) &&
+    localStorage.getItem(AUTH_TOKEN) !== "" &&
+    localStorage.getItem(USER_ROLE) &&
     (
-        sessionStorage.getItem(USER_ROLE) === "Admin" ||
-        sessionStorage.getItem(USER_ROLE) === "Client" ||
-        sessionStorage.getItem(USER_ROLE) === "Labourer"
+        localStorage.getItem(USER_ROLE) === "Admin" ||
+        localStorage.getItem(USER_ROLE) === "Client" ||
+        localStorage.getItem(USER_ROLE) === "Labourer"
     ) &&
-    sessionStorage.getItem(USER_NAME) &&
-    sessionStorage.getItem(USER_ID) ? true : false;
+    localStorage.getItem(USER_NAME) &&
+    localStorage.getItem(USER_ID) ? true : false;
     if(!authenticated) {
-        sessionStorage.clear();
+        localStorage.clear();
     }
     return authenticated;
 }
@@ -45,43 +45,43 @@ exports.setTokenExpiration = _ => {
 }
 
 exports.getTokenExpirationTime = _ => {
-    return sessionStorage.getItem(TOKEN_EXP);
+    return localStorage.getItem(TOKEN_EXP);
 }
 
 exports.authenticateClient = _ => {
-    return sessionStorage.getItem(USER_ROLE) === "Client" ? true : false;
+    return localStorage.getItem(USER_ROLE) === "Client" ? true : false;
 }
 
 exports.authenticateLabourer = _ => {
-    return sessionStorage.getItem(USER_ROLE) === "Labourer" ? true : false;
+    return localStorage.getItem(USER_ROLE) === "Labourer" ? true : false;
 }
 
 exports.authenticateAdmin = _ => {
-    return sessionStorage.getItem(USER_ROLE) === "Admin" ? true : false;
+    return localStorage.getItem(USER_ROLE) === "Admin" ? true : false;
 }
 
 exports.getToken = _ => {
-    return sessionStorage.getItem(AUTH_TOKEN);
+    return localStorage.getItem(AUTH_TOKEN);
 }
 
 exports.getID = _ => {
-    return sessionStorage.getItem(USER_ID);
+    return localStorage.getItem(USER_ID);
 }
 
 exports.getRole = _ => {
-    return sessionStorage.getItem(USER_ROLE);
+    return localStorage.getItem(USER_ROLE);
 }
 
 exports.getName = _ => {
-    return sessionStorage.getItem(USER_NAME);
+    return localStorage.getItem(USER_NAME);
 }
 
 exports.logout = _ => {
-    sessionStorage.clear();
+    localStorage.clear();
 }
 
 exports.forceLogout = _ => {
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.replace("/");
     alert("Something went wrong. Please sign in again.");
 }

@@ -29,15 +29,17 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Labourer>>> GetAllLabourers()
         {
+            var labourers = _context.Labourer.Where(l => l.IsAvailable == true).ToList();
             return await _context.Labourer.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<LabourerProfileVM> GetLabourerProfile(int id)
         {
             return new LabourerProfileVMRepo(_context).GetLabourer(id);
         }
+
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -55,7 +57,9 @@ namespace labourRecruitment.Controllers
                 lp.LabourerLastName = labourerProfile.Labourer.LabourerLastName;
                 lp.IsAvailable = labourerProfile.Labourer.IsAvailable;
                 lp.LabourerEmail = labourerProfile.Labourer.LabourerEmail;
+               
             }
+
 
             _context.LabourerSkill.RemoveRange(_context.LabourerSkill.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
 
@@ -86,6 +90,24 @@ namespace labourRecruitment.Controllers
             catch (DbUpdateException)
             {
                 throw;
+            }
+            return NoContent();
+        }
+
+        [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult ToggleOnLeave(Labourer labourer)
+        {
+            var selectedLabourer = _context.Labourer.FirstOrDefault(l => l.LabourerId == labourer.LabourerId);
+
+            if (selectedLabourer == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                selectedLabourer.OnLeave = labourer.OnLeave;
+                _context.SaveChanges();
             }
             return NoContent();
         }

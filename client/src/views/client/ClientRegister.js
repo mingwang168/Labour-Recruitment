@@ -44,9 +44,14 @@ const RegisterClient = ({ history }) => {
         e.preventDefault();
         let errors = [];
 
+        if(companyname === "") {
+            errors.push("Company name is required.");
+        }
+
         if(!FormValidator.email(email)) {
             errors.push("Invalid email entered.")
         }
+
         if(password === confirmpassword) {
             if(!FormValidator.password(password)) {
                 errors.push("Password must contain at least 6 letters, and each of the following: one uppercase letter, one lowercase letter, one number, and one symbol.");
@@ -54,8 +59,13 @@ const RegisterClient = ({ history }) => {
         } else {
             errors.push("Passwords do not match.");
         }
+
         if(!FormValidator.phone(phonenumber)) {
             errors.push("Invalid phone number entered.");
+        }
+
+        if(city === "") {
+            errors.push("City is required.");
         }
 
         if(errors.length) {
