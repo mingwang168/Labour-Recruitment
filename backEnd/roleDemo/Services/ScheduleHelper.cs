@@ -105,7 +105,13 @@ namespace labourRecruitment.Services
                     PopulateLabourerAttendance(jobId, labourer.LabourerId, jobSelected.StartDate, eDate);
                     EmailSettings emailSetting = new EmailSettings
                     {
-                       
+                        Domain = "smtp.sendgrid.net",
+                        Port = 587,
+                        UsernameLogin = "hotdog169",
+                        UsernamePassword = "P@$$w0rd!",
+                        FromEmail = "ssdindustrypro@gmail.com",
+                        DisplayName = "Admin",
+                        ToEmail = ""
                     };
                     EmailContent emailContent = new EmailContent
                     {
@@ -187,7 +193,13 @@ namespace labourRecruitment.Services
                             PopulateLabourerAttendance(j.JobId, l.LabourerId, sDate, eDate);
                             EmailSettings emailSetting = new EmailSettings
                             {
-                               
+                                Domain = "smtp.sendgrid.net",
+                                Port = 587,
+                                UsernameLogin = "hotdog169",
+                                UsernamePassword = "P@$$w0rd!",
+                                FromEmail = "ssdindustrypro@gmail.com",
+                                DisplayName = "Admin",
+                                ToEmail = ""
                             };
                             EmailContent emailContent = new EmailContent
                             {

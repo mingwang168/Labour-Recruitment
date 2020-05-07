@@ -30,111 +30,136 @@ namespace labourRecruitment.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> GetInvoice([FromBody] JobLabourer input)
+        public IActionResult GetInvoice([FromBody] JobLabourer input)
         {
+            List<ResultVM> results = new List<ResultVM>();
             var jobLabourers = _context.JobLabourer.Where(jb => jb.StartDay == input.StartDay && jb.EndDay == input.EndDay && jb.JobId == input.JobId)
-                .Select(l=> new JobLabourer { 
+                .Select(l => new JobLabourer
+                {
                     SkillId = l.SkillId,
+                    LabourerId = l.LabourerId,
                     Labourer = l.Labourer,
+                    Skill = l.Skill,
                     JobId = l.JobId,
                     StartDay = l.StartDay,
                     EndDay = l.EndDay
                 }).ToList();
-            var list = jobLabourers.GroupBy(jb => jb.SkillId).ToList();
-            foreach(var li in list)
+
+            foreach (JobLabourer jb in jobLabourers)
             {
-
-            }
-            return new ObjectResult("OK");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetClientInvoice([FromBody] Input input)
-        {
-            var job = _context.Job.Find(input.jobId);
-            var skills = await _context.JobSkill.Where(js => js.JobId == input.jobId).Select(ojs => ojs.Skill).ToListAsync();
-            var clientName = _context.Client.FirstOrDefault(c => c.ClientId == job.ClientId).ClientName;
-
-            var clientInvoice = new ClientInvoiceVM()
-            {
-                JobId = input.jobId,
-                JobName = job.Title,
-                ClientName = clientName,
-                StartDate = job.StartDate,
-                EndDate = job.EndDate,
-                Total = 0,
-                Labourers = null
-            };
-
-            List<SkillVM> skillvms = skills.Select(s => new SkillVM 
-            {
-                SkillId = s.SkillId,
-                SkillName = s.SkillName,
-                Quantity = 0,
-                Hours = 0,
-                Rate = s.AdminReceives,
-                Total = 0
-            }).ToList();
-            decimal? totalpaid = 0;
-            foreach (SkillVM sk in skillvms)
-            {
-                var joblabourers = _context.JobLabourer.Where(jl => jl.SkillId == sk.SkillId && jl.JobId == input.jobId);
-                var quantity = 0;
-                var rate = sk.Rate;
-
-                foreach (JobLabourer joblabourer in joblabourers)
+                var rate = _context.Skill.FirstOrDefault(s => s.SkillId == jb.SkillId).AdminReceives;
+                var i = _context.LabourerAttendance.Where(la => la.LabourerId == jb.Labourer.LabourerId && la.JobId == jb.JobId
+                && la.Date.CompareTo(jb.StartDay) >= 0 && la.Date.CompareTo(jb.EndDay) <= 0 && la.DailyQualityRating > 0).Count();
+                results.Add(new ResultVM
                 {
-                    var oneQuantity = _context.LabourerAttendance
-                         .Where(la => IsSameWeek(la.Date, input.dateInput) && la.JobId == input.jobId && la.DailyQualityRating != null && la.DailyQualityRating != 0 && la.LabourerId == joblabourer.LabourerId)
-                         .Count();
-                    quantity = quantity + oneQuantity;
-                };
+                    WorkedDays = i,
+                    TotalHours = i * 8,
+                    TotalAmount = rate * 8 * i,
+                    Labourer = jb.Labourer,
+                    Skill = jb.Skill
+                });
 
-                sk.Quantity = quantity;
-                sk.Hours = quantity * 8;
-                sk.Rate = rate;
-                sk.Total = quantity * 8 * rate;
-                totalpaid += quantity * 8 * rate;
+
             }
-            clientInvoice.Total = totalpaid;
-            clientInvoice.Labourers = skillvms;
-
-            if (clientInvoice != null)
-            {
-                return new ObjectResult(clientInvoice);
-            }
-            else
-            {
-                return NotFound();
-            }
-
+            return new ObjectResult(results);
         }
 
-        public class ClientInvoiceVM
+        //[HttpGet]
+        //public async Task<IActionResult> GetClientInvoice([FromBody] Input input)
+        //{
+        //    var job = _context.Job.Find(input.jobId);
+        //    var skills = await _context.JobSkill.Where(js => js.JobId == input.jobId).Select(ojs => ojs.Skill).ToListAsync();
+        //    var clientName = _context.Client.FirstOrDefault(c => c.ClientId == job.ClientId).ClientName;
+
+        //    var clientInvoice = new ClientInvoiceVM()
+        //    {
+        //        JobId = input.jobId,
+        //        JobName = job.Title,
+        //        ClientName = clientName,
+        //        StartDate = job.StartDate,
+        //        EndDate = job.EndDate,
+        //        Total = 0,
+        //        Labourers = null
+        //    };
+
+        //    List<SkillVM> skillvms = skills.Select(s => new SkillVM 
+        //    {
+        //        SkillId = s.SkillId,
+        //        SkillName = s.SkillName,
+        //        Quantity = 0,
+        //        Hours = 0,
+        //        Rate = s.AdminReceives,
+        //        Total = 0
+        //    }).ToList();
+        //    decimal? totalpaid = 0;
+        //    foreach (SkillVM sk in skillvms)
+        //    {
+        //        var joblabourers = _context.JobLabourer.Where(jl => jl.SkillId == sk.SkillId && jl.JobId == input.jobId);
+        //        var quantity = 0;
+        //        var rate = sk.Rate;
+
+        //        foreach (JobLabourer joblabourer in joblabourers)
+        //        {
+        //            var oneQuantity = _context.LabourerAttendance
+        //                 .Where(la => IsSameWeek(la.Date, input.dateInput) && la.JobId == input.jobId && la.DailyQualityRating != null && la.DailyQualityRating != 0 && la.LabourerId == joblabourer.LabourerId)
+        //                 .Count();
+        //            quantity = quantity + oneQuantity;
+        //        };
+
+        //        sk.Quantity = quantity;
+        //        sk.Hours = quantity * 8;
+        //        sk.Rate = rate;
+        //        sk.Total = quantity * 8 * rate;
+        //        totalpaid += quantity * 8 * rate;
+        //    }
+        //    clientInvoice.Total = totalpaid;
+        //    clientInvoice.Labourers = skillvms;
+
+        //    if (clientInvoice != null)
+        //    {
+        //        return new ObjectResult(clientInvoice);
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+
+        //}
+
+        public class ResultVM
         {
-            public int JobId { get; set; }
-            public string JobName { get; set; }
-            public string ClientName { get; set; }
-            public DateTime StartDate { get; set; }
-            public DateTime EndDate { get; set; }
-            public decimal? Total { get; set; }
-            public List<SkillVM> Labourers { get; set; }
+            public int WorkedDays { get; set; }
+            public int TotalHours { get; set; }
+            public decimal TotalAmount { get; set; }
+            public Labourer Labourer { get; set; }
+            public Skill Skill { get; set; }
         }
 
-        public class SkillVM
-        {
-            public int SkillId { get; set; }
-            public string SkillName { get; set; }
-            public int Quantity { get; set; }
-            public int Hours { get; set; }
-            public decimal? Rate { get; set; }
-            public decimal? Total { get; set; }
+        //public class ClientInvoiceVM
+        //{
+        //    public int JobId { get; set; }
+        //    public string JobName { get; set; }
+        //    public string ClientName { get; set; }
+        //    public DateTime StartDate { get; set; }
+        //    public DateTime EndDate { get; set; }
+        //    public decimal? Total { get; set; }
+        //    public List<SkillVM> Labourers { get; set; }
+        //}
 
-        }
-        public class Input
-        {
-            public int jobId { get; set; }
-            public DateTime dateInput { get; set; }
-        }
-        }
+        //public class SkillVM
+        //{
+        //    public int SkillId { get; set; }
+        //    public string SkillName { get; set; }
+        //    public int Quantity { get; set; }
+        //    public int Hours { get; set; }
+        //    public decimal? Rate { get; set; }
+        //    public decimal? Total { get; set; }
+
+        //}
+        //public class Input
+        //{
+        //    public int jobId { get; set; }
+        //    public DateTime dateInput { get; set; }
+        //}
+    }
 }
