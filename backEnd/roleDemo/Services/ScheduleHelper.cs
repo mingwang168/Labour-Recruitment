@@ -120,9 +120,9 @@ namespace labourRecruitment.Services
                     foreach (JobSkill js in jobSkills)
                     {
                         var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
-                        var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today).Select(l => l.Labourer)
+                        var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today.AddDays(9)).Select(l => l.Labourer)
                             .Distinct().Where(l=>l.OnLeave == true).ToList();
-                        var availableLabourers = _context.Labourer.Except(unAvailableLabourers).ToList();
+                        var availableLabourers = ratedLabourers.Except(unAvailableLabourers).ToList();
                         List<Labourer> chosenLabourers = new List<Labourer>();
                         chosenLabourers.AddRange(availableLabourers.GetRange(0, js.NumberNeeded));
                         foreach (Labourer l in chosenLabourers)
@@ -163,9 +163,8 @@ namespace labourRecruitment.Services
                             }
                             PopulateLabourerAttendance(j.JobId, l.LabourerId, sDate, eDate);
                             l.IsAvailable = false;
+                            _context.SaveChanges();
                         };
-                        _context.SaveChanges();
-
                     };
 
                 };

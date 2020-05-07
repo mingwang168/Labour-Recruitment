@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using labourRecruitment.Models.LabourRecruitment;
 using labourRecruitment.Repositories;
+using labourRecruitment.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace labourRecruitment.Controllers
@@ -17,6 +18,15 @@ namespace labourRecruitment.Controllers
         {
             _context = context;
         }
+
+        [HttpPut]
+        public IActionResult PutSchedule()
+        {
+            ScheduleHelper scheule = new ScheduleHelper(_context);
+            scheule.AddWeeklySchedule();
+
+            return new ObjectResult("OK");
+        } 
 
        
     }
