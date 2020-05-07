@@ -17,23 +17,29 @@ namespace labourRecruitment.Services
             _context = context;
         }
 
-        public async Task<IActionResult> CheckIfComplete()
+        public void CheckComplete()
         {
-            var jobsAreComplete = await _context.Job.Where(j => j.InProgress == true && j.EndDate.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd")).Select(oj => oj).ToListAsync();
+            var completedJobs = _context.Job.Where(j => j.InProgress == true && j.EndDate.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd")).Select(oj => oj).ToList();
             
-            if (jobsAreComplete != null)
+            if (completedJobs != null)
             {
-            foreach (Job job in jobsAreComplete)
+                foreach (Job job in completedJobs)
                 {
                    job.IsComplete = true;
                 }
             }
-            else
+
+            var scheduledLabourers = _context.JobLabourer.Except(_context.JobLabourer.Where(jb => jb.EndDay <= DateTime.Now)).Select(l=>l.Labourer).ToList();
+            var availableLabourers = _context.Labourer.Except(scheduledLabourers);
+            if (availableLabourers != null) {
+                foreach (Labourer l in availableLabourers)
                 {
-                    return new NoContentResult();
+                    l.IsAvailable = true;
                 }
-            await _context.SaveChangesAsync();
-            return new ObjectResult(jobsAreComplete);
+            }
+      
+             _context.SaveChanges();
+ 
         }
 
     }
