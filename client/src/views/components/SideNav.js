@@ -27,7 +27,7 @@ const SideNav = () => {
         },
         {
             name: "Invoices",
-            path: "/dashboard",
+            path: "/invoices",
             icon: "receipt"
         }
     ];

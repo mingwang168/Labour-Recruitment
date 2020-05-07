@@ -126,7 +126,7 @@ const Incidents = (props) => {
         }
     }, [])
 
-    return <Layout content={content} />;
+    return !authorized ? <Redirect to="/dashboard" /> : <Layout content={content} />;
 }
 
 export default Incidents;

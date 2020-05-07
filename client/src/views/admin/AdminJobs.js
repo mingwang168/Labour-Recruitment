@@ -1,94 +1,110 @@
-import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
 
+import Loader from '../components/Loader';
+import Layout from '../components/Layout';
+import PageHeader from '../components/PageHeader';
 import Table from '../components/Table';
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
-import Footer from '../components/Footer';
+import ErrorMessage from '../components/ErrorMessage';
+import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
-import { JOBS_TABLE_COLUMNS   } from '../../utils/TableColumns';
 const BASE_URL = "http://localhost:5001/api";
 
 const AdminJobs = (props) => {
 
+    // Authorization
+    const [authorized] = useState(Auth.authenticateAdmin());
+
+    // Components
+    const [loaded, setLoaded] = useState(false);
+
+    // Data
     const [jobs, setJobs] = useState();
+    const [jobsTableColumns, setJobsTableColumns] = useState();
 
     const fetchJobs = async() => {
         try {
-            let response = await fetch(BASE_URL + "/Job/GetAllJobs", {
+            const URI = BASE_URL + "/Job/GetAllActiveJobs";
+            let response = await fetch(URI, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${Auth.getToken()}`
                 }
             });
 
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
+
             if(data.length) {
-                setJobs(DataSanitizer.cleanJobsData(data));
+                let formattedData = data.map(d => ({
+                    id: d.jobId,
+                    title: d.title,
+                    startdate: DataSanitizer.formatDateString(d.startDate),
+                    enddate: DataSanitizer.formatDateString(d.endDate),
+                    status: d.isComplete ? "Complete" : "In Progress"
+                }));
+
+                setJobs(formattedData);
+                setJobsTableColumns([
+                    {Header: 'Job Title', accessor: 'title'},
+                    {Header: 'Start Date', accessor: 'startdate'},
+                    {Header: 'End Date', accessor: 'enddate'},
+                    {Header: 'Completion Status', accessor: 'status'},
+                ]);
             }
         } catch(e) {
             console.error(e);
         }
+
+        // Set loading state
+        setLoaded(true);
     }
 
     useEffect(() => {
-        fetchJobs();
+        if(authorized) fetchJobs();
     }, [])
 
-    return (
-    <div className="dashboard-main-wrapper">
-        <TopNav />
-        <SideNav />
-    
-        <div className="dashboard-wrapper">
-            <div className="container-fluid dashboard-content">
-                {/* Page Header */}
-                <div className="page-header">
-                <h2 className="pageheader-title">
-                    Manage Jobs
-                </h2>
-                <div className="page-breadcrumb">
-                <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                        <Link to="/dashboard" className="breadcrumb-link">Home</Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                        Jobs
-                    </li>
-                </ol>
-                </nav>
-                </div>
-                </div>
+    const content = (
+    <>
+    <PageHeader
+        title={`Manage Jobs`}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Jobs" }
+        ]}
+    />
 
-                {/* All Jobs Table */}
-                <div className="row">
-                <div className="col">
-                <div className="card">
-                <h5 className="card-header">All Jobs</h5>
-                <div className="card-body">
-                    { jobs ?
-                    <Table
-                        columns={JOBS_TABLE_COLUMNS}
-                        data={jobs}
-                        path={"/job"}
-                        {...props}
-                    />
-                    :
-                    <p className="lead">No jobs to display.</p>
-                    }
-                </div>
-                </div>
-                </div>
-                </div>
+    <Loader loaded={loaded}>
+        {/* Jobs Table */}
+        <div className="row">
+            <div className="col">
+            <div className="card">
+            <h5 className="card-header">Active Jobs</h5>
+            <div className="card-body">
+                { !jobs ? <ErrorMessage message={"No jobs to display."} /> :
+                <Table
+                    data={jobs}
+                    columns={jobsTableColumns}
+                    path="/job"
+                    searchable={true}
+                    striped={true}
+                    {...props}
+                />
+                }
             </div>
-            <Footer />
+            </div>
+            </div>
         </div>
-    </div>
+    </Loader>
+    </>
     );
+
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
 export default AdminJobs;

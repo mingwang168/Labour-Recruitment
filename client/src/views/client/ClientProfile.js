@@ -169,6 +169,18 @@ const ClientProfile = (props) => {
                 <RatingBadge rating={client.rating} />
             </div>
 
+            <div className="card-body border-top">
+                <h3 className="font-16">Contact</h3>
+                <ul className="list-unstyled icon-list mb-0">
+                    <li className="mb-2">
+                        <i className="material-icons">phone</i>
+                        <span>
+                            {client.clientPhoneNumber}
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
             { client.clientDescription &&
             <div className="card-body border-top">
                 <h3 className="font-16">About</h3>

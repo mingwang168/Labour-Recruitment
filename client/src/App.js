@@ -5,6 +5,7 @@ import {
 	Route,
 	Redirect,
 } from "react-router-dom";
+
 import * as Auth from "./utils/Auth";
 
 import Home from "./views/Home";
@@ -16,13 +17,14 @@ import Dashboard from "./views/Dashboard";
 import Incidents from "./views/Indicents";
 import JobDetail from "./views/JobDetail";
 import IncidentDetail from "./views/IncidentDetail";
+import UpdateProfile from "./views/UpdateProfile";
 
 import ClientRegister from "./views/client/ClientRegister";
 import ClientProfile from "./views/client/ClientProfile";
-import ClientUpdateProfile from "./views/client/ClientUpdateProfile";
 import ClientAddJob from "./views/client/ClientAddJob";
 import ClientUpdateJobDetails from "./views/client/ClientUpdateJobDetails";
 import ClientLabourerAttendance from "./views/client/ClientLabourerAttendance";
+import ClientInvoices from "./views/client/ClientInvoices";
 import ClientAddIncident from "./views/client/ClientAddIncident";
 
 import LabourerRegister from "./views/labourer/LabourerRegister";
@@ -33,6 +35,7 @@ import AdminClients from "./views/admin/AdminClients";
 import AdminLabourers from "./views/admin/AdminLabourers";
 import AdminIncidents from "./views/admin/AdminIncidents";
 import AdminInvoices from "./views/admin/AdminInvoices";
+import InvoiceDetail from "./views/admin/InvoiceDetail";
 import AdminPayrates from "./views/admin/AdminPayrates";
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
@@ -75,26 +78,27 @@ class App extends Component {
         <ProtectedRoute exact path='/incidents' component={Incidents} />
         <ProtectedRoute exact path='/job/:id' component={JobDetail} />
         <ProtectedRoute exact path='/incident/:id' component={IncidentDetail} />
-		<ProtectedRoute exact path='/profile/client/:id' component={ClientProfile} />
-		<ProtectedRoute exact path='/profile/labourer/:id' component={LabourerProfile} />
+		<ProtectedRoute exact path='/profile/edit' component={UpdateProfile} />
+		<ProtectedRoute exact path='/invoice/:id' component={InvoiceDetail} />
 
 		{/* Client Only Views */}
-		<ProtectedRoute exact path='/profile/edit' component={ClientUpdateProfile} />
+		<ProtectedRoute exact path='/profile/client/:id' component={ClientProfile} />
         <ProtectedRoute exact path='/addjob' component={ClientAddJob} />
-		<ProtectedRoute exact path='/editjob/:id' act component={ClientUpdateJobDetails} />
+		<ProtectedRoute exact path='/editjob/:id' component={ClientUpdateJobDetails} />
 		<ProtectedRoute exact path='/job/:id/attendance/:date' act component={ClientLabourerAttendance} />
-        <ProtectedRoute exact path='/addincident' act component={ClientAddIncident} />
+        <ProtectedRoute exact path='/addincident' component={ClientAddIncident} />
+		<ProtectedRoute exact path='/invoices' component={ClientInvoices} />
 
 		{/* Labourer Views */}
-		
+		<ProtectedRoute exact path='/profile/labourer/:id' component={LabourerProfile} />
 
 		{/* Admin Views */}
 		<ProtectedRoute exact path='/admin/jobs' component={AdminJobs} />
 		<ProtectedRoute exact path='/admin/clients' component={AdminClients} />
 		<ProtectedRoute exact path='/admin/labourers' component={AdminLabourers} />
 		<ProtectedRoute exact path='/admin/incidents' component={AdminIncidents} />
-		<ProtectedRoute exact path='/admin/invoices' component={AdminInvoices} />
 		<ProtectedRoute exact path='/admin/payrates' component={AdminPayrates} />
+		<ProtectedRoute exact path='/admin/invoices' component={AdminInvoices} />
 
 		<Route component={PageNotFound} />
 	</Switch>

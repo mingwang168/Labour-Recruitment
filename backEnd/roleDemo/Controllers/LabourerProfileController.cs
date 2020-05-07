@@ -39,6 +39,7 @@ namespace labourRecruitment.Controllers
             return new LabourerProfileVMRepo(_context).GetLabourer(id);
         }
 
+
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PutLabourerProfile(LabourerProfileVM labourerProfile)
@@ -57,9 +58,15 @@ namespace labourRecruitment.Controllers
                 lp.LabourerEmail = labourerProfile.Labourer.LabourerEmail;
             }
 
+
             _context.LabourerSkill.RemoveRange(_context.LabourerSkill.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
 
             foreach (string skillName in labourerProfile.Skills.Select(s => s.SkillName))
+     /*
+            _context.AvailabilityLabourer.RemoveRange(_context.AvailabilityLabourer.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
+
+            foreach (string day in labourerProfile.Availabilities.Select(av => av.AvailabilityDay))
+
             {
                 Skill skill = _context.Skill.Where(s => s.SkillName == skillName).FirstOrDefault();
                 if (skill != null)
@@ -78,6 +85,7 @@ namespace labourRecruitment.Controllers
                 }
 
             }
+            */
 
             try
             {

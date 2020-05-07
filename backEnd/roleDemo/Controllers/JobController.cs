@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,21 +25,84 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        // GET: api/Job/GetAllActiveJobs
-        [HttpGet]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
-        {
-            return await _context.Job.ToListAsync();
-        }
+        //// GET: api/Job/GetAllJobs
+        //[HttpGet]
+        ////[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
+        //{
+        //    return await _context.Job.ToListAsync();
+        //}
 
-        // GET: api/Job/GetAllActiveJobs
+        //GET: api/Job/GetAllJobs
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<IEnumerable<Job>>> GetAllActiveJobs()
+        public async Task<ActionResult<ICollection>> GetAllJobs()
         {
-            return await _context.Job.Where(job => job.InProgress == true).ToListAsync();
+            var jobs = _context.Job.Select(j => new Job
+            {
+                JobId = j.JobId,
+                ClientId = j.ClientId,
+                Title = j.Title,
+                JobDescription = j.JobDescription,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
+                InProgress = j.InProgress,
+                IsComplete = j.IsComplete,
+                Street = j.Street,
+                City = j.City,
+                State = j.State,
+                PostalCode = j.PostalCode,
+                TotalHired = j.TotalHired,
+                ScheduleDone = j.ScheduleDone,
+                Client = _context.Client.Select(c => new Client { ClientName = c.ClientName }).FirstOrDefault(),
+                //IncidentReport = j.IncidentReport,
+                //JobLabourer = j.JobLabourer,
+                //JobSkill = j.JobSkill,
+                //LabourerAttendance = j.LabourerAttendance
+            }).ToListAsync();
+
+            return await jobs;
         }
+
+        //// GET: api/Job/GetAllActiveJobs
+        //[HttpGet]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //public async Task<ActionResult<IEnumerable<Job>>> GetAllActiveJobs()
+        //{
+        //    return await _context.Job.Where(job => job.InProgress == true).ToListAsync();
+        //}
+
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<ICollection>> GetAllActiveJobs()
+        {
+            var jobs = _context.Job.Where(j => j.InProgress == true).Select(j => new Job
+            {
+                JobId = j.JobId,
+                ClientId = j.ClientId,
+                Title = j.Title,
+                JobDescription = j.JobDescription,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
+                InProgress = j.InProgress,
+                IsComplete = j.IsComplete,
+                Street = j.Street,
+                City = j.City,
+                State = j.State,
+                PostalCode = j.PostalCode,
+                TotalHired = j.TotalHired,
+                ScheduleDone = j.ScheduleDone,
+                Client = _context.Client.Select(c => new Client { ClientName = c.ClientName }).FirstOrDefault(),
+                //IncidentReport = j.IncidentReport,
+                //JobLabourer = j.JobLabourer,
+                //JobSkill = j.JobSkill,
+                //LabourerAttendance = j.LabourerAttendance
+            }).ToListAsync();
+
+            return await jobs;
+        }
+
 
         // GET: api/Job/GetJob/{id}
         [HttpGet("{id}", Name = "GetJob")]
@@ -57,7 +121,10 @@ namespace labourRecruitment.Controllers
             }).ToListAsync();
             job.Client = _context.Client.Where(c => c.ClientId == job.ClientId).Select(c => new Client()
             {
-                ClientName = c.ClientName
+                ClientName = c.ClientName,
+                ClientCity = c.ClientCity,
+                ClientState = c.ClientState,
+                ClientPhoneNumber = c.ClientPhoneNumber
             }).FirstOrDefault();
             job.JobLabourer = await _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => new JobLabourer()
             {
