@@ -116,8 +116,8 @@ namespace roleDemo {
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
             //we should change the time to every friday 
-            //RecurringJob.AddOrUpdate<ScheduleRepo>("daily-check", x => , "*/10 * * * *");
-            RecurringJob.AddOrUpdate<ScheduleHelper>("weekly-schedule", x => x.AddWeeklySchedule(), "*/5  * * * *");
+            //RecurringJob.AddOrUpdate<CheckCompletion>("daily-check", x => x.CheckComplete() , "*/4 * * * *");
+            //RecurringJob.AddOrUpdate<ScheduleHelper>("weekly-schedule", x => x.AddWeeklySchedule(), "*/5  * * * *");
         }
 
     }

@@ -22,8 +22,8 @@ namespace labourRecruitment.Controllers
         [HttpPut]
         public IActionResult PutSchedule()
         {
-            ScheduleHelper scheule = new ScheduleHelper(_context);
-            scheule.AddWeeklySchedule();
+            CheckCompletion scheule = new CheckCompletion(_context);
+            scheule.CheckComplete();
 
             return new ObjectResult("OK");
         } 

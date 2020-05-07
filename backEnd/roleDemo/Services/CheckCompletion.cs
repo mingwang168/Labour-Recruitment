@@ -19,18 +19,22 @@ namespace labourRecruitment.Services
 
         public void CheckComplete()
         {
-            var completedJobs = _context.Job.Where(j => j.InProgress == true && j.EndDate == DateTime.Now).Select(oj => oj).ToList();
-            
+            var completedJobs = _context.Job.Where(j => j.InProgress == true && j.EndDate.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd")).Select(oj => oj).ToList();
+
+
             if (completedJobs != null)
             {
                 foreach (Job job in completedJobs)
                 {
                    job.IsComplete = true;
+                   job.InProgress = false;
                 }
             }
 
-            var scheduledLabourers = _context.JobLabourer.Except(_context.JobLabourer.Where(jb => jb.EndDay <= DateTime.Now)).Select(l=>l.Labourer).ToList();
-            var availableLabourers = _context.Labourer.Except(scheduledLabourers);
+            var availableLabourers = _context.JobLabourer.Where(jb => jb.EndDay.CompareTo(DateTime.Now) <= 0).Select(l => l.Labourer).ToList();
+           
+            //var availableLabourers = completeJobLabourer.ToList();
+           
             if (availableLabourers != null) {
                 foreach (Labourer l in availableLabourers)
                 {
