@@ -16,6 +16,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public DateTime? IncidentReportDate { get; set; }
         public string IncidentReportDescription { get; set; }
         public string IncidentReportFile { get; set; }
+        public bool? AdminNotified { get; set; }
 
         public virtual IncidentType IncidentType { get; set; }
         public virtual Job Job { get; set; }

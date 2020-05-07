@@ -115,6 +115,8 @@ namespace labourRecruitment.Models.LabourRecruitment
             {
                 entity.Property(e => e.IncidentReportId).HasColumnName("incident_report_id");
 
+                entity.Property(e => e.AdminNotified).HasColumnName("adminNotified");
+
                 entity.Property(e => e.IncidentReportDate)
                     .HasColumnName("incident_report_date")
                     .HasColumnType("date");
@@ -295,6 +297,8 @@ namespace labourRecruitment.Models.LabourRecruitment
                     .IsUnicode(false);
 
                 entity.Property(e => e.LabourerSin).HasColumnName("labourer_SIN");
+
+                entity.Property(e => e.OnLeave).HasColumnName("onLeave");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 

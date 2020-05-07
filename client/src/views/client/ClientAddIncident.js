@@ -151,6 +151,7 @@ const ClientAddIncident = ({ history }) => {
             IncidentReportDate: incidentdate,
             IncidentReportDescription: incidentsummary,
             JobId: selectedJob,
+            AdminNotified: false
         };
 
         try {
