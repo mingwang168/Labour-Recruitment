@@ -27,6 +27,10 @@
     <Compile Remove="Migrations\20200430210832_AddedDuration.Designer.cs" />
     <Compile Remove="Migrations\20200430211815_IntialCreate.cs" />
     <Compile Remove="Migrations\20200430211815_IntialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200502043741_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200502043741_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200507012407_AddedOnLeavetoLabourer.cs" />
+    <Compile Remove="Migrations\20200507012407_AddedOnLeavetoLabourer.Designer.cs" />
   </ItemGroup>
 
 

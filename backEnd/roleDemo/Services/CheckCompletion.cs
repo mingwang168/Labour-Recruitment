@@ -19,7 +19,7 @@ namespace labourRecruitment.Services
 
         public void CheckComplete()
         {
-            var completedJobs = _context.Job.Where(j => j.InProgress == true && j.EndDate.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd")).Select(oj => oj).ToList();
+            var completedJobs = _context.Job.Where(j => j.InProgress == true && j.EndDate == DateTime.Now).Select(oj => oj).ToList();
             
             if (completedJobs != null)
             {

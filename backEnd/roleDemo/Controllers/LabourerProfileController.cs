@@ -29,6 +29,7 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Labourer>>> GetAllLabourers()
         {
+            var labourers = _context.Labourer.Where(l => l.IsAvailable == true).ToList();
             return await _context.Labourer.ToListAsync();
         }
 

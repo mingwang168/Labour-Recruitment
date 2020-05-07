@@ -267,6 +267,9 @@ namespace labourRecruitment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("incident_report_id");
 
+                    b.Property<bool?>("AdminNotified")
+                        .HasColumnName("adminNotified");
+
                     b.Property<DateTime?>("IncidentReportDate")
                         .HasColumnName("incident_report_date")
                         .HasColumnType("date");
@@ -322,7 +325,7 @@ namespace labourRecruitment.Migrations
                         .HasMaxLength(20)
                         .IsUnicode(false);
 
-                    b.Property<int>("ClientId")
+                    b.Property<int?>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<DateTime>("EndDate")
@@ -366,7 +369,7 @@ namespace labourRecruitment.Migrations
                         .HasMaxLength(30)
                         .IsUnicode(false);
 
-                    b.Property<int>("TotalHired")
+                    b.Property<int?>("TotalHired")
                         .HasColumnName("total_hired");
 
                     b.HasKey("JobId");
@@ -382,7 +385,7 @@ namespace labourRecruitment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("job_labourer_id");
 
-                    b.Property<double?>("ClientQualityRating")
+                    b.Property<double>("ClientQualityRating")
                         .HasColumnName("client_quality_rating");
 
                     b.Property<int>("Duration")
@@ -392,13 +395,13 @@ namespace labourRecruitment.Migrations
                         .HasColumnName("end_day")
                         .HasColumnType("datetime");
 
-                    b.Property<int?>("JobId")
+                    b.Property<int>("JobId")
                         .HasColumnName("job_id");
 
-                    b.Property<int?>("LabourerId")
+                    b.Property<int>("LabourerId")
                         .HasColumnName("labourer_id");
 
-                    b.Property<double?>("LabourerSafetyRating")
+                    b.Property<double>("LabourerSafetyRating")
                         .HasColumnName("labourer_safety_rating");
 
                     b.Property<bool>("SafetyMeetingCompleted")
@@ -452,8 +455,8 @@ namespace labourRecruitment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("labourer_id");
 
-                    b.Property<bool?>("IsAvailable")
-                        .HasColumnName("onLeave");
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnName("isAvailable");
 
                     b.Property<string>("LabourerEmail")
                         .HasColumnName("labourer_email")
@@ -473,7 +476,8 @@ namespace labourRecruitment.Migrations
                     b.Property<int?>("LabourerSin")
                         .HasColumnName("labourer_SIN");
 
-                    b.Property<bool?>("OnLeave");
+                    b.Property<bool>("OnLeave")
+                        .HasColumnName("onLeave");
 
                     b.Property<int?>("UserId")
                         .HasColumnName("user_id");
@@ -539,10 +543,10 @@ namespace labourRecruitment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("labourer_skill_id");
 
-                    b.Property<int?>("LabourerId")
+                    b.Property<int>("LabourerId")
                         .HasColumnName("labourer_id");
 
-                    b.Property<int?>("SkillId")
+                    b.Property<int>("SkillId")
                         .HasColumnName("skill_id");
 
                     b.HasKey("LabourerSkillId");
@@ -689,8 +693,7 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Client", "Client")
                         .WithMany("Job")
                         .HasForeignKey("ClientId")
-                        .HasConstraintName("FK__Job__client_id__31EC6D26")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasConstraintName("FK__Job__client_id__31EC6D26");
                 });
 
             modelBuilder.Entity("labourRecruitment.Models.LabourRecruitment.JobLabourer", b =>
@@ -698,12 +701,14 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Job", "Job")
                         .WithMany("JobLabourer")
                         .HasForeignKey("JobId")
-                        .HasConstraintName("FK__JobLabour__job_i__47DBAE45");
+                        .HasConstraintName("FK__JobLabour__job_i__47DBAE45")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Labourer", "Labourer")
                         .WithMany("JobLabourer")
                         .HasForeignKey("LabourerId")
-                        .HasConstraintName("FK__JobLabour__labou__48CFD27E");
+                        .HasConstraintName("FK__JobLabour__labou__48CFD27E")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
                         .WithMany("JobLabourer")
@@ -766,12 +771,14 @@ namespace labourRecruitment.Migrations
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Labourer", "Labourer")
                         .WithMany("LabourerSkill")
                         .HasForeignKey("LabourerId")
-                        .HasConstraintName("FK__LabourerS__labou__440B1D61");
+                        .HasConstraintName("FK__LabourerS__labou__440B1D61")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("labourRecruitment.Models.LabourRecruitment.Skill", "Skill")
                         .WithMany("LabourerSkill")
                         .HasForeignKey("SkillId")
-                        .HasConstraintName("FK__LabourerS__skill__44FF419A");
+                        .HasConstraintName("FK__LabourerS__skill__44FF419A")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
