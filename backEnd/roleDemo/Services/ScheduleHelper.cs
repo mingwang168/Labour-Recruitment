@@ -76,7 +76,7 @@ namespace labourRecruitment.Services
             GetHighestRated rated = new GetHighestRated(_context);
             foreach (JobSkill js in jobSkillSelected)
             {
-                var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).Where(l => l.IsAvailable == true).ToList();
+                var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).Where(l => l.IsAvailable == true && l.OnLeave == false).ToList();
                 List<Labourer> labourers = new List<Labourer>();
                 labourers.AddRange(ratedLabourers.GetRange(0, js.NumberNeeded));
 
@@ -120,7 +120,8 @@ namespace labourRecruitment.Services
                     foreach (JobSkill js in jobSkills)
                     {
                         var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
-                        var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today).Select(l => l.Labourer).Distinct().ToList();
+                        var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today).Select(l => l.Labourer)
+                            .Distinct().Where(l=>l.OnLeave == true).ToList();
                         var availableLabourers = _context.Labourer.Except(unAvailableLabourers).ToList();
                         List<Labourer> chosenLabourers = new List<Labourer>();
                         chosenLabourers.AddRange(availableLabourers.GetRange(0, js.NumberNeeded));
