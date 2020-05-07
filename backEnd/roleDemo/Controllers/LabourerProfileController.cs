@@ -62,11 +62,6 @@ namespace labourRecruitment.Controllers
             _context.LabourerSkill.RemoveRange(_context.LabourerSkill.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
 
             foreach (string skillName in labourerProfile.Skills.Select(s => s.SkillName))
-     /*
-            _context.AvailabilityLabourer.RemoveRange(_context.AvailabilityLabourer.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
-
-            foreach (string day in labourerProfile.Availabilities.Select(av => av.AvailabilityDay))
-
             {
                 Skill skill = _context.Skill.Where(s => s.SkillName == skillName).FirstOrDefault();
                 if (skill != null)
@@ -85,8 +80,7 @@ namespace labourRecruitment.Controllers
                 }
 
             }
-            */
-
+           
             try
             {
                 _context.SaveChanges();
