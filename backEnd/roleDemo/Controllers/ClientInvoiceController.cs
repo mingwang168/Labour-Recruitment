@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace labourRecruitment.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class ClientInvoiceController : ControllerBase
     {
@@ -29,6 +29,24 @@ namespace labourRecruitment.Controllers
             return !(ts.TotalDays >= 7 || (DateTime.Compare(dt1, dt2) > 0 ? (dt1.DayOfWeek < dt2.DayOfWeek) : (dt1.DayOfWeek > dt2.DayOfWeek)));
         }
 
+        [HttpPut]
+        public async Task<IActionResult> GetInvoice([FromBody] JobLabourer input)
+        {
+            var jobLabourers = _context.JobLabourer.Where(jb => jb.StartDay == input.StartDay && jb.EndDay == input.EndDay && jb.JobId == input.JobId)
+                .Select(l=> new JobLabourer { 
+                    SkillId = l.SkillId,
+                    Labourer = l.Labourer,
+                    JobId = l.JobId,
+                    StartDay = l.StartDay,
+                    EndDay = l.EndDay
+                }).ToList();
+            var list = jobLabourers.GroupBy(jb => jb.SkillId).ToList();
+            foreach(var li in list)
+            {
+
+            }
+            return new ObjectResult("OK");
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetClientInvoice([FromBody] Input input)
