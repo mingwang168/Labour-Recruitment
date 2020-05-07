@@ -39,8 +39,8 @@ namespace labourRecruitment.Controllers
             return new LabourerProfileVMRepo(_context).GetLabourer(id);
         }
 
-        
-        [HttpPut]
+
+        [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PutLabourerProfile(LabourerProfileVM labourerProfile)
         {
@@ -58,20 +58,25 @@ namespace labourRecruitment.Controllers
                 lp.LabourerEmail = labourerProfile.Labourer.LabourerEmail;
             }
 
-            /*
+
+            _context.LabourerSkill.RemoveRange(_context.LabourerSkill.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
+
+            foreach (string skillName in labourerProfile.Skills.Select(s => s.SkillName))
+     /*
             _context.AvailabilityLabourer.RemoveRange(_context.AvailabilityLabourer.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
 
             foreach (string day in labourerProfile.Availabilities.Select(av => av.AvailabilityDay))
+
             {
-                Availability availability = _context.Availability.Where(a => a.AvailabilityDay == day).FirstOrDefault();
-                if (availability != null)
+                Skill skill = _context.Skill.Where(s => s.SkillName == skillName).FirstOrDefault();
+                if (skill != null)
                 {
-                    AvailabilityLabourer availabilityLabourer = new AvailabilityLabourer
+                    LabourerSkill labourerSkill = new LabourerSkill
                     {
-                        AvailabilityId = availability.AvailabilityId,
+                        SkillId = skill.SkillId,
                         LabourerId = labourerProfile.Labourer.LabourerId
                     };
-                    _context.AvailabilityLabourer.Add(availabilityLabourer);
+                    _context.LabourerSkill.Add(labourerSkill);
                     _context.SaveChanges();
                 }
                 else
@@ -111,9 +116,5 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(lb);
 
         }
-
-
-
-
     }
 }
