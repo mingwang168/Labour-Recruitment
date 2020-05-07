@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Checkbox from 'react-simple-checkbox';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
@@ -12,6 +11,7 @@ import Table from '../components/Table';
 import OneColumnTable from '../components/OneColumnTable';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import RatingBadge from '../components/RatingBadge';
+import OnVacationBadge from '../components/OnVacationBadge';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
 import UnauthorizedMessage from '../components/UnauthorizedMessage';
@@ -43,10 +43,12 @@ const LabourerProfile = (props) => {
     const [skills, setSkills] = useState();
     const [jobs, setJobs] = useState();
     const [incidents, setIncidents] = useState();
+    //const [onVacation, setOnVacation] = useState(labourer.onLeave)
 
     // Table Columns
     const [jobsTableColumns, setJobsTableColumns] = useState();
     const [incidentsTableColumns, setIncidentsTableColumns] = useState();
+    
 
     const fetchProfileData = async(id) => {
         // Fetch profile data
@@ -196,12 +198,7 @@ const LabourerProfile = (props) => {
                 </h1>
                 { Auth.getID() == labourer.labourerId &&
                 <>
-                    <Checkbox size="2" tickSize="0" color="#5969ff" 
                     
-                     />
-                    <span className="ml-1">
-                        On Vacation 
-                    </span>
                 </>
                 }
             </div>
