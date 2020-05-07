@@ -82,7 +82,7 @@ namespace labourRecruitment.Controllers
                 }
 
             }
-         
+
             try
             {
                 _context.SaveChanges();
