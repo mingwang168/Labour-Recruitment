@@ -93,6 +93,23 @@ namespace labourRecruitment.Controllers
             return NoContent();
         }
 
+        [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult ToggleOnLeave(Labourer labourer)
+        {
+            var selectedLabourer = _context.Labourer.FirstOrDefault(l => l.LabourerId == labourer.LabourerId);
+
+            if (selectedLabourer == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                selectedLabourer.OnLeave = labourer.OnLeave;
+                _context.SaveChanges();
+            }
+            return NoContent();
+        }
 
         // DELETE: api/Todo?id=5
         [HttpDelete]
