@@ -21,6 +21,7 @@ namespace labourRecruitment.Models.LabourRecruitment
         public int? LabourerSin { get; set; }
         public string LabourerEmail { get; set; }
         public bool? IsAvailable { get; set; }
+        public bool? OnLeave { get; set; }
 
         public virtual SystemUser User { get; set; }
         public virtual ICollection<AvailabilityLabourer> AvailabilityLabourer { get; set; }

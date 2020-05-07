@@ -279,6 +279,8 @@ namespace labourRecruitment.Models.LabourRecruitment
 
                 entity.Property(e => e.IsAvailable).HasColumnName("isAvailable");
 
+                entity.Property(e => e.IsAvailable).HasColumnName("onLeave");
+
                 entity.Property(e => e.LabourerEmail)
                     .HasColumnName("labourer_email")
                     .HasMaxLength(30)
