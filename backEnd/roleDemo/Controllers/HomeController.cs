@@ -33,20 +33,20 @@ namespace roleDemo.Controllers {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Contact()
-        {
-            EmailContent emailContent = new EmailContent
-            {
-                LabourerFirstName = "Ming",
-                LabourerLastName = "Wang",
-                JobAddress = "BCIT downtown campus",
-                JobStart = Convert.ToDateTime("2020-05-15 00:00:00"),
-                JobEnd = Convert.ToDateTime("2020-05-20 00:00:00")
-            };
-            if (new EmailHelper(_emailSettings).SendMail("minghuiwang0904@gmail.com", "Your Job Schedule", emailContent))
-                return RedirectToAction("Index");
-            return RedirectToAction("Error");
-        }
+        //public IActionResult Contact()
+        //{
+        //    //EmailContent emailContent = new EmailContent
+        //    //{
+        //    //    LabourerFirstName = "Ming",
+        //    //    LabourerLastName = "Wang",
+        //    //    JobAddress = "BCIT downtown campus",
+        //    //    JobStart = Convert.ToDateTime("2020-05-15 00:00:00"),
+        //    //    JobEnd = Convert.ToDateTime("2020-05-20 00:00:00")
+        //    //};
+        //    //if (new EmailHelper(_emailSettings).SendMail("minghuiwang0904@gmail.com", "Your Job Schedule", emailContent))
+        //    //    return RedirectToAction("Index");
+        //    //return RedirectToAction("Error");
+        //}
 
         //public IActionResult CheckCompletion()
         //{

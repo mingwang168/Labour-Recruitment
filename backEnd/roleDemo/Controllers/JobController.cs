@@ -9,6 +9,7 @@ using labourRecruitment.Services;
 using labourRecruitment.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,14 +27,7 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-        //// GET: api/Job/GetAllJobs
-        //[HttpGet]
-        ////[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
-        //{
-        //    return await _context.Job.ToListAsync();
-        //}
-
+      
         //GET: api/Job/GetAllJobs
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -65,15 +59,7 @@ namespace labourRecruitment.Controllers
             return await jobs;
         }
 
-        //// GET: api/Job/GetAllActiveJobs
-        //[HttpGet]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //public async Task<ActionResult<IEnumerable<Job>>> GetAllActiveJobs()
-        //{
-        //    return await _context.Job.Where(job => job.InProgress == true).ToListAsync();
-        //}
-
-
+      
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<ICollection>> GetAllActiveJobs()
