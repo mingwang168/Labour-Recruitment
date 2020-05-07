@@ -33,8 +33,8 @@ namespace labourRecruitment.Services
             }
 
             
-            var scheduledLabourers = _context.LabourerAttendance.Where(l => l.Date.CompareTo(today) > 0).Select(l => l.Labourer).ToList();
-            var labourers = _context.Labourer.ToList();
+            var scheduledLabourers = _context.LabourerAttendance.Where(l => l.Date.CompareTo(today) >= 0).Select(l => l.Labourer).ToList();
+            var labourers = _context.Labourer.Where(l=>l.OnLeave == false).ToList();
             var availableLabourers = labourers.Except(scheduledLabourers).ToList();
 
 

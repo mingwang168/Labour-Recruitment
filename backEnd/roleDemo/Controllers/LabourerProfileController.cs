@@ -109,7 +109,7 @@ namespace labourRecruitment.Controllers
                 selectedLabourer.OnLeave = labourer.OnLeave;
                 _context.SaveChanges();
             }
-            return NoContent();
+            return new ObjectResult(labourer);
         }
 
         // DELETE: api/Todo?id=5
