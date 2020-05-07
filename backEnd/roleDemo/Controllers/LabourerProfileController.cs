@@ -56,6 +56,7 @@ namespace labourRecruitment.Controllers
                 lp.LabourerLastName = labourerProfile.Labourer.LabourerLastName;
                 lp.IsAvailable = labourerProfile.Labourer.IsAvailable;
                 lp.LabourerEmail = labourerProfile.Labourer.LabourerEmail;
+               
             }
 
 

@@ -60,6 +60,7 @@ namespace roleDemo.Controllers
                     LabourerSin = input.Labourer.LabourerSin,
                     LabourerEmail = input.User.Email,
                     IsAvailable = true,
+                    OnLeave = false
                 };
                 _context.SystemUser.Add(sysUser);
                 sysUser.Labourer.Add(labourer);
