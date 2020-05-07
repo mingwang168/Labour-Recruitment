@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Checkbox from 'react-simple-checkbox';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
@@ -63,7 +64,7 @@ const LabourerProfile = (props) => {
             }
     
             let data = await response.json();
-
+            console.log(data)
             if(data) {
                 setLabourer({
                     ...data.labourer,
@@ -193,6 +194,16 @@ const LabourerProfile = (props) => {
                 <h1 className="font-26 mb-2">
                     {`${labourer.labourerFirstName} ${labourer.labourerLastName}`}
                 </h1>
+                { Auth.getID() == labourer.labourerId &&
+                <>
+                    <Checkbox size="2" tickSize="0" color="#5969ff" 
+                    
+                     />
+                    <span className="ml-1">
+                        On Vacation 
+                    </span>
+                </>
+                }
             </div>
 
             <div className="card-body border-top">
