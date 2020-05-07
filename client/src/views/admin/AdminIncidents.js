@@ -4,18 +4,26 @@ import { Link } from 'react-router-dom';
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
 
+import Loader from '../components/Loader';
+import Layout from '../components/Layout';
+import PageHeader from '../components/PageHeader';
 import Table from '../components/Table';
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
-import Footer from '../components/Footer';
-
-import { INCIDENTS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+import ErrorMessage from '../components/ErrorMessage';
+import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const AdminIncidents = (props) => {
 
+    // Authorization
+    const [authorized] = useState(Auth.authenticateAdmin());
+
+    // Component
+    const [loaded, setLoaded] = useState(false);
+
+    // Data
     const [incidents, setIncidents] = useState();
+    const [incidentsTableColumns, setIncidentsTableColumns] = useState();
 
     const fetchIncidents = async() => {
         try {
@@ -33,68 +41,70 @@ const AdminIncidents = (props) => {
             let data = await response.json();
 
             if(data.length) {
-                setIncidents(DataSanitizer.cleanIncidentsData(data));
+                let formattedData = data.map(d => ({
+                    id: d.incidentReportId,
+                    job: d.job.title,
+                    date: DataSanitizer.formatDateString(d.incidentReportDate),
+                    type: d.incidentType.incidentTypeName,
+                    affected: `${d.labourerIncidentReport.length} labourer(s)`
+                }));
+
+                setIncidentsTableColumns([
+                    {Header: 'Date', accessor: 'date'},
+                    {Header: 'Job Title', accessor: 'job'},
+                    {Header: 'Incident Type', accessor: 'type'},
+                    {Header: '# affected', accessor: 'affected'},
+                ]);
+
+                setIncidents(formattedData);
             }
         } catch(e) {
             console.error(e);
         }
+
+        // Set loading state
+        setLoaded(true);
     }
 
     useEffect(() => {
-        fetchIncidents();
+        if(authorized) fetchIncidents();
     }, [])
 
-    return (
-    <div className="dashboard-main-wrapper">
-        <TopNav />
-        <SideNav />
-    
-        <div className="dashboard-wrapper">
-            <div className="container-fluid dashboard-content">
-                {/* Page Header */}
-                <div className="page-header">
-                <h2 className="pageheader-title">
-                    Manage Incidents
-                </h2>
-                <div className="page-breadcrumb">
-                <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                        <Link to="/dashboard" className="breadcrumb-link">Home</Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                        Incidents
-                    </li>
-                </ol>
-                </nav>
-                </div>
-                </div>
+    const content = (
+    <>
+    <PageHeader
+        title={"Manage Incidents"}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Incidents" }
+        ]}
+    />
 
-                {/* Incidents Table */}
-                <div className="row">
-                <div className="col">
-                <div className="card">
-                <h5 className="card-header">Incidents</h5>
-                <div className="card-body">
-                    { incidents ?
-                    <Table
-                        columns={INCIDENTS_TABLE_COLUMNS}
-                        data={incidents}
-                        path={"/incident"}
-                        {...props}
-                    />
-                    :
-                    <p className="lead">No incidents to display.</p>
-                    }
-                </div>
-                </div>
-                </div>
-                </div>
+    <Loader loaded={loaded}>
+        <div className="row">
+        <div className="col">
+        <div className="card">
+            <h4 className="card-header">Incidents</h4>
+            <div className="card-body">
+                { !incidents ? <ErrorMessage message={"No incidents to display."} /> :
+                <Table
+                    data={incidents}
+                    columns={incidentsTableColumns}
+                    path="/incident"
+                    searchable={true}
+                    striped={true}
+                    {...props}
+                />
+                }
             </div>
-            <Footer />
         </div>
-    </div>
+        </div>
+        </div>
+    </Loader>
+    </>
     );
+
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
 export default AdminIncidents;

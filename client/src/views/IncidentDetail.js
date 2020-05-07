@@ -1,123 +1,208 @@
-import React, {useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
 
-import TopNav from './components/TopNav';
-import SideNav from './components/SideNav';
-import * as Auth from '../utils/Auth'
+import * as Auth from "../utils/Auth";
+import { isWholeNumber } from '../utils/IsWholeNumber';
+
+import Loader from "./components/Loader";
+import Layout from "./components/Layout";
+import PageHeader from "./components/PageHeader";
+import FormErrors from "./components/FormErrors";
+import RateWorkers from "./components/RateWorkers";
+import LabourerList from "./components/LabourerList";
+import UnauthorizedMessage from "./components/UnauthorizedMessage";
 
 const BASE_URL = "http://localhost:5001/api";
 
 const IncidentDetail = (props) => {
-    const [details, setDetails] = useState()
+    // Authorization
+    const [authorized] = useState(true);
 
-    const fetchIncidentDetails = async(id) => {
-        let token = Auth.getToken()
+    const [id] = useState(
+        props.match.params.id && isWholeNumber(props.match.params.id) ? props.match.params.id : null
+    );
+
+    // Component
+    const [loaded, setLoaded] = useState(false);
+
+    // Data
+    const [report, setReport] = useState();
+    const [jobLabourer, setJobLabourer] = useState();
+
+    const fetchIncidentDetails = async (id) => {
         try {
-            const response = await fetch(BASE_URL + "/incidents/GetIncidentByIncidentId/"+ id , { 
-                method : "GET", 
-                headers : {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+            const response = await fetch(
+                BASE_URL + "/incidents/GetIncidentByIncidentId/" + id,
+                {
+                    method: "GET",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${Auth.getToken()}`,
+                    },
                 }
-            })
-            const data = await response.json()
-            
-            if (data) {
-                setDetails(data)
-            }
+            );
 
+            if(response.status !== 200) {
+                throw response;
+            }
+            
+            const data = await response.json();
+
+            if(data) {
+                setReport(data.incidentReport);
+                setJobLabourer(data.jobLabourers);
+            }
         } catch (e) {
             console.error(e);
         }
-    }
-    
-    useEffect(() =>{
-        fetchIncidentDetails(props.match.params.id)
-    }, [])
 
-   
-    return (
-        <>
-        {details && 
-        <div className="dashboard-main-wrapper">
-            <TopNav />
-            <SideNav />
+        // Set loading state
+        setLoaded(true);
+    };
 
+    const changeRating = async (newRating, labourerId, jobId) => {
+        let token = Auth.getToken();
+        if (token == null) {
+            Auth.forceLogout();
+        }
 
-            <div className="dashboard-wrapper">
-                <div className="container-fluid dashboard-content">
+        try {
+            const response = await fetch(
+                BASE_URL + "/JobHistory/LabourerSafety",
+                {
+                    method: "PUT",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        JobId: jobId,
+                        LabourerId: labourerId,
+                        LabourerSafetyRating: newRating,
+                    }),
+                }
+            );
+            const data = await response.json();
+            if (data) {
+                console.log(data);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
-                    {/* Page Header */}
-                    <div className="row">
-                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div className="page-header">
-                                <h2 className="pageheader-title">Incident Details</h2>
-                                <div className="page-breadcrumb">
-                                    <nav aria-label="breadcrumb">
-                                        <ol className="breadcrumb">
-                                            <li className="breadcrumb-item"><a href="/dashboard" className="breadcrumb-link">Dashboard</a></li>
-                                            <li className="breadcrumb-item"><a href="/incidents" className="breadcrumb-link">Incident reports</a></li>
-                                            <li className="breadcrumb-item active" aria-current="page">Incident Details</li>
-                                        </ol>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    const content = report && (
+    <>
+    <PageHeader
+        title={"Incident Details"}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Incidents", path: "/incidents" },
+            { name: "Incident Details" },
+        ]}
+    />
 
-                    <div className="row">
-                        {/* Incident details */}
-                        <div className="col col-md-12">
-                            <div className="card">
-                                <div className="card-body">
-                                    <h1 className="font-26 mb-0">{details.job.title}</h1>
-                                    <p>{details.job.client.clientName}</p>
-                                    <p>{details.job.street}<br/>{details.job.city}, {details.job.state}</p>
-                                </div>
-                                <div className="card-body border-top">
-                                    <h3 className="font-16">Date of Incident</h3>
-                                    <time>{details.incidentReportDate.split('T')[0]}</time>
-                                </div>
-                                <div className="card-body border-top">
-                                    <h3 className="font-16">Affected labourer name(s)</h3>
-                                    {details.labourerIncidentReport.map((r, i) => (
-                                        <ul key={i} className="list-unstyled mb-0">
-                                            <li>{r.labourer.labourerFirstName} {r.labourer.labourerLastName}</li>
-                                        </ul>
-                                    ))
-                                    }
-                                </div>
-                                <div className="card-body border-top">
-                                    <h3 className="font-16">Incident type</h3>
-                                    <p>{details.incidentType.incidentTypeName}</p>
-                                </div>
-                                <div className="card-body border-top">
-                                    <h3 className="font-16">Incident description</h3>
-                                    <p>{details.incidentReportDescription}</p>
-                                </div>
-                                
-                                <div className="card-body border-top">
-                                    <h3 className="font-16">Incident file</h3>
-                                    <div className="custom-file">
-                                    <input type="file" className="custom-file-input" id="customFile"></input>
-                                    <label className="custom-file-label" htmlFor="customFile">Choose incident file</label>
-                                </div>
-                                </div>
-                                {/* Display this only if the job owner is viewing this page */}
-                                <div className="card-body border-top">
-                                    <Link to="/editincident" className="btn btn-light">Edit Incident Details</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <Loader loaded={loaded}>
+        <div className="row">
+        <div className="col col-md-12">
+        <div className="card">
+            {/* Incident Details */}
+            <div className="card-body">
+                <h1 className="font-26 mb-0">
+                    {report.job.title}
+                </h1>
+                <p>{report.job.client.clientName}</p>
+                <p>
+                    {report.job.street}<br />
+                    {report.job.city}, {report.job.client.clientState}
+                </p>
+            </div>
+            <div className="card-body border-top">
+                <h3 className="font-16">Date of Incident</h3>
+                <time>
+                    {report.incidentReportDate.split("T")[0]}
+                </time>
+            </div>
+            <div className="card-body border-top">
+                <h3 className="font-16">Incident type</h3>
+                <p>{report.incidentType.incidentTypeName}</p>
+            </div>
+            <div className="card-body border-top">
+                <h3 className="font-16">
+                    Incident Description
+                </h3>
+                <p>{report.incidentReportDescription}</p>
+            </div>
 
+            {/* Safety Ratings */}
+            {jobLabourer && (
+            <div className="card" id="safetyratings">
+                <h5 className="card-header">
+                    Safety Ratings
+                </h5>
+                <div className="card-body">
+                    <p>
+                        Give affected labourers a rating, based on their safety-wise performance on this job.
+                    </p>
+                    <table className="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {jobLabourer.map((j, i) => (
+                                <tr key={i}>
+                                    <td>
+                                        {`${j.labourer.labourerFirstName} ${j.labourer.labourerLastName}`}
+                                    </td>
+                                    <td>
+                                        <RateWorkers
+                                            changeRating={changeRating}
+                                            clientId={report.job.clientId}
+                                            jobId={report.jobId}
+                                            labourerId={j.labourer.labourerId}
+                                            rating={j.labourerSafetyRating}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            )}
+            <div className="card-body border-top">
+                <h3 className="font-16">Incident File</h3>
+                <div className="custom-file">
+                    <input
+                        type="file"
+                        className="custom-file-input"
+                        id="customFile"
+                        style={{cursor:'pointer'}}
+                    />
+                    <label
+                        className="custom-file-label d-flex"
+                        htmlFor="customFile"
+                    >
+                        <i className="material-icons mr-2">publish</i> Choose incident file
+                    </label>
                 </div>
             </div>
         </div>
-        }
+        </div>
+        </div>
+    </Loader>
     </>
-    )
-}
+    );
+
+    useEffect(() => {
+        if(id) fetchIncidentDetails(id);
+    }, []);
+
+    return !authorized ? <UnauthorizedMessage /> : <Layout content={content} />;
+};
 
 export default IncidentDetail;

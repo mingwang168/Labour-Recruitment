@@ -22,10 +22,10 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-      
+
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetLabourerByJobId(int id)
+        public IActionResult GetLabourerByJobId(int id)
         {
             List<Labourer> labourers = _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => ojl.Labourer).ToList();
 
@@ -33,5 +33,18 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(labourers);
         }
 
+        [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult PutSafetyMeetingCompeleted([FromBody]JobLabourer jobLabourer)
+        {
+            var joblabourers = _context.JobLabourer.Where(jl => jl.JobId == jobLabourer.JobId && jl.LabourerId == jobLabourer.LabourerId).ToList();
+            foreach(JobLabourer jl in joblabourers)
+            {
+                jl.SafetyMeetingCompleted = jobLabourer.SafetyMeetingCompleted;
+                
+            };
+            _context.SaveChanges();
+            return new ObjectResult(jobLabourer);
+        }
     }
 }

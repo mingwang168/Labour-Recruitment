@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as DataSanitizer from '../utils/DataSanitizer';
 
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
-import RateWorkers from './components/RateWorkers'
 import Table from './components/Table';
+import CheckSafetyMetting from './components/CheckSafetyMeeting';
 import ErrorMessage from './components/ErrorMessage';
 
 import * as Auth from '../utils/Auth';
+
 
 import { ATTENDANCE_DATES_TABLE_COLUMNS, INCIDENTS_TABLE_COLUMNS } from '../utils/TableColumns';
 
@@ -19,7 +20,8 @@ const JobDetail = (props) => {
     const [details, setDetails] = useState();
     const [incidents, setIncidents] = useState([""]);
     const [attendanceDates, setAttendanceDates] = useState();
-
+    const [safetyMeeting, setSafetyMeeting] = useState();
+    
     const fetchJobDetails = async(id) => {
        
         // Job details
@@ -72,7 +74,7 @@ const JobDetail = (props) => {
             console.error(err);
         }
     }
-
+    
     useEffect(() => {
         if(props.match.params.id) {
             if(Number.isInteger(Number(props.match.params.id))) {
@@ -81,6 +83,7 @@ const JobDetail = (props) => {
         }
     }, [props.match.params.id])
 
+    
     return (
     <>
     <div className="dashboard-main-wrapper">
@@ -202,67 +205,17 @@ const JobDetail = (props) => {
                         <h5 className="card-header">Safety Meetings</h5>
                         <div className="card-body">
                             <p>Safety meetings are mandatory. Please check off the dates where safety meetings were completed.</p>
-                            <table className="table table-bordered job-safetymeetings-table">
-                            <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Apr 3, 2020</td>
-                                    <td><span className="badge badge-danger">Incomplete</span></td>
-                                    <td><Link to="/job" className="badge badge-light">Change</Link></td>
-                                </tr>
-                                <tr>
-                                    <td>Apr 2, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><Link to="/job" className="badge badge-light">Change</Link></td>
-                                </tr>
-                                <tr>
-                                    <td>Apr 1, 2020</td>
-                                    <td><span className="badge badge-success">Complete</span></td>
-                                    <td><Link to="/job" className="badge badge-light">Change</Link></td>
-                                </tr>
-                            </tbody>
-                            </table>
+                            {details.jobLabourer.map((jLabourer, i) => (
+                            <CheckSafetyMetting firstname={jLabourer.labourer.labourerFirstName} key={i}
+                                                lastname={jLabourer.labourer.labourerLastName} 
+                                                safetyMeeting={jLabourer.safetyMeetingCompleted} 
+                                                labourerId={jLabourer.labourerId} 
+                                                jobId={details.jobId} clientId={details.clientId} /> 
+                            ))
+                            }
                         </div>
                     </div>
-
-                    {/* Safety Ratings */}
-                    {/* <div className="card" id="safetyratings">
-                        <h5 className="card-header">Safety Ratings</h5>
-                        <div className="card-body">
-                            <p>Give hired labourers a rating, based on their safety-wise performance on this job.</p>
-                            <table className="table table-bordered job-safetyratings-table">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Work Type</th>
-                                <th>Rating</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {details.jobLabourer.map((jLabourer,i) => 
-                                <tr key = {i}>
-                                <td className ="text-capitalize">{jLabourer.labourer.labourerFirstName} {jLabourer.labourer.labourerLastName}</td>
-                                <td>{jLabourer.skill.skillName}</td>
-                                <td>
-                                    <RateWorkers
-                                        jobId = {details.jobId}
-                                        rating = {jLabourer.labourerSafetyRating} 
-                                        labourerId = {jLabourer.labourerId}
-                                        clientName = {details.client.clientName}
-                                    />
-                                </td>
-                            </tr>
-                            )}
-                            </tbody>
-                            </table>
-                        </div>
-                    </div> */}
+                
                 </div>
             </div>
             </>
