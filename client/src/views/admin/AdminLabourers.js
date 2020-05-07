@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 import * as Auth from '../../utils/Auth';
-import * as DataSanitizer from '../../utils/DataSanitizer';
 
-import Layout from '../components/Layout';
 import Loader from '../components/Loader';
+import Layout from '../components/Layout';
+import PageHeader from '../components/PageHeader';
 import Table from '../components/Table';
 import ErrorMessage from '../components/ErrorMessage';
-
-import { LABOURERS_TABLE_COLUMNS   } from '../../utils/TableColumns';
+import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const AdminLabourers = (props) => {
 
-    const [labourers, setLabourers] = useState([]);
+    // Authorization
+    const [authorized] = useState(Auth.authenticateAdmin());
+
+    // Component
     const [loaded, setLoaded] = useState(false);
+
+    // Data
+    const [labourers, setLabourers] = useState();
+    const [labourersTableColumns, setLabourersTableColumns] = useState();
 
     const fetchLabourers = async() => {
         try {
@@ -34,63 +39,66 @@ const AdminLabourers = (props) => {
             let data = await response.json();
 
             if(data && data.length) {
-                setLabourers(DataSanitizer.cleanLabourersData(data));
+                let formattedData = data.map(d => ({
+                    id: d.labourerId,
+                    name: `${d.labourerFirstName} ${d.labourerLastName}`,
+                    email: d.labourerEmail,
+                    availability: d.isAvailable ? "Yes" : "No"
+                }));
+
+                setLabourers(formattedData);
+                setLabourersTableColumns([
+                    {Header: 'Name', accessor: 'name',},
+                    {Header: 'Email', accessor: 'email',},
+                    {Header: 'Is Available', accessor: 'availability'}
+                ]);
             }
         } catch(e) {
             console.error(e);
         }
+
+        // Set loading state
         setLoaded(true);
     }
 
     useEffect(() => {
-        fetchLabourers();
+        if(authorized) fetchLabourers();
     }, [])
 
     const content = (
-        <>
-        {/* Page Header */}
-        <div className="page-header">
-        <h2 className="pageheader-title">
-            Manage Labourers
-        </h2>
-        <div className="page-breadcrumb">
-        <nav aria-label="breadcrumb">
-        <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-                <Link to="/dashboard" className="breadcrumb-link">Home</Link>
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-                Labourers
-            </li>
-        </ol>
-        </nav>
-        </div>
-        </div>
-
-        {/* Labourers Table */}
+    <>
+    <PageHeader
+        title={`Manage Labourers`}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Labourers" }
+        ]}
+    />
+    
+    <Loader loaded={loaded}>
         <div className="row">
         <div className="col">
         <div className="card">
-            <h5 className="card-header">All Labourers</h5>
+            <h4 className="card-header">All Labourers</h4>
             <div className="card-body">
-                <Loader loaded={loaded}>
-                    { !labourers.length ? <ErrorMessage message={"No labourer data."} /> : 
-                    <Table 
-                        columns={LABOURERS_TABLE_COLUMNS}
-                        data={labourers}
-                        path={"/profile/labourer"}
-                        {...props}
-                    />
-                    }
-                </Loader>
+            { !labourers ? <ErrorMessage message={"No labourers to display."} /> :
+            <Table
+                data={labourers}
+                columns={labourersTableColumns}
+                path="/profile/labourer"
+                searchable={true}
+                {...props}
+            />
+            }
             </div>
         </div>
         </div>
         </div>
-        </>
+    </Loader>
+    </>
     );
 
-    return <Layout content={content} />;
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
 export default AdminLabourers;

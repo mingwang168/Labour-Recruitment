@@ -40,8 +40,7 @@ namespace labourRecruitment.Controllers
             return new ClientProfileVMRepo(_context).GetClient(id);
         }
 
-        [HttpPut("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut]
         public async Task<IActionResult> PutClientProfile(ClientProfileVM clientProfile)
         {
             var cp = _context.Client.SingleOrDefault(c => c.ClientId == clientProfile.Client.ClientId);
