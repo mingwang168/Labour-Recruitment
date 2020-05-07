@@ -7,6 +7,7 @@ const OnVacationBadge = (props) => {
     const [onVacation, setOnVacation] = useState(props.onLeave)
 
     const ChangeOnVacation = async(check) => {
+        console.log(props.labourerId)
             try{
                 const response = await fetch(BASE_URL + '/LabourerProfile', {
                     method : 'PUT',
@@ -17,6 +18,7 @@ const OnVacationBadge = (props) => {
                     }, 
                     body : JSON.stringify({
                         LabourerId : props.labourerId,
+                        OnLeave : check
                     })
                 })
                 const data = await response.json()

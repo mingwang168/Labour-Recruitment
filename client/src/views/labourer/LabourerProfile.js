@@ -197,9 +197,10 @@ const LabourerProfile = (props) => {
                     {`${labourer.labourerFirstName} ${labourer.labourerLastName}`}
                 </h1>
                 { Auth.getID() == labourer.labourerId &&
-                <>
-                    
-                </>
+                    <OnVacationBadge 
+                        labourerId={labourer.labourerId}
+                        onLeave={labourer.onLeave} 
+                    /> 
                 }
             </div>
 
