@@ -87,12 +87,21 @@ const AdminPayrates = (props) => {
             <h4 className="card-header">All Skills</h4>
             <div className="card-body">
             { !skills ? <ErrorMessage message={"No payrates to display."} /> :
-            <Table
+           <div className="row">
+           <Table
                 data={skills}
                 columns={skillsTableColumns}
+                path="/skill"
                 {...props}
-            />
-            }
+            />            
+            </div>
+            }   
+             <button
+                    onClick={() => console.log("Add New Skill button")}
+                    className="btn btn-primary pt-1 pb-0 float-right"
+                >
+                   Add New Skill
+                </button> 
             </div>
         </div>
         </div>
