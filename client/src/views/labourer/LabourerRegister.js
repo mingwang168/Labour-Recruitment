@@ -71,13 +71,16 @@ const RegisterLabourer = ({ history }) => {
         if(!FormValidator.name(firstname)) {
             errors.push("Invalid first name entered.");
         }
+
         if(!FormValidator.name(lastname)) {
             console.log(lastname)
             errors.push("Invalid last name entered.");
         }
+
         if(!FormValidator.email(email)) {
             errors.push("Invalid email entered.");
         }
+
         if(password === confirmpassword) {
             if(!FormValidator.password(password)) {
                 errors.push("Password must contain at least 8 characters, and each of the following: one uppercase letter, one lowercase letter, one number, and one symbol.");
@@ -85,9 +88,11 @@ const RegisterLabourer = ({ history }) => {
         } else {
             errors.push("Passwords do not match.");
         }
+
         if(!selectedSkills.length) {
             errors.push("You must select at least one skill.")
         }
+
         if(errors.length) {
             setFormErrors(errors);
         } else {
@@ -211,9 +216,12 @@ const RegisterLabourer = ({ history }) => {
             <div className="form-group">
                 <label className="d-block" htmlFor="skills">Select Skills <span className="text-danger">*</span></label>
                 <Select 
-                    options={ skillOptions &&
-                        skillOptions.map(skill => {return {value: skill.skillId, label: skill.skillName}}) 
-                    } 
+                    options={ skillOptions && skillOptions.map(skill => {
+                        return {
+                            value: skill.skillId,
+                            label: skill.skillName}
+                        }
+                    )} 
                     onChange={onChangeSkill} 
                     isMulti 
                 />

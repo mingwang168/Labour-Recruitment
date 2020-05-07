@@ -1,95 +1,103 @@
-import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 import * as Auth from '../../utils/Auth';
-import * as DataSanitizer from '../../utils/DataSanitizer';
 
+import Loader from '../components/Loader';
+import Layout from '../components/Layout';
+import PageHeader from '../components/PageHeader';
 import Table from '../components/Table';
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
-import Footer from '../components/Footer';
+import ErrorMessage from '../components/ErrorMessage';
+import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
-// import { INVOICES_TABLE_COLUMNS   } from '../../utils/TableColumns';
 const BASE_URL = "http://localhost:5001/api";
 
 const AdminInvoices = (props) => {
 
-    const [invoices, setInvoices] = useState();
+    // Authorization
+    const [authorized] = useState(Auth.authenticateAdmin());
 
-    const fetchInvoices = async() => {
+    // Components
+    const [loaded, setLoaded] = useState(false);
+
+    // Data
+    const [jobs, setJobs] = useState();
+    const [jobsTableColumns, setJobsTableColumns] = useState();
+
+    const fetchJobs = async() => {
         try {
-            let response = await fetch(BASE_URL + "/Invoices", {
+            const URI = BASE_URL + "/Job/GetAllActiveJobs";
+            let response = await fetch(URI, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${Auth.getToken()}`
                 }
             });
-
+    
+            if(response.status !== 200) {
+                throw response;
+            }
+    
             let data = await response.json();
+    
             if(data.length) {
-                // console.log(data);
-                // fetchInvoices(DataSanitizer.cleanInvoicesData(data));
+                let formattedData = data.map(d => ({
+                    id: d.jobId,
+                    title: d.title,
+                    status: d.isComplete ? "Complete" : "In Progress"
+                }));
+    
+                setJobs(formattedData);
+                setJobsTableColumns([
+                    {Header: 'Job Title', accessor: 'title'},
+                    {Header: 'Completion Status', accessor: 'status'},
+                ]);
             }
         } catch(e) {
             console.error(e);
         }
+
+        // Set loading state
+        setLoaded(true);
     }
 
     useEffect(() => {
-        // fetchInvoices();
+        fetchJobs();
     }, [])
 
-    return (
-    <div className="dashboard-main-wrapper">
-        <TopNav />
-        <SideNav />
-    
-        <div className="dashboard-wrapper">
-            <div className="container-fluid dashboard-content">
-                {/* Page Header */}
-                <div className="page-header">
-                <h2 className="pageheader-title">
-                    Manage Invoices
-                </h2>
-                <div className="page-breadcrumb">
-                <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                        <Link to="/dashboard" className="breadcrumb-link">Home</Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                        Invoices
-                    </li>
-                </ol>
-                </nav>
-                </div>
-                </div>
+    const content = (
+    <>
+    <PageHeader
+        title={`Manage Invoices`}
+        breadcrumbs={[
+            { name: "Home", path: "/dashboard" },
+            { name: "Invoices" }
+        ]}
+    />
 
-                {/* Incidents Table */}
-                <div className="row">
-                <div className="col">
-                <div className="card">
-                <h5 className="card-header">All Invoices</h5>
-                <div className="card-body">
-                    {/* { incidents ?
-                    <Table
-                        columns={INVOICES_TABLE_COLUMNS}
-                        data={invoices}
-                        path={"/invoices"}
-                        {...props}
-                    />
-                    :
-                    <p className="lead">No invoices to display.</p>
-                    } */}
-                </div>
-                </div>
-                </div>
-                </div>
-            </div>
-            <Footer />
+    <Loader loaded={loaded}>
+        <div className="row">
+        <div className="col">
+        <div className="card">
+        <h5 className="card-header">Invoices</h5>
+        <div className="card-body">
+            { !jobs ? <ErrorMessage message={"No invoices to display."} /> :
+            <Table
+                data={jobs}
+                columns={jobsTableColumns}
+                path="/invoice"
+                searchable={true}
+                {...props}
+            />
+            }
         </div>
-    </div>
+        </div>
+        </div>
+        </div>    
+    </Loader>
+    </>
     );
+
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
 export default AdminInvoices;

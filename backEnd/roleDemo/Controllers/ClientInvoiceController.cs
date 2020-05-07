@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace labourRecruitment.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class ClientInvoiceController : ControllerBase
     {
@@ -30,7 +31,6 @@ namespace labourRecruitment.Controllers
 
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetClientInvoice([FromBody] Input input)
         {
             var job = _context.Job.Find(input.jobId);

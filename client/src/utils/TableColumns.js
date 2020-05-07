@@ -17,25 +17,6 @@ exports.JOBS_TABLE_COLUMNS = [
     }
 ];
 
-exports.CLIENTS_TABLE_COLUMNS = [
-    {
-        Header: 'Name',
-        accessor: 'name',
-    },
-    {
-        Header: 'Email',
-        accessor: 'email',
-    },
-    {
-        Header: 'Phone',
-        accessor: 'phone',
-    },
-    {
-        Header: 'Location',
-        accessor: 'location',
-    }
-];
-
 exports.LABOURERS_TABLE_COLUMNS = [
     {
         Header: 'Name',

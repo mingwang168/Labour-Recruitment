@@ -121,7 +121,10 @@ namespace labourRecruitment.Controllers
             }).ToListAsync();
             job.Client = _context.Client.Where(c => c.ClientId == job.ClientId).Select(c => new Client()
             {
-                ClientName = c.ClientName
+                ClientName = c.ClientName,
+                ClientCity = c.ClientCity,
+                ClientState = c.ClientState,
+                ClientPhoneNumber = c.ClientPhoneNumber
             }).FirstOrDefault();
             job.JobLabourer = await _context.JobLabourer.Where(jl => jl.JobId == id).Select(ojl => new JobLabourer()
             {
