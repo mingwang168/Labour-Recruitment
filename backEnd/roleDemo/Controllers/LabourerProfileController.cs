@@ -40,7 +40,7 @@ namespace labourRecruitment.Controllers
         }
 
         
-        [HttpPut("{id}")]
+        [HttpPut]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult PutLabourerProfile(LabourerProfileVM labourerProfile)
         {
@@ -58,7 +58,7 @@ namespace labourRecruitment.Controllers
                 lp.LabourerEmail = labourerProfile.Labourer.LabourerEmail;
             }
 
-
+            /*
             _context.AvailabilityLabourer.RemoveRange(_context.AvailabilityLabourer.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
 
             foreach (string day in labourerProfile.Availabilities.Select(av => av.AvailabilityDay))
@@ -80,6 +80,7 @@ namespace labourRecruitment.Controllers
                 }
 
             }
+            */
 
             try
             {

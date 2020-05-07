@@ -11,51 +11,45 @@ import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
-const AdminPayrates = (props) => {
+const ClientInvoices = (props) => {
 
     // Authorization
-    const [authorized] = useState(Auth.authenticateAdmin());
+    const [authorized] = useState(Auth.authenticateClient());
 
-    // Component
+    // Components
     const [loaded, setLoaded] = useState(false);
 
     // Data
-    const [skills, setSkills] = useState();
-    const [skillsTableColumns, setSkillsTableColumns] = useState();
+    const [jobs, setJobs] = useState();
+    const [jobsTableColumns, setJobsTableColumns] = useState();
 
-    const fetchSkills = async() => {
+    const fetchJobs = async() => {
         try {
-            const URI = BASE_URL + "/Skills/GetAllSkills";
+            const URI = BASE_URL + `/Job/GetJobByClientId/${Auth.getID()}`;
             let response = await fetch(URI, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${Auth.getToken()}`
                 }
             });
-
+    
             if(response.status !== 200) {
                 throw response;
             }
-
+    
             let data = await response.json();
-
-            if(data && data.length) {
-                let formattedData = data.map(d => {
-                    let rate = (Math.floor(Math.random() * 10) + 20).toFixed(2);
-                    let adminRate = (rate * 1.2).toFixed(2);
-                    return {
-                        id: d.skillId,
-                        name: d.skillName,
-                        labourerReceives: `$${rate}/hr`,
-                        adminReceives: `$${adminRate}/hr`
-                    }
-                });
-
-                setSkills(formattedData);
-                setSkillsTableColumns([
-                    {Header: 'Name', accessor: 'name',},
-                    {Header: 'Labourer Receives', accessor: 'labourerReceives',},
-                    {Header: 'Admin Receives (20% cut)', accessor: 'adminReceives'}
+    
+            if(data.length) {
+                let formattedData = data.map(d => ({
+                    id: d.jobId,
+                    title: d.title,
+                    status: d.isComplete ? "Complete" : "In Progress"
+                }));
+    
+                setJobs(formattedData);
+                setJobsTableColumns([
+                    {Header: 'Job Title', accessor: 'title'},
+                    {Header: 'Completion Status', accessor: 'status'},
                 ]);
             }
         } catch(e) {
@@ -67,36 +61,38 @@ const AdminPayrates = (props) => {
     }
 
     useEffect(() => {
-        if(authorized) fetchSkills();
+        if(authorized) fetchJobs();
     }, [])
 
     const content = (
     <>
     <PageHeader
-        title={`Manage Skill Payrates`}
+        title={`Invoices`}
         breadcrumbs={[
             { name: "Home", path: "/dashboard" },
-            { name: "Skill Payrates" }
+            { name: "Invoices" }
         ]}
     />
-    
+
     <Loader loaded={loaded}>
         <div className="row">
         <div className="col">
         <div className="card">
-            <h4 className="card-header">All Skills</h4>
-            <div className="card-body">
-            { !skills ? <ErrorMessage message={"No payrates to display."} /> :
+        <h5 className="card-header">Invoices</h5>
+        <div className="card-body">
+            { !jobs ? <ErrorMessage message={"No invoices to display."} /> :
             <Table
-                data={skills}
-                columns={skillsTableColumns}
+                data={jobs}
+                columns={jobsTableColumns}
+                path="/invoice"
+                searchable={true}
                 {...props}
             />
             }
-            </div>
         </div>
         </div>
         </div>
+        </div>    
     </Loader>
     </>
     );
@@ -104,4 +100,4 @@ const AdminPayrates = (props) => {
     return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
-export default AdminPayrates;
+export default ClientInvoices;
