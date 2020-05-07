@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using labourRecruitment.Models.LabourRecruitment;
 using labourRecruitment.Repositories;
+using labourRecruitment.Services;
 using labourRecruitment.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -140,7 +141,7 @@ namespace labourRecruitment.Controllers
 
             _context.SaveChangesAsync();
 
-            ScheduleRepo scheduleRepo = new ScheduleRepo(_context);
+            ScheduleHelper scheduleRepo = new ScheduleHelper(_context);
             scheduleRepo.AddLabourersToFirstSchedule(jobSkill.Job.JobId);
 
             return new ObjectResult(jobSkill.Job.JobId); 

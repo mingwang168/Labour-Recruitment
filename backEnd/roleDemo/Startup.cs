@@ -18,9 +18,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using labourRecruitment.Models.LabourRecruitment;
 using Hangfire;
-using labourRecruitment.Repositories;
 using Hangfire.SQLite;
 using Hangfire.MemoryStorage;
+using labourRecruitment.Services;
 
 namespace roleDemo {
     public class Startup {
@@ -116,8 +116,8 @@ namespace roleDemo {
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
             //we should change the time to every friday 
-            //RecurringJob.AddOrUpdate<ScheduleRepo>("daily-check-job", x => , "*/10 * * * *");
-            //RecurringJob.AddOrUpdate<ScheduleRepo>("weekly-schedule", x => x.AddWeeklySchedule(), "*/5  * * * *");
+            //RecurringJob.AddOrUpdate<ScheduleRepo>("daily-check", x => , "*/10 * * * *");
+            //RecurringJob.AddOrUpdate<ScheduleHelper>("weekly-schedule", x => x.AddWeeklySchedule(), "*/5  * * * *");
         }
 
     }
