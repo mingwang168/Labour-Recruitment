@@ -105,7 +105,7 @@ namespace labourRecruitment.Services
                     PopulateLabourerAttendance(jobId, labourer.LabourerId, jobSelected.StartDate, eDate);
                     EmailSettings emailSetting = new EmailSettings
                     {
-                        
+                       
                     };
                     EmailContent emailContent = new EmailContent
                     {
@@ -116,7 +116,7 @@ namespace labourRecruitment.Services
                        JobEnd = eDate 
                     };
                     EmailHelper emailHelper = new EmailHelper(emailSetting);
-                    emailHelper.SendMail("jaleh36@gmail.com", "Your Job Schedule", emailContent);
+                    emailHelper.SendMail(labourer.LabourerEmail, "Your Job Schedule", emailContent);
                    
                     labourer.IsAvailable = false;
                 }
@@ -185,6 +185,10 @@ namespace labourRecruitment.Services
 
                             }
                             PopulateLabourerAttendance(j.JobId, l.LabourerId, sDate, eDate);
+                            EmailSettings emailSetting = new EmailSettings
+                            {
+                               
+                            };
                             EmailContent emailContent = new EmailContent
                             {
                                 LabourerFirstName = l.LabourerFirstName,
@@ -193,7 +197,8 @@ namespace labourRecruitment.Services
                                 JobStart = sDate,
                                 JobEnd = eDate
                             };
-                            new EmailHelper(_emailSettings).SendMail("jaleh36@gmail.com", "Your Job Schedule", emailContent);
+                            EmailHelper emailHelper = new EmailHelper(emailSetting);
+                            emailHelper.SendMail(l.LabourerEmail, "Your Job Schedule", emailContent);
                             l.IsAvailable = false;
                             _context.SaveChanges();
                         };
