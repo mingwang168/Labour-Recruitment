@@ -20,7 +20,6 @@ const JobDetail = (props) => {
     const [details, setDetails] = useState();
     const [incidents, setIncidents] = useState([""]);
     const [attendanceDates, setAttendanceDates] = useState();
-    const [safetyMeeting, setSafetyMeeting] = useState();
     
     const fetchJobDetails = async(id) => {
        
@@ -206,11 +205,13 @@ const JobDetail = (props) => {
                         <div className="card-body">
                             <p>Safety meetings are mandatory. Please check off the dates where safety meetings were completed.</p>
                             {details.jobLabourer.map((jLabourer, i) => (
-                            <CheckSafetyMetting firstname={jLabourer.labourer.labourerFirstName} key={i}
-                                                lastname={jLabourer.labourer.labourerLastName} 
-                                                safetyMeeting={jLabourer.safetyMeetingCompleted} 
-                                                labourerId={jLabourer.labourerId} 
-                                                jobId={details.jobId} clientId={details.clientId} /> 
+                            <CheckSafetyMetting 
+                                firstname={jLabourer.labourer.labourerFirstName} key={i}
+                                lastname={jLabourer.labourer.labourerLastName} 
+                                safetyMeeting={jLabourer.safetyMeetingCompleted} 
+                                labourerId={jLabourer.labourerId} 
+                                jobId={details.jobId} clientId={details.clientId} 
+                            /> 
                             ))
                             }
                         </div>

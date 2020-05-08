@@ -17,10 +17,9 @@ namespace labourRecruitment.Services
             this._eSettings = _eSettings;
         }
 
-        public bool SendMail(string recipient, string subject, EmailContent emailContent)
+        public void SendMail(string recipient, string subject, EmailContent emailContent)
         {
-            try
-            {
+            
                 MailMessage mail = new MailMessage()
                 {
                     From = new MailAddress(_eSettings.FromEmail, _eSettings.DisplayName)
@@ -30,11 +29,6 @@ namespace labourRecruitment.Services
                                  ? _eSettings.ToEmail : recipient;
 
                 mail.To.Add(new MailAddress(toEmail));
-
-                foreach (string bcc in _eSettings.BccEmails)
-                {
-                    mail.Bcc.Add(new MailAddress(bcc));
-                }
 
                 // Subject and multipart/alternative Body
                 mail.Subject = subject;
@@ -66,12 +60,7 @@ namespace labourRecruitment.Services
                 smtp.Credentials = new NetworkCredential(_eSettings.UsernameLogin, _eSettings.UsernamePassword);
                 smtp.EnableSsl = false;
                 smtp.Send(mail);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-            return true;
+          
         }
     }
     

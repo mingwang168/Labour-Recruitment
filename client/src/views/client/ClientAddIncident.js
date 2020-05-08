@@ -11,6 +11,7 @@ import FormErrors from "../components/FormErrors";
 import LabourerList from "../components/LabourerList";
 import UnauthorizedMessage from "../components/UnauthorizedMessage";
 
+
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientAddIncident = ({ history }) => {
@@ -191,6 +192,7 @@ const ClientAddIncident = ({ history }) => {
             IncidentReportDate: incidentdate,
             IncidentReportDescription: incidentsummary,
             JobId: selectedJob,
+            AdminNotified: false
         };
 
         try {
@@ -345,6 +347,7 @@ const ClientAddIncident = ({ history }) => {
                         <div className="form-group mb-4">
                             <label htmlFor="incidentsummary">
                                 Summary of Incident
+                                <span className="text-danger">*</span>
                             </label>
                             <textarea
                                 name="incidentsummary"

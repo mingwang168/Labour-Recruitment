@@ -49,7 +49,7 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 					if(Auth.validateToken()) {
 						return <Comp {...props} />;
 					} else {
-						sessionStorage.clear();
+						localStorage.clear();
 						alert("Your session has expired. Please login again.");
 						return <Redirect to={{ pathname: "/login" }} />;
 					}
