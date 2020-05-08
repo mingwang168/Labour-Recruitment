@@ -5,11 +5,7 @@ import * as Auth from '../../utils/Auth';
 const BASE_URL = "http://localhost:5001/api";
 const RateClient = (props) => {
     const [rating, setRating] = useState(props.rating)
-    // const changeRating = async(newRating) => {
-    //     props.changeRating(newRating, props.labourerId, props.jobId)
-    //     setRating(newRating)
-    // }
-
+   
     const changeRating = async (newRating) => {
         let token = Auth.getToken();
         if (token == null) {

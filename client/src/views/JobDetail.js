@@ -83,7 +83,6 @@ const JobDetail = (props) => {
         }
     }, [props.match.params.id])
 
-    console.log(details)
     return (
     <>
     <div className="dashboard-main-wrapper">
