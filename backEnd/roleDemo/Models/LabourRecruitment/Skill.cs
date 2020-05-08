@@ -14,8 +14,8 @@ namespace labourRecruitment.Models.LabourRecruitment
 
         public int SkillId { get; set; }
         public string SkillName { get; set; }
-        public decimal? AdminReceives { get; set; }
-        public decimal? LabourerReceives { get; set; }
+        public decimal AdminReceives { get; set; }
+        public decimal LabourerReceives { get; set; }
 
         public virtual ICollection<JobLabourer> JobLabourer { get; set; }
         public virtual ICollection<JobSkill> JobSkill { get; set; }

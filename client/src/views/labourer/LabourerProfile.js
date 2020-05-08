@@ -11,6 +11,7 @@ import Table from '../components/Table';
 import OneColumnTable from '../components/OneColumnTable';
 import AvailabilityBadge from '../components/AvailabilityBadge';
 import RatingBadge from '../components/RatingBadge';
+import OnVacationBadge from '../components/OnVacationBadge';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
 import UnauthorizedMessage from '../components/UnauthorizedMessage';
@@ -42,10 +43,12 @@ const LabourerProfile = (props) => {
     const [skills, setSkills] = useState();
     const [jobs, setJobs] = useState();
     const [incidents, setIncidents] = useState();
+    //const [onVacation, setOnVacation] = useState(labourer.onLeave)
 
     // Table Columns
     const [jobsTableColumns, setJobsTableColumns] = useState();
     const [incidentsTableColumns, setIncidentsTableColumns] = useState();
+    
 
     const fetchProfileData = async(id) => {
         // Fetch profile data
@@ -63,7 +66,7 @@ const LabourerProfile = (props) => {
             }
     
             let data = await response.json();
-
+            console.log(data)
             if(data) {
                 setLabourer({
                     ...data.labourer,
@@ -193,6 +196,12 @@ const LabourerProfile = (props) => {
                 <h1 className="font-26 mb-2">
                     {`${labourer.labourerFirstName} ${labourer.labourerLastName}`}
                 </h1>
+                { Auth.getID() == labourer.labourerId &&
+                    <OnVacationBadge 
+                        labourerId={labourer.labourerId}
+                        onLeave={labourer.onLeave} 
+                    /> 
+                }
             </div>
 
             <div className="card-body border-top">

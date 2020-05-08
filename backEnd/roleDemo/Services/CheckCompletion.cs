@@ -19,7 +19,8 @@ namespace labourRecruitment.Services
 
         public void CheckComplete()
         {
-            var completedJobs = _context.Job.Where(j => j.InProgress == true && j.EndDate.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd")).Select(oj => oj).ToList();
+            DateTime today = new DateTime(2020, 05, 15);
+            var completedJobs = _context.Job.Where(j => j.InProgress == true && j.EndDate.ToString("yyyy-MM-dd") == today.ToString("yyyy-MM-dd")).Select(oj => oj).ToList();
 
 
             if (completedJobs != null)
@@ -31,18 +32,21 @@ namespace labourRecruitment.Services
                 }
             }
 
-            var availableLabourers = _context.JobLabourer.Where(jb => jb.EndDay.CompareTo(DateTime.Now) <= 0).Select(l => l.Labourer).ToList();
-           
-            //var availableLabourers = completeJobLabourer.ToList();
-           
-            if (availableLabourers != null) {
+            
+            var scheduledLabourers = _context.LabourerAttendance.Where(l => l.Date.CompareTo(today) >= 0).Select(l => l.Labourer).ToList();
+            var labourers = _context.Labourer.Where(l=>l.OnLeave == false).ToList();
+            var availableLabourers = labourers.Except(scheduledLabourers).ToList();
+
+
+            if (availableLabourers != null)
+            {
                 foreach (Labourer l in availableLabourers)
                 {
                     l.IsAvailable = true;
                 }
             }
-      
-             _context.SaveChanges();
+
+            _context.SaveChanges();
  
         }
 

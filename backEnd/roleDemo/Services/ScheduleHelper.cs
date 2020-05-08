@@ -3,14 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static labourRecruitment.Services.EmailHelper;
 
 namespace labourRecruitment.Services
 {
     public class ScheduleHelper
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmailSettings _emailSettings;
+
         public ScheduleHelper(ApplicationDbContext context)
         {
+            _context = context;
+        }
+        public ScheduleHelper(ApplicationDbContext context, EmailSettings emailSettings)
+        {
+            _emailSettings = emailSettings;
             _context = context;
         }
         public static int GetBusinessDays(DateTime startD, DateTime endD)
@@ -95,6 +103,27 @@ namespace labourRecruitment.Services
                         Duration = GetBusinessDays(jobSelected.StartDate, eDate)
                     });
                     PopulateLabourerAttendance(jobId, labourer.LabourerId, jobSelected.StartDate, eDate);
+                    EmailSettings emailSetting = new EmailSettings
+                    {
+                        Domain = "smtp.sendgrid.net",
+                        Port = 587,
+                        UsernameLogin = "hotdog169",
+                        UsernamePassword = "P@$$w0rd!",
+                        FromEmail = "ssdindustrypro@gmail.com",
+                        DisplayName = "Admin",
+                        ToEmail = ""
+                    };
+                    EmailContent emailContent = new EmailContent
+                    {
+                       LabourerFirstName = labourer.LabourerFirstName,
+                       LabourerLastName =  labourer.LabourerLastName,
+                       JobAddress = jobSelected.Street,
+                       JobStart = jobSelected.StartDate,
+                       JobEnd = eDate 
+                    };
+                    EmailHelper emailHelper = new EmailHelper(emailSetting);
+                    emailHelper.SendMail(labourer.LabourerEmail, "Your Job Schedule", emailContent);
+                   
                     labourer.IsAvailable = false;
                 }
                 _context.SaveChanges();
@@ -162,6 +191,26 @@ namespace labourRecruitment.Services
 
                             }
                             PopulateLabourerAttendance(j.JobId, l.LabourerId, sDate, eDate);
+                            EmailSettings emailSetting = new EmailSettings
+                            {
+                                Domain = "smtp.sendgrid.net",
+                                Port = 587,
+                                UsernameLogin = "hotdog169",
+                                UsernamePassword = "P@$$w0rd!",
+                                FromEmail = "ssdindustrypro@gmail.com",
+                                DisplayName = "Admin",
+                                ToEmail = ""
+                            };
+                            EmailContent emailContent = new EmailContent
+                            {
+                                LabourerFirstName = l.LabourerFirstName,
+                                LabourerLastName = l.LabourerLastName,
+                                JobAddress = j.Street,
+                                JobStart = sDate,
+                                JobEnd = eDate
+                            };
+                            EmailHelper emailHelper = new EmailHelper(emailSetting);
+                            emailHelper.SendMail(l.LabourerEmail, "Your Job Schedule", emailContent);
                             l.IsAvailable = false;
                             _context.SaveChanges();
                         };
