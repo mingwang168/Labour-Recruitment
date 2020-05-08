@@ -115,8 +115,10 @@ const JobDetail = (props) => {
         }
     }, [])
 
-    const content = isClient && !isJobOwner ? <UnauthorizedMessage /> : (
+    const content = (
     <Loader loaded={loaded}>
+        {isClient && !isJobOwner ? <UnauthorizedMessage /> : (
+        <>
         {!details ?  <ErrorMessage message={"Job does not exist."} /> :
         <>
         <PageHeader
@@ -336,6 +338,8 @@ const JobDetail = (props) => {
 
         </>
         }
+        </>
+        )}
     </Loader>
     );
 

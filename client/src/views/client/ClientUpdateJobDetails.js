@@ -75,7 +75,8 @@ const ClientUpdateJobDetails = (props) => {
             setFormErrors(["Failed to edit job. You are not allowed to edit the job."]);
         } else {
             try {
-                let response = await fetch(BASE_URL + '/job/PutJob/' + props.match.params.id, {            
+                const URI = BASE_URL + '/job/PutJob/' + props.match.params.id;
+                let response = await fetch(URI, {            
                     'method': 'PUT',
                     'headers': {
                         "Accept": "application/json",
@@ -85,16 +86,16 @@ const ClientUpdateJobDetails = (props) => {
                     body: JSON.stringify(editJob)
                 })
 
-                // Bad response
                 if(response.status !== 200) {
                     setFormErrors(["Failed to edit job. Please try again later."]);
                     throw response;
                 }
 
-                // Success
                 let data = await response.json();
-                console.log(data)
-                props.history.push('/job/' + data);
+
+                if(data) {
+                    props.history.push('/job/' + data);
+                }
             } catch(e) {
                 console.error(e);
             }

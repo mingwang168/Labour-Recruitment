@@ -18,7 +18,7 @@ const ClientLabourerAttendance = (props) => {
 
     // Authorization
     const [authorized] = useState(
-        Auth.authenticateAdmin || Auth.authenticateClient()
+        Auth.authenticateAdmin() || Auth.authenticateClient()
     )
 
     const [params] = useState({
@@ -88,9 +88,11 @@ const ClientLabourerAttendance = (props) => {
 
             if(data.length) {
                 let clientID = data[0].job.clientId;
+
                 if(Auth.authenticateClient() && Auth.getID() == clientID) {
                     setIsJobOwner(true);
                 }
+
                 setList(DataSanitizer.cleanAttendanceRatingsData(data));
                 setTitle(data[0].job.title);
             }
@@ -110,7 +112,7 @@ const ClientLabourerAttendance = (props) => {
         }
     }, [])
 
-    const content = isJobOwner || Auth.authenticateAdmin() && (
+    const content = (isJobOwner || Auth.authenticateAdmin()) && (
     <Loader loaded={loaded}>
         { !list ? <ErrorMessage message={"Error: Could not fetch data."} /> :
         <>
