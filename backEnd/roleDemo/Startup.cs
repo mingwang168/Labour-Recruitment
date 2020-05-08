@@ -116,8 +116,8 @@ namespace roleDemo {
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
            
-            RecurringJob.AddOrUpdate<CheckCompletion>("daily-check", x => x.CheckComplete() , "0 19 * * *");
-            RecurringJob.AddOrUpdate<ScheduleHelper>("weekly-schedule", x => x.AddWeeklySchedule(), "0 21 * * 5");
+            RecurringJob.AddOrUpdate<CheckCompletion>("daily-check", x => x.CheckComplete() , "0 19 * * *", TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate<ScheduleHelper>("weekly-schedule", x => x.AddWeeklySchedule(), "0 21 * * 5", TimeZoneInfo.Local);
         }
 
     }
