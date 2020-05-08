@@ -11,7 +11,6 @@ import ErrorMessage from "./components/ErrorMessage";
 import UnauthorizedMessage from "./components/UnauthorizedMessage";
 
 const BASE_URL = "http://localhost:5001/api";
-
 const IncidentDetail = (props) => {
     
     // Authorization

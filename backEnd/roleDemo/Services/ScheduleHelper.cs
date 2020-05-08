@@ -137,8 +137,7 @@ namespace labourRecruitment.Services
             GetHighestRated rated = new GetHighestRated(_context);
             var ratedClients = rated.GetHighestRatingClients();
 
-            //Later we should change it to now 
-            DateTime today = new DateTime(2020, 5, 8);
+            
             foreach (Client client in ratedClients)
             {
                 var jobs = _context.Job.Where(j => j.ClientId == client.ClientId && j.ScheduleDone != true).ToList();
@@ -149,7 +148,7 @@ namespace labourRecruitment.Services
                     foreach (JobSkill js in jobSkills)
                     {
                         var ratedLabourers = rated.GetHighestRatedLabourers(js.SkillId).ToList();
-                        var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > today.AddDays(9)).Select(l => l.Labourer)
+                        var unAvailableLabourers = _context.JobLabourer.Where(jb => jb.StartDay > DateTime.Now.AddDays(9)).Select(l => l.Labourer)
                             .Distinct().Where(l=>l.OnLeave == true).ToList();
                         var availableLabourers = ratedLabourers.Except(unAvailableLabourers).ToList();
                         List<Labourer> chosenLabourers = new List<Labourer>();
@@ -157,8 +156,8 @@ namespace labourRecruitment.Services
                         foreach (Labourer l in chosenLabourers)
                         {
                             var jobLabourer = _context.JobLabourer.Where(jl => jl.JobId == j.JobId && jl.LabourerId == l.LabourerId).FirstOrDefault();
-                            DateTime sDate = today.AddDays(10);
-                            DateTime eDate = j.EndDate > today.AddDays(15) ? today.AddDays(15) : j.EndDate;
+                            DateTime sDate = DateTime.Now.AddDays(10);
+                            DateTime eDate = j.EndDate > DateTime.Now.AddDays(15) ? DateTime.Now.AddDays(15) : j.EndDate;
                             if (jobLabourer == null)
                             {
                                 _context.Add(new JobLabourer

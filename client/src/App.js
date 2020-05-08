@@ -19,6 +19,7 @@ import JobDetail from "./views/JobDetail";
 import SafetyMeetingsDetail from './views/SafetyMeetingsDetail';
 import IncidentDetail from "./views/IncidentDetail";
 import InvoiceDetail from "./views/InvoiceDetail";
+import PayrollDetail from "./views/PayrollDetail";
 import UpdateProfile from "./views/UpdateProfile";
 
 import ClientRegister from "./views/client/ClientRegister";
@@ -37,8 +38,11 @@ import AdminClients from "./views/admin/AdminClients";
 import AdminLabourers from "./views/admin/AdminLabourers";
 import AdminIncidents from "./views/admin/AdminIncidents";
 import AdminInvoices from "./views/admin/AdminInvoices";
+import AdminPayroll from "./views/admin/AdminPayroll";
 import AdminPayrates from "./views/admin/AdminPayrates";
 import AdminSkillDetails from "./views/admin/AdminSkillDetails";
+import AdminNewSkill from "./views/admin/AdminNewSkill";
+
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 	return (
@@ -83,6 +87,8 @@ class App extends Component {
         <ProtectedRoute exact path='/incident/:id' component={IncidentDetail} />
 		<ProtectedRoute exact path='/profile/edit' component={UpdateProfile} />
 		<ProtectedRoute exact path='/invoice/:id/:startdate/:enddate' component={InvoiceDetail} />
+		<ProtectedRoute exact path='/payroll/:id/:startdate/:enddate' component={PayrollDetail} />
+
 
 		{/* Client Only Views */}
 		<ProtectedRoute exact path='/profile/client/:id' component={ClientProfile} />
@@ -101,8 +107,11 @@ class App extends Component {
 		<ProtectedRoute exact path='/admin/labourers' component={AdminLabourers} />
 		<ProtectedRoute exact path='/admin/incidents' component={AdminIncidents} />
 		<ProtectedRoute exact path='/admin/invoices' component={AdminInvoices} />
+		<ProtectedRoute exact path='/admin/payrolls' component={AdminPayroll} />
 		<ProtectedRoute exact path='/admin/payrates' component={AdminPayrates} />
 		<ProtectedRoute exact path='/admin/skill/:id' component={AdminSkillDetails} />
+		<ProtectedRoute exact path='/admin/addskill' component={AdminNewSkill} />
+
 
 		<Route component={PageNotFound} />
 	</Switch>

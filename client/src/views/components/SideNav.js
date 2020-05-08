@@ -82,6 +82,11 @@ const SideNav = () => {
             icon: "receipt"
         },
         {
+            name: "Payrolls",
+            path: "/admin/payrolls",
+            icon: "report"
+        },
+        {
             name: "Payrates",
             path: "/admin/payrates",
             icon: "trending_up"

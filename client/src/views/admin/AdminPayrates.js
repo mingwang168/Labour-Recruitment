@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import {Link, Redirect, Router} from 'react-router-dom';
 import * as Auth from '../../utils/Auth';
 
 import Loader from '../components/Loader';
@@ -96,12 +96,10 @@ const AdminPayrates = (props) => {
             />            
             </div>
             }   
-             <button
-                    onClick={() => console.log("Add New Skill button")}
-                    className="btn btn-primary pt-1 pb-0 float-right"
-                >
-                   Add New Skill
-                </button> 
+             <Link 
+                to ="/admin/addskill"
+                className="btn btn-primary btn-sm float-right"
+            > Add New Skill </Link> 
             </div>
         </div>
         </div>
