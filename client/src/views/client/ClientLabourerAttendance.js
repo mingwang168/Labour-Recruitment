@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
-import Footer from '../components/Footer';
 
 import * as Auth from '../../utils/Auth';
 import * as DataSanitizer from '../../utils/DataSanitizer';
