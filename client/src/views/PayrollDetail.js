@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import * as Auth from '../utils/Auth';
+import * as DataSanitizer from '../utils/DataSanitizer';
 import { isValidDate } from '../utils/ValidateDate';
 import { isWholeNumber } from '../utils/IsWholeNumber';
 
@@ -30,7 +31,8 @@ const PayrollDetail = (props) => {
     const [loaded, setLoaded] = useState(false);
 
     // Data
-    const [labourer, setLabourer] = useState();
+    const [job, setJob] = useState();
+    const [labourers, setLabourers] = useState();
     const [payrollTableColumns, setPayrollTableColumns] = useState();
 
 
@@ -51,20 +53,16 @@ const PayrollDetail = (props) => {
             }
 
             let data = await response.json();
+            console.log(data)
 
-            // if(data) {
-            //     generatedInvoice = {
-            //         job: data.title,
-            //         complete: data.isComplete,
-            //         duration: getDuration(data.startDate, data.endDate),
-            //         isComplete: data.isComplete,
-            //         client: {
-            //             name: data.client.clientName,
-            //             address: `${data.client.clientCity}, ${data.client.clientState}`,
-            //             phone: data.client.clientPhoneNumber
-            //         }
-            //     }
-            // }
+            if(data) {
+               let formattedData = {
+                    title: data.title,
+                    startdate: DataSanitizer.formatDateString(data.startDate),
+                    enddate: DataSanitizer.formatDateString(data.endDate),
+                }
+                setJob(formattedData)
+            }
         } catch(e) {
             console.error(e)
         }
@@ -104,7 +102,7 @@ const PayrollDetail = (props) => {
                     {Header: '# Hours', accessor: 'hours'},
                 ]);
 
-                 setLabourer(formattedData)                  
+                 setLabourers(formattedData)                  
             }
         } catch(e) {
             console.error(e)
@@ -115,7 +113,7 @@ const PayrollDetail = (props) => {
     }
 
     const content = (
-    <Loader loaded={loaded}>
+        <>
         <PageHeader
             title={`Payroll Details`}
             breadcrumbs={[
@@ -128,21 +126,36 @@ const PayrollDetail = (props) => {
             ]}
         />
 
-        { !labourer ? <ErrorMessage message={"No labourers to display."} /> :
-            <Table
-                data={labourer}
-                columns={payrollTableColumns}
-                path="/profile/labourer"
-                searchable={true}
-                striped={true}
-                {...props}
-            />
-        }
+        <div className="row">
+            <div className="col">
+            <div className="card">
+                {job && 
+                <div className="card-header">
+                    <h4 className="card-header-title">{job.title}</h4>
+                    <h6 className="card-header-title">{job.startdate} - {job.enddate}</h6>
+                </div>
+                }
+                <div className="card-body">
+                    <Loader loaded={loaded}>
+                    { !labourers ? <ErrorMessage message={"No labourers to display."} /> :
+                    <Table
+                        data={labourers}
+                        columns={payrollTableColumns}
+                        path="/profile/labourer"
+                        searchable={true}
+                        striped={true}
+                        {...props}
+                    />
+                    }
+                    </Loader>
+                </div>
+            </div>
+            </div>
+            </div>
+            </>
+            );
 
-      
-    </Loader>
-    );
-
+    
     useEffect(() => {
         fetchReport()
        
