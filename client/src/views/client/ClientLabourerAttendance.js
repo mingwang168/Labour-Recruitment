@@ -65,7 +65,7 @@ const ClientLabourerAttendance = (props) => {
                 throw response;
             } else {
                 setSuccess(<SuccessMessage message={"Successfully updated rating."} />);
-                setTimeout(() => setSuccess(), 2500);
+                setTimeout(() => setSuccess(), 2000);
                 setError(null);
             }
         } catch (e) {
@@ -165,68 +165,7 @@ const ClientLabourerAttendance = (props) => {
     </Loader>
     );
 
-    return <Layout content={authorized ? content : <UnauthorizedMessage /> } />
-
-    // return (
-    // <div className="dashboard-main-wrapper">
-    //     <TopNav />
-    //     <SideNav />
-
-    //     <div className="dashboard-wrapper">
-    //         <div className="container-fluid dashboard-content">
-
-    //             {/* Page Header */}
-    //             <div className="row">
-    //             <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-    //             <div className="page-header">
-    //                 <h2 className="pageheader-title">
-    //                     {`Labourer Attendance for ${DataSanitizer.formatDateString(props.match.params.date)}`}
-    //                 </h2>
-    //                 <hr />
-    //                 <h5 onClick={() => props.history.goBack()} className="text-muted" style={{cursor:'pointer'}}>&larr; Go back</h5>
-    //             </div>
-    //             </div>
-    //             </div>
-
-    //             {error && error}
-
-    //             <div className="card">
-    //                <div className="card-body">
-    //                { list &&
-    //                     <table className="table table-bordered">
-    //                         <thead>
-    //                             <tr>
-    //                                 <th>Labourer Name</th>
-    //                                 <th>Quality Rating</th>
-    //                             </tr>
-    //                         </thead>
-    //                         <tbody>
-    //                             {list.map((l,i) => (
-    //                                 <tr key = {i}>
-    //                                     <td>{l.name}</td>
-    //                                     <td>
-    //                                         <RateWorkers  
-    //                                             changeRating={changeRating} 
-    //                                             rating={l.rating} 
-    //                                             clientId={l.clientId} 
-    //                                             labourerId={l.labourerId} 
-    //                                         />
-    //                                     </td>
-    //                                 </tr>
-    //                             ))
-    //                         }
-    //                         </tbody>   
-    //                     </table>
-    //                } 
-    //                </div>
-    //            </div>
-                
-    //         </div>
-
-    //         <Footer />
-    //     </div>
-    // </div>
-    // )
+    return <Layout content={authorized ? content : <UnauthorizedMessage /> } />;
 }
 
 export default ClientLabourerAttendance;
