@@ -91,7 +91,7 @@ const AdminPayrates = (props) => {
            <Table
                 data={skills}
                 columns={skillsTableColumns}
-                path="/skill"
+                path="/admin/skill"
                 {...props}
             />            
             </div>

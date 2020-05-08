@@ -13,7 +13,7 @@ const BASE_URL = "http://localhost:5001/api";
 const AdminSkillDetails = (props) => {
 
     // Authorization
-    const [authorized, setAuthorized] = useState(
+    const [authorized] = useState(
         Auth.authenticateAdmin()
     );
 
@@ -36,32 +36,29 @@ const AdminSkillDetails = (props) => {
                     "Authorization": `Bearer ${Auth.getToken()}`
                 }
             });
+
             if(response.status !== 200){
                 throw response;
             }
-            let data = await response.json();
-            
-            if(data.length) {
-                if(data[0].toString() !== Auth.getID()) {
-                    setAuthorized(false);
-                }
-            } else {
-                setAuthorized(false);
-            }
 
-            //console.log(data);
-                   
-            setSkill({
-                name: data.skillName,
-                adminReceives: data.adminReceives,
-                labourerReceives: data.labourerReceives
-            });
-            
-        }catch(e){
+            let data = await response.json();
+
+            if(
+                data &&
+                data.skillName &&
+                data.adminReceives &&
+                data.labourerReceives
+            ) {
+                setSkill({
+                    name: data.skillName,
+                    adminReceives: data.adminReceives,
+                    labourerReceives: data.labourerReceives
+                });
+            }
+        } catch(e){
             console.error(e);
         }
 
-        console.log("inside get " + authorized)
         // Set loading state
         setLoaded(true);
     }
@@ -88,10 +85,8 @@ const AdminSkillDetails = (props) => {
             </Loader>
         </>
     );
-    
-   // return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 
-    return <Layout content={content} />
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
 export default AdminSkillDetails;
