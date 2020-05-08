@@ -380,8 +380,8 @@ const ClientAddIncident = ({ history }) => {
             </div>
         </>
     );
-
-    return !authorized ? <UnauthorizedMessage /> : <Layout content={content} />;
+    
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 };
 
 export default ClientAddIncident;
