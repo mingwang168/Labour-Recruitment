@@ -157,6 +157,20 @@ const ClientAddIncident = ({ history }) => {
             }
         }
 
+        // Check if incident is today or before
+        if(incidentdate && incidentdate !== "") {
+            let today = new Date();
+            let selected = new Date(incidentdate);
+
+            // Fix selected date format
+            selected.setDate(selected.getDate() + 1);
+            selected.setHours(0, 0, 0, 0);
+
+            if(selected > today) {
+                errors.push("Date of incident cannot be in the future.");
+            }
+        }
+
         // Validate incident type
         if(!selectedIncident) {
             errors.push("Incident type is required.");
