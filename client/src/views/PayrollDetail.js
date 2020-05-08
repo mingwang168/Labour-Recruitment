@@ -7,7 +7,7 @@ import { isWholeNumber } from '../utils/IsWholeNumber';
 import Loader from './components/Loader';
 import Layout from './components/Layout';
 import PageHeader from './components/PageHeader';
-import Invoice from './components/Invoice';
+import Table from './components/Table';
 import ErrorMessage from './components/ErrorMessage';
 import UnauthorizedMessage from './components/UnauthorizedMessage';
 
@@ -31,11 +31,11 @@ const PayrollDetail = (props) => {
 
     // Data
     const [labourer, setLabourer] = useState();
+    const [payrollTableColumns, setPayrollTableColumns] = useState();
 
 
     const fetchReport = async() => {
-        let generatedInvoice;
-
+      
         // Fetch job data
         try {
             const URI = BASE_URL + `/Job/GetJob/${params.JobId}`;
@@ -89,7 +89,6 @@ const PayrollDetail = (props) => {
             let data = await response.json();
 
             if(data.length) {
-                console.log(data)
                 let formattedData = data.map(d => ({
                     id: d.labourer.labourerId,
                     name: d.labourer.labourerFirstName + " " +d.labourer.labourerLastName,
@@ -98,8 +97,13 @@ const PayrollDetail = (props) => {
                     hours: d.totalHours
                 }));
 
-               
-                console.log(formattedData)
+                setPayrollTableColumns([
+                    {Header: 'Name', accessor: 'name'},
+                    {Header: 'Skill', accessor: 'skill'},
+                    {Header: '# Days', accessor: 'days'},
+                    {Header: '# Hours', accessor: 'hours'},
+                ]);
+
                  setLabourer(formattedData)                  
             }
         } catch(e) {
@@ -118,12 +122,22 @@ const PayrollDetail = (props) => {
                 { name: "Home", path: "/dashboard" },
                 { 
                     name: "Payroll",
-                    path: Auth.authenticateAdmin()
-                        && "/admin/payroll"
+                    path: "/admin/payrolls"
                 },
                 { name: "Payroll Details" }
             ]}
         />
+
+        { !labourer ? <ErrorMessage message={"No labourers to display."} /> :
+            <Table
+                data={labourer}
+                columns={payrollTableColumns}
+                path="/profile/labourer"
+                searchable={true}
+                striped={true}
+                {...props}
+            />
+        }
 
       
     </Loader>
