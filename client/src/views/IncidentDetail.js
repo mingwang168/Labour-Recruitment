@@ -145,7 +145,7 @@ const IncidentDetail = (props) => {
                     <p>
                         Give effected labourers a rating, based on their safety-wise performance on this job.
                     </p>
-                    <table className="table table-bordered table-hover">
+                    <table className="table table-bordered">
                         <thead>
                             <tr>
                                 <th>Name</th>
