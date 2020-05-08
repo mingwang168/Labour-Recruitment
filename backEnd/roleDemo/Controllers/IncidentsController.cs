@@ -176,5 +176,20 @@ namespace labourRecruitment.Controllers
             _context.SaveChanges();
             return new ObjectResult(report.IncidentReport.IncidentReportId);
         }
+
+        [HttpPut("{id}", Name = "AdminNotified")]
+        public IActionResult ChangeAdminNotified(int id)
+        {
+            var incident = _context.IncidentReport.FirstOrDefault(i => i.IncidentReportId == id);
+            if (incident != null)
+            {
+                incident.AdminNotified = true;
+            }
+            else
+            {
+                return BadRequest();
+            }
+            return new ObjectResult(incident);
+        }
     }
 }
