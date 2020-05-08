@@ -158,7 +158,6 @@ const PayrollDetail = (props) => {
     
     useEffect(() => {
         fetchReport()
-       
     }, [])
 
     return <Layout content={!authorized ? <UnauthorizedMessage /> : content} />;
