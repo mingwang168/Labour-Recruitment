@@ -26,7 +26,7 @@ const AdminJobs = (props) => {
 
     const fetchJobs = async() => {
         try {
-            const URI = BASE_URL + "/Job/GetAllActiveJobs";
+            const URI = BASE_URL + "/Job/GetAllJobs";
             let response = await fetch(URI, {
                 method: "GET",
                 headers: {
