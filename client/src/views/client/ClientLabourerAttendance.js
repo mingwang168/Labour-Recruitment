@@ -43,6 +43,7 @@ const ClientLabourerAttendance = (props) => {
             console.error(err);
         }
     }
+    
     const getList = async(id, date) => {
         try {
             const response = await fetch(BASE_URL + `/LabourerAttendance/data?jobId=${id}&date=${date}`, {
@@ -92,7 +93,7 @@ const ClientLabourerAttendance = (props) => {
                <div className="card">
                    <div className="card-body">
                    { list &&
-                        <table className="table table-bordered table-striped table-hover">
+                        <table className="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Labourer Name</th>
