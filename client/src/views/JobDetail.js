@@ -343,9 +343,11 @@ const JobDetail = (props) => {
                     <TabPane tab="Rate Client" key="3">
                     <div className="card">
                         <div className="card-body">
-                            <p>Client Rating is mandatory.</p>
+                            <p>
+                                Please give your client a rating from 1 to 5.
+                            </p>
                             { details.jobLabourer.map((jLabourer, i) => (
-                                Auth.getID() === jLabourer.labourerId && 
+                                Auth.getID() == jLabourer.labourerId && 
                                 <RateClient key={i}
                                     jobId={details.jobId}
                                     labourerId={jLabourer.labourer.labourerId}
