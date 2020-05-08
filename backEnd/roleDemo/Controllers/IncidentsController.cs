@@ -23,7 +23,7 @@ namespace labourRecruitment.Controllers
             _context = context;
         }
 
-       
+
         // GET: api/Incidents
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IncidentReport>>> GetAllIncidents()
@@ -37,7 +37,7 @@ namespace labourRecruitment.Controllers
                         Labourer = r.Labourer
                     }).ToList();
 
-                report.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == report.IncidentTypeId).Select(i=> new IncidentType
+                report.IncidentType = _context.IncidentType.Where(i => i.IncidentTypeId == report.IncidentTypeId).Select(i => new IncidentType
                 {
                     IncidentTypeName = i.IncidentTypeName
                 }).FirstOrDefault();
@@ -75,7 +75,7 @@ namespace labourRecruitment.Controllers
                 IncidentTypeName = i.IncidentTypeName
             }).FirstOrDefault();
 
-          
+
             var labourers = _context.LabourerIncidentReport.Where(l => l.IncidentReportId == id).Select(l => l.LabourerId).ToList();
             List<JobLabourer> jobLabourers = new List<JobLabourer>();
             labourers.ForEach(l =>
@@ -109,7 +109,7 @@ namespace labourRecruitment.Controllers
                 LabourerIncidentReport = i.LabourerIncidentReport
 
             }).ToList();
-           
+
 
             if (incident == null)
             {
@@ -161,10 +161,16 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(incident);
         }
 
-        [HttpGet( Name = "GetIncidentsNotNotified")]
+        [HttpGet(Name = "GetIncidentsNotNotified")]
         public IActionResult GetIncidentsNotNotified()
         {
-            return new ObjectResult(_context.IncidentReport.Where(i => i.AdminNotified == false).ToList());
+            var incidents = _context.IncidentReport.Where(i => i.AdminNotified == false).Select(i => new IncidentClientVM
+            {
+                IncidentReport = i,
+                Client = i.Job.Client
+            }).ToList();
+
+            return new ObjectResult(incidents);
         }
 
         // POST: api/Incidents
@@ -183,7 +189,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(report.IncidentReport.IncidentReportId);
         }
 
-        [HttpPut("{id}", Name = "AdminNotified")]
+        [HttpPut("{id}")]
         public IActionResult ChangeAdminNotified(int id)
         {
             var incident = _context.IncidentReport.FirstOrDefault(i => i.IncidentReportId == id);
@@ -195,6 +201,7 @@ namespace labourRecruitment.Controllers
             {
                 return BadRequest();
             }
+            _context.SaveChanges();
             return new ObjectResult(incident);
         }
     }

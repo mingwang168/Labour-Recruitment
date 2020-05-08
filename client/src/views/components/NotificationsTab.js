@@ -72,14 +72,15 @@ const NotificationTabs = (props) => {
             <div className="notification-list">
             <div className="list-group">
                 { incidents.map(( incident, i) => (
-                    <a onClick={() => DirectToDetail(incident.incidentReport.incidentReportId) } 
-                       className="list-group-item list-group-item-action" href="/incidents" key={i}>
+                    <Link onClick={() => DirectToDetail(incident.incidentReport.incidentReportId) } 
+                       className="list-group-item list-group-item-action"
+                       to={`/incident/${incident.incidentReport.incidentReportId}`} key={i}>
                     <div className="notification-info">
                     <div className="notification-list-user-block" style={{paddingLeft:'0px'}}>
                         <span className="notification-list-user-name" style={{marginRight:'0px'}}>Company {incident.client.clientName}</span> created an Incident Report
                     </div>
                     </div>
-                    </a>
+                    </Link>
                 ))
                 }
             </div>

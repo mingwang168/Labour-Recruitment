@@ -11,4 +11,10 @@ namespace labourRecruitment.ViewModels
         public IncidentReport IncidentReport { get; set; }
         public IEnumerable<JobLabourer> JobLabourers { get; set; }
     }
+
+    public class IncidentClientVM
+    {
+        public IncidentReport IncidentReport { get; set; }
+        public Client Client { get; set; }
+    }
 }
