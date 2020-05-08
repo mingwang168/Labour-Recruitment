@@ -64,7 +64,7 @@ const LabourerUpdateProfile = (props) => {
                     firstname: profile.labourerFirstName,
                     lastname: profile.labourerLastName,
                     email: profile.labourerEmail,
-                    isAvailable: profile.isAvailable
+                    // isAvailable: profile.isAvailable
                 });
             }
         } catch(e){
@@ -196,10 +196,6 @@ const LabourerUpdateProfile = (props) => {
         }
     }
 
-    const onChangeAvailability = _ => {
-        setFormData({...formData, isAvailable: isAvailable ? false : true});
-    }
-
     useEffect(() => {
         fetchProfileData();
         fetchSkillOptions();
@@ -282,7 +278,7 @@ const LabourerUpdateProfile = (props) => {
             />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
             <label className="mt-2 mr-3">
                 Are you available for work?
             </label>
@@ -296,7 +292,7 @@ const LabourerUpdateProfile = (props) => {
                 />
                 <span><label htmlFor="switch16"></label></span>
             </div>
-        </div>
+        </div> */}
 
         <div className="form-group row text-right mt-3">
         <div className="col col-lg-12">
