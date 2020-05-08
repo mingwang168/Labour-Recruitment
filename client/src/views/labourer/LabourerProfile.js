@@ -43,7 +43,7 @@ const LabourerProfile = (props) => {
     const [skills, setSkills] = useState();
     const [jobs, setJobs] = useState();
     const [incidents, setIncidents] = useState();
-    //const [onVacation, setOnVacation] = useState(labourer.onLeave)
+   
 
     // Table Columns
     const [jobsTableColumns, setJobsTableColumns] = useState();
@@ -196,7 +196,7 @@ const LabourerProfile = (props) => {
                 <h1 className="font-26 mb-2">
                     {`${labourer.labourerFirstName} ${labourer.labourerLastName}`}
                 </h1>
-                { Auth.getID() == labourer.labourerId &&
+                { (Auth.getID() == labourer.labourerId || Auth.getRole() == "Admin") &&
                     <OnVacationBadge 
                         labourerId={labourer.labourerId}
                         onLeave={labourer.onLeave} 
