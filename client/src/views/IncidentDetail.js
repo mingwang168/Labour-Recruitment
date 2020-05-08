@@ -8,13 +8,10 @@ import Layout from "./components/Layout";
 import PageHeader from "./components/PageHeader";
 import RateWorkers from "./components/RateWorkers";
 import ErrorMessage from "./components/ErrorMessage";
-import UnauthorizedMessage from "./components/UnauthorizedMessage";
 
 const BASE_URL = "http://localhost:5001/api";
+
 const IncidentDetail = (props) => {
-    
-    // Authorization
-    const [authorized] = useState(true);
 
     const [id] = useState(
         props.match.params.id && isWholeNumber(props.match.params.id) ? props.match.params.id : null
@@ -91,7 +88,7 @@ const IncidentDetail = (props) => {
         }
     };
 
-    const content = !report ? <ErrorMessage message={"Incident does not exist."} /> : (
+    const content = (
     <>
     <PageHeader
         title={"Incident Details"}
@@ -103,6 +100,7 @@ const IncidentDetail = (props) => {
     />
 
     <Loader loaded={loaded}>
+        { !report ? <ErrorMessage message={"Incident does not exist."} /> : (
         <div className="row">
         <div className="col col-md-12">
         <div className="card">
@@ -193,6 +191,7 @@ const IncidentDetail = (props) => {
         </div>
         </div>
         </div>
+        )}
     </Loader>
     </>
     );
@@ -201,7 +200,7 @@ const IncidentDetail = (props) => {
         if(id) fetchIncidentDetails(id);
     }, []);
 
-    return !authorized ? <UnauthorizedMessage /> : <Layout content={content} />;
+    return <Layout content={content} />;
 };
 
 export default IncidentDetail;
