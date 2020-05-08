@@ -112,6 +112,8 @@ const ClientLabourerAttendance = (props) => {
 
     const content = isJobOwner || Auth.authenticateAdmin() && (
     <Loader loaded={loaded}>
+        { !list ? <ErrorMessage message={"Error: Could not fetch data."} /> :
+        <>
         <PageHeader
             title={`Labourer Attendance for ${DataSanitizer.formatDateString(params.date)}`}
             breadcrumbs={[
@@ -157,6 +159,8 @@ const ClientLabourerAttendance = (props) => {
         } 
         </div>
         </div>
+        </>
+        }
     </Loader>
     );
 
