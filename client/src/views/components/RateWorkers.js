@@ -8,8 +8,8 @@ const RateWorkers = (props) => {
     const [rating, setRating] = useState(props.rating);
 
     const changeRating = async(newRating) => {
-        props.changeRating(newRating, props.labourerId, props.jobId)
-        setRating(newRating)
+        props.changeRating(newRating, props.labourerId, props.jobId);
+        setRating(newRating);
     }
     
     return (
