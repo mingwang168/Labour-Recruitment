@@ -119,6 +119,39 @@ const LabourerUpdateProfile = (props) => {
         }
     }
 
+    const submitForm = async() => {
+        try {
+            let URI = BASE_URL + `/LabourerProfile/${Auth.getID()}`;
+            let response = await fetch(URI, {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                },
+                body: JSON.stringify({
+                    Labourer: {
+                        LabourerId: id,
+                        LabourerFirstName: firstname,
+                        LabourerLastName: lastname,
+                        LabourerEmail: email
+                    },
+                    Skills: selectedSkills.map(skill => {
+                        return { SkillName: skill.label }
+                    })
+                })
+            })
+
+            if(response.status !== 204) {
+                throw response;
+            } else {
+                props.history.push(`/profile/labourer/${id}`);
+            }
+        } catch(e){
+            console.error(e);
+        }
+    }
+
     const validateForm = e => {
         e.preventDefault();
         let errors = [];
@@ -147,56 +180,19 @@ const LabourerUpdateProfile = (props) => {
         }
     }
 
-    const submitForm = async() => {
-        // Format selected skills data
-        let selected = [];
-
-        selectedSkills.forEach(skill => {
-            if(typeof(skill) === "object") {
-                selected.push(skill.value)
-            } else {
-                selected.push(skill)
-            }
-        });
-
-        try {
-            let URI = BASE_URL + "/LabourerProfile";
-            let response = await fetch(URI, {
-                method: "PUT",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${Auth.getToken()}`
-                },
-                body: JSON.stringify({
-                    Labourer: {
-                        LabourerId: id,
-                        LabourerFirstName: firstname,
-                        LabourerLastName: lastname,
-                        LabourerEmail: email
-                    }
-                })
-            })
-
-            if(response.status !== 204) {
-                throw response;
-            } else {
-                props.history.push(`/profile/labourer/${id}`);
-            }
-        } catch(e){
-            console.error(e);
-        }
-    }
-
     const onChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 
     const onChangeSkill = (skills) => {
-        if(skills.length) {
-            skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]));
-        } else {
+        if(!skills) {
             setSelectedSkills([]);
+        } else if(!skills.length) {
+            setSelectedSkills([]);
+        } else {
+            let selected = [];
+            skills.forEach(skill => selected.push(skill));
+            setSelectedSkills(selected);
         }
     }
 
