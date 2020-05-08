@@ -57,9 +57,7 @@ namespace labourRecruitment.Controllers
                 lp.LabourerLastName = labourerProfile.Labourer.LabourerLastName;
                 lp.IsAvailable = labourerProfile.Labourer.IsAvailable;
                 lp.LabourerEmail = labourerProfile.Labourer.LabourerEmail;
-               
             }
-
 
             _context.LabourerSkill.RemoveRange(_context.LabourerSkill.Where(al => al.LabourerId == labourerProfile.Labourer.LabourerId));
 
@@ -119,7 +117,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(labourer);
         }
 
-        // DELETE: api/Todo?id=5
+        // DELETE: api/LabourerProfile
         [HttpDelete]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> DeleteLabourerProfile(int id)
