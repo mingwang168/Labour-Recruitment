@@ -66,7 +66,11 @@ const AdminJobs = (props) => {
     }
 
     useEffect(() => {
-        if(authorized) fetchJobs();
+        if(authorized) {
+            fetchJobs();
+        } else {
+            setLoaded(true);
+        }
     }, [])
 
     const content = (
@@ -84,7 +88,7 @@ const AdminJobs = (props) => {
         <div className="row">
             <div className="col">
             <div className="card">
-            <h5 className="card-header">Active Jobs</h5>
+            <h5 className="card-header">All Jobs</h5>
             <div className="card-body">
                 { !jobs ? <ErrorMessage message={"No jobs to display."} /> :
                 <Table
