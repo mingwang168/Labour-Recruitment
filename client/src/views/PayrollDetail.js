@@ -30,9 +30,86 @@ const PayrollDetail = (props) => {
     const [loaded, setLoaded] = useState(false);
 
     // Data
-    const [labourer, setlabourer] = useState();
+    const [labourer, setLabourer] = useState();
 
-    
+
+    const fetchReport = async() => {
+        let generatedInvoice;
+
+        // Fetch job data
+        try {
+            const URI = BASE_URL + `/Job/GetJob/${params.JobId}`;
+            let response = await fetch(URI, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            });
+
+            if(response.status !== 200) {
+                throw response;
+            }
+
+            let data = await response.json();
+
+            // if(data) {
+            //     generatedInvoice = {
+            //         job: data.title,
+            //         complete: data.isComplete,
+            //         duration: getDuration(data.startDate, data.endDate),
+            //         isComplete: data.isComplete,
+            //         client: {
+            //             name: data.client.clientName,
+            //             address: `${data.client.clientCity}, ${data.client.clientState}`,
+            //             phone: data.client.clientPhoneNumber
+            //         }
+            //     }
+            // }
+        } catch(e) {
+            console.error(e)
+        }
+
+        // Fetch labourer data
+        try {
+            const URI = BASE_URL + `/ClientInvoice`;
+            let response = await fetch(URI, {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                },
+                body: JSON.stringify(params)
+            });
+
+            if(response.status !== 200) {
+                throw response;
+            }
+
+            let data = await response.json();
+
+            if(data.length) {
+                console.log(data)
+                let formattedData = data.map(d => ({
+                    id: d.labourer.labourerId,
+                    name: d.labourer.labourerFirstName + " " +d.labourer.labourerLastName,
+                    skill: d.skill.skillName,
+                    days: d.workedDays,
+                    hours: d.totalHours
+                }));
+
+               
+                console.log(formattedData)
+                 setLabourer(formattedData)                  
+            }
+        } catch(e) {
+            console.error(e)
+        }
+        
+        // Set loading state
+        setLoaded(true);
+    }
+
     const content = (
     <Loader loaded={loaded}>
         <PageHeader
@@ -48,14 +125,13 @@ const PayrollDetail = (props) => {
             ]}
         />
 
-        
+      
     </Loader>
     );
 
     useEffect(() => {
-        if(params) {
-            
-        }
+        fetchReport()
+       
     }, [])
 
     return <Layout content={!authorized ? <UnauthorizedMessage /> : content} />;
