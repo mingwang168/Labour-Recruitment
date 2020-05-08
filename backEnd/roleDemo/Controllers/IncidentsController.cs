@@ -161,6 +161,12 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(incident);
         }
 
+        [HttpGet( Name = "GetIncidentsNotNotified")]
+        public IActionResult GetIncidentsNotNotified()
+        {
+            return new ObjectResult(_context.IncidentReport.Where(i => i.AdminNotified == false).ToList());
+        }
+
         // POST: api/Incidents
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

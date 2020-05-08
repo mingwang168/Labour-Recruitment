@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace labourRecruitment.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class ClientInvoiceController : ControllerBase
     {
@@ -77,79 +77,7 @@ namespace labourRecruitment.Controllers
             }).Distinct();
             var weeks = jobLabourers.Where(jb => jb.LastDay.CompareTo(DateTime.Now) < 0);
             return new ObjectResult(weeks);
-
-
-            //var start = _context.Job.FirstOrDefault(j => j.JobId == jobId).StartDate;
-            //var end = _context.Job.FirstOrDefault(j => j.JobId == jobId).EndDate;
-
-            //if (IsSameWeek(start, end))
-            //{
-            //    var week = new Week
-            //    {
-            //        FirstDay = start,
-            //        LastDay = end,
-            //        JobId = jobId
-            //    };
-            //    weeks.Add(week);
-            //}
-            //else
-            //{
-            //    int day = (int)start.DayOfWeek;
-            //    DateTime firstLast = new DateTime();
-            //    switch (day)
-            //    {
-            //        case 1:
-            //            firstLast = start.AddDays(5);
-            //            break;
-            //        case 2:
-            //            firstLast = start.AddDays(4);
-            //            break;
-            //        case 3:
-            //            firstLast = start.AddDays(3);
-            //            break;
-            //        case 4:
-            //            firstLast = start.AddDays(2);
-            //            break;
-            //        case 5:
-            //            firstLast = start.AddDays(1);
-            //            break;
-            //        case 6:
-            //            firstLast = start.AddDays(0);
-            //            break;
-            //    }
-            //    var firsWeek = new Week()
-            //    {
-            //        FirstDay = start,
-            //        LastDay = firstLast,
-            //        JobId = jobId
-            //    };
-            //    weeks.Add(firsWeek);
-            //    for (var i = start; i <= end; i = i.AddDays(1))
-            //    {
-            //        if (i.DayOfWeek.ToString() == "Sunday")
-            //        {
-            //            if (IsSameWeek(i, end))
-            //            {
-            //                var week = new Week()
-            //                {
-            //                    FirstDay = i,
-            //                    LastDay = end,
-            //                    JobId = jobId
-            //                };
-            //                weeks.Add(week);
-            //            }
-            //            else
-            //            {
-            //                var week = new Week()
-            //                {
-            //                    FirstDay = i,
-            //                    LastDay = i.AddDays(6),
-            //                    JobId = jobId
-            //                };
-            //                weeks.Add(week);
-            //            }
-            //        }
-            //    }
+          
         }
           
    
@@ -161,68 +89,6 @@ namespace labourRecruitment.Controllers
         }
 
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetClientInvoice([FromBody] Input input)
-        //{
-        //    var job = _context.Job.Find(input.jobId);
-        //    var skills = await _context.JobSkill.Where(js => js.JobId == input.jobId).Select(ojs => ojs.Skill).ToListAsync();
-        //    var clientName = _context.Client.FirstOrDefault(c => c.ClientId == job.ClientId).ClientName;
-
-        //    var clientInvoice = new ClientInvoiceVM()
-        //    {
-        //        JobId = input.jobId,
-        //        JobName = job.Title,
-        //        ClientName = clientName,
-        //        StartDate = job.StartDate,
-        //        EndDate = job.EndDate,
-        //        Total = 0,
-        //        Labourers = null
-        //    };
-
-        //    List<SkillVM> skillvms = skills.Select(s => new SkillVM 
-        //    {
-        //        SkillId = s.SkillId,
-        //        SkillName = s.SkillName,
-        //        Quantity = 0,
-        //        Hours = 0,
-        //        Rate = s.AdminReceives,
-        //        Total = 0
-        //    }).ToList();
-        //    decimal? totalpaid = 0;
-        //    foreach (SkillVM sk in skillvms)
-        //    {
-        //        var joblabourers = _context.JobLabourer.Where(jl => jl.SkillId == sk.SkillId && jl.JobId == input.jobId);
-        //        var quantity = 0;
-        //        var rate = sk.Rate;
-
-        //        foreach (JobLabourer joblabourer in joblabourers)
-        //        {
-        //            var oneQuantity = _context.LabourerAttendance
-        //                 .Where(la => IsSameWeek(la.Date, input.dateInput) && la.JobId == input.jobId && la.DailyQualityRating != null && la.DailyQualityRating != 0 && la.LabourerId == joblabourer.LabourerId)
-        //                 .Count();
-        //            quantity = quantity + oneQuantity;
-        //        };
-
-        //        sk.Quantity = quantity;
-        //        sk.Hours = quantity * 8;
-        //        sk.Rate = rate;
-        //        sk.Total = quantity * 8 * rate;
-        //        totalpaid += quantity * 8 * rate;
-        //    }
-        //    clientInvoice.Total = totalpaid;
-        //    clientInvoice.Labourers = skillvms;
-
-        //    if (clientInvoice != null)
-        //    {
-        //        return new ObjectResult(clientInvoice);
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-
-        //}
-
         public class ResultVM
         {
             public int WorkedDays { get; set; }
@@ -232,31 +98,6 @@ namespace labourRecruitment.Controllers
             public Skill Skill { get; set; }
         }
 
-        //public class ClientInvoiceVM
-        //{
-        //    public int JobId { get; set; }
-        //    public string JobName { get; set; }
-        //    public string ClientName { get; set; }
-        //    public DateTime StartDate { get; set; }
-        //    public DateTime EndDate { get; set; }
-        //    public decimal? Total { get; set; }
-        //    public List<SkillVM> Labourers { get; set; }
-        //}
-
-        //public class SkillVM
-        //{
-        //    public int SkillId { get; set; }
-        //    public string SkillName { get; set; }
-        //    public int Quantity { get; set; }
-        //    public int Hours { get; set; }
-        //    public decimal? Rate { get; set; }
-        //    public decimal? Total { get; set; }
-
-        //}
-        //public class Input
-        //{
-        //    public int jobId { get; set; }
-        //    public DateTime dateInput { get; set; }
-        //}
+     
     }
 }
