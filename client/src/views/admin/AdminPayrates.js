@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Link, Redirect, Router} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as Auth from '../../utils/Auth';
 
 import Loader from '../components/Loader';
