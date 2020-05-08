@@ -17,6 +17,7 @@ import CheckSafetyMeeting from './components/CheckSafetyMeeting';
 import ErrorMessage from './components/ErrorMessage';
 
 import { ATTENDANCE_DATES_TABLE_COLUMNS, INCIDENTS_TABLE_COLUMNS } from '../utils/TableColumns';
+import UnauthorizedMessage from './components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
@@ -107,7 +108,7 @@ const JobDetail = (props) => {
         }
     }, [])
 
-    const content = (
+    const content = isClient && !isJobOwner ? <UnauthorizedMessage /> : (
     <Loader loaded={loaded}>
         {!details ?  <ErrorMessage message={"Job does not exist."} /> :
         <>
@@ -121,7 +122,6 @@ const JobDetail = (props) => {
 
         <div className="row">
             <div className="col-12 col-xl-4">
-
                 {/* Project Details */}
                 <div className="card">
                     <div className="card-body">
