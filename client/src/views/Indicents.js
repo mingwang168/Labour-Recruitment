@@ -108,7 +108,6 @@ const Incidents = (props) => {
                     columns={incidentsTableColumns}
                     path="/incident"
                     searchable={true}
-                    striped={true}
                     {...props}
                 />
                 }
