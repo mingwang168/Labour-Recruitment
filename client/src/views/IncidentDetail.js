@@ -133,7 +133,7 @@ const IncidentDetail = (props) => {
             </div>
 
             {/* Safety Ratings */}
-            {jobLabourer && (
+            { (jobLabourer && ( Auth.authenticateClient() || Auth.authenticateAdmin() )) && (
             <div className="card" id="safetyratings">
                 <h5 className="card-header">
                     Safety Ratings
