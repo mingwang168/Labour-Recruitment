@@ -67,7 +67,11 @@ const AdminPayrates = (props) => {
     }
 
     useEffect(() => {
-        if(authorized) fetchSkills();
+        if(authorized) {
+            fetchSkills();
+        } else {
+            setLoaded(true);
+        }
     }, [])
 
     const content = (
@@ -84,22 +88,27 @@ const AdminPayrates = (props) => {
         <div className="row">
         <div className="col">
         <div className="card">
-            <h4 className="card-header">All Skills</h4>
-            <div className="card-body">
-            { !skills ? <ErrorMessage message={"No payrates to display."} /> :
-           <div className="row">
-           <Table
-                data={skills}
-                columns={skillsTableColumns}
-                path="/admin/skill"
-                {...props}
-            />            
+            <div className="card-header d-flex">
+                <h4 className="card-header-title">All Skills</h4>
+                <div className="toolbar ml-auto">
+                    <Link 
+                        to="/admin/addskill"
+                        className="btn btn-primary btn-sm"
+                    >
+                        Add New Skill
+                    </Link>
+                </div>
             </div>
-            }   
-             <Link 
-                to ="/admin/addskill"
-                className="btn btn-primary btn-sm float-right"
-            > Add New Skill </Link> 
+            <div className="card-body">
+                { !skills ? <ErrorMessage message={"No payrates to display."} /> :
+                <Table
+                    data={skills}
+                    columns={skillsTableColumns}
+                    itemsPerPage={10}
+                    path="/admin/skill"
+                    {...props}
+                />      
+                }
             </div>
         </div>
         </div>
