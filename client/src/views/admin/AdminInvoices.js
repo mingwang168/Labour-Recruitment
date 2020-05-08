@@ -5,6 +5,7 @@ import * as Auth from '../../utils/Auth';
 import Loader from '../components/Loader';
 import Layout from '../components/Layout';
 import PageHeader from '../components/PageHeader';
+import Select from 'react-select';
 import Table from '../components/Table';
 import ErrorMessage from '../components/ErrorMessage';
 import UnauthorizedMessage from '../components/UnauthorizedMessage';
@@ -20,12 +21,11 @@ const AdminInvoices = (props) => {
     const [loaded, setLoaded] = useState(false);
 
     // Data
-    const [jobs, setJobs] = useState();
-    const [jobsTableColumns, setJobsTableColumns] = useState();
+    const [clients, setClients] = useState();
 
-    const fetchJobs = async() => {
+    const fetchClients = async() => {
         try {
-            const URI = BASE_URL + "/Job/GetAllActiveJobs";
+            const URI = BASE_URL + "/ClientProfile";
             let response = await fetch(URI, {
                 method: "GET",
                 headers: {
@@ -38,30 +38,70 @@ const AdminInvoices = (props) => {
             }
     
             let data = await response.json();
-    
+
             if(data.length) {
-                let formattedData = data.map(d => ({
-                    id: d.jobId,
-                    title: d.title,
-                    status: d.isComplete ? "Complete" : "In Progress"
+                setClients(data.map((d) => {
+                    return {
+                        label: d.clientName,
+                        value: d.clientId
+                    }
                 }));
-    
-                setJobs(formattedData);
-                setJobsTableColumns([
-                    {Header: 'Job Title', accessor: 'title'},
-                    {Header: 'Completion Status', accessor: 'status'},
-                ]);
             }
+            
         } catch(e) {
             console.error(e);
         }
+    }
 
-        // Set loading state
-        setLoaded(true);
+    const fetchJobsByClientID = async() => {
+        try {
+            const URI = BASE_URL + "";
+            let response = await fetch(URI, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            });
+    
+            if(response.status !== 200) {
+                throw response;
+            }
+    
+            let data = await response.json();
+            
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    const fetchInvoiceWeeksByJobID = async() => {
+        try {
+            const URI = BASE_URL + "";
+            let response = await fetch(URI, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                }
+            });
+    
+            if(response.status !== 200) {
+                throw response;
+            }
+    
+            let data = await response.json();
+            
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    const onChangeClient = (selection) => {
+        if(selection) console.log(selection)
     }
 
     useEffect(() => {
-        fetchJobs();
+        fetchClients();
+        setLoaded(true);
     }, [])
 
     const content = (
@@ -80,15 +120,13 @@ const AdminInvoices = (props) => {
         <div className="card">
         <h5 className="card-header">Invoices</h5>
         <div className="card-body">
-            { !jobs ? <ErrorMessage message={"No invoices to display."} /> :
-            <Table
-                data={jobs}
-                columns={jobsTableColumns}
-                path="/invoice"
-                searchable={true}
-                {...props}
+            <label htmlFor="client">Select Client</label>
+            <Select
+                required
+                name="client"
+                options={clients}
+                onChange={onChangeClient}
             />
-            }
         </div>
         </div>
         </div>
