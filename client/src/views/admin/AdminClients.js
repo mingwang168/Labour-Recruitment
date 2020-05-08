@@ -25,7 +25,8 @@ const AdminClients = (props) => {
 
     const fetchClients = async() => {
         try {
-            let response = await fetch(BASE_URL + "/ClientProfile", {
+            const URI = BASE_URL + "/ClientProfile";
+            let response = await fetch(URI, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${Auth.getToken()}`

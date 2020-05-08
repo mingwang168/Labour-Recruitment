@@ -80,7 +80,7 @@ class App extends Component {
         <ProtectedRoute exact path='/job/:id' component={JobDetail} />
         <ProtectedRoute exact path='/incident/:id' component={IncidentDetail} />
 		<ProtectedRoute exact path='/profile/edit' component={UpdateProfile} />
-		<ProtectedRoute exact path='/invoice/:id' component={InvoiceDetail} />
+		<ProtectedRoute exact path='/invoice/:id/:startdate/:enddate' component={InvoiceDetail} />
 
 		{/* Client Only Views */}
 		<ProtectedRoute exact path='/profile/client/:id' component={ClientProfile} />
