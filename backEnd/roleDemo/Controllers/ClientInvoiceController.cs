@@ -29,6 +29,97 @@ namespace labourRecruitment.Controllers
             return !(ts.TotalDays >= 7 || (DateTime.Compare(dt1, dt2) > 0 ? (dt1.DayOfWeek < dt2.DayOfWeek) : (dt1.DayOfWeek > dt2.DayOfWeek)));
         }
 
+        [HttpGet("{jobId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetInvoiceWeeks(int jobId)
+        {
+            var isInJobLabourer = _context.JobLabourer.Any(jl => jl.JobId == jobId);
+            List<Week> weeks = new List<Week>();
+            if (isInJobLabourer)
+            {
+                var start = _context.Job.FirstOrDefault(j=>j.JobId==jobId).StartDate;
+                var end = _context.Job.FirstOrDefault(j => j.JobId == jobId).EndDate;
+
+                if (IsSameWeek(start, end))
+                {
+                    var week = new Week
+                    {
+                        FirstDay = start,
+                        LastDay = end,
+                        JobId = jobId
+                    };
+                   weeks.Add(week);
+                }
+                else
+                {
+                    int day = (int)start.DayOfWeek;
+                    DateTime firstLast = new DateTime();
+                    switch (day)
+                    {
+                        case 1:
+                            firstLast = start.AddDays(5);
+                            break;
+                        case 2:
+                            firstLast = start.AddDays(4);
+                            break;
+                        case 3:
+                            firstLast = start.AddDays(3);
+                            break;
+                        case 4:
+                            firstLast = start.AddDays(2);
+                            break;
+                        case 5:
+                            firstLast = start.AddDays(1);
+                            break;
+                        case 6:
+                            firstLast = start.AddDays(0);
+                            break;
+                    }
+                    var firsWeek = new Week()
+                    {
+                        FirstDay = start,
+                        LastDay = firstLast,
+                        JobId = jobId
+                    };
+                    weeks.Add(firsWeek);
+                    for (var i = start; i <= end; i = i.AddDays(1))
+                    {
+                        if (i.DayOfWeek.ToString() == "Sunday")
+                        {
+                            if (IsSameWeek(i, end))
+                            {
+                                var week = new Week()
+                                {
+                                    FirstDay = i,
+                                    LastDay = end,
+                                    JobId = jobId
+                                };
+                                weeks.Add(week);
+                            }
+                            else
+                            {
+                            var week = new Week()
+                            {
+                                FirstDay = i,
+                                LastDay = i.AddDays(6),
+                                JobId = jobId
+                            };
+                                weeks.Add(week);
+                            }
+                        }
+                    }
+                }
+            }
+            return new ObjectResult(weeks);
+        }
+
+        public class Week
+        {
+            public DateTime FirstDay { get; set; }
+            public DateTime LastDay { get; set; }
+            public int JobId { get; set; }
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GetClientInvoice([FromBody] Input input)

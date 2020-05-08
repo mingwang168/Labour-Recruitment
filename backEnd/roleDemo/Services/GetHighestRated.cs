@@ -3,15 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static labourRecruitment.Controllers.ClientAssignController;
-using static labourRecruitment.Controllers.LabourerAssignController;
 
-namespace labourRecruitment.Repositories
+namespace labourRecruitment.Services
 {
-    public class HighestRatedRepo
+    public class GetHighestRated
     {
         private readonly ApplicationDbContext _context;
-        public HighestRatedRepo(ApplicationDbContext context)
+        public GetHighestRated(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -59,9 +57,43 @@ namespace labourRecruitment.Repositories
                 clientvm.averageRating = jobs.Average(avj => avj.jobAverageRating);
             }
 
-            List<Client> clientSorted = clientvms.OrderByDescending(c => c.averageRating).Select(c=>c.client).Distinct().ToList();
+            List<Client> clientSorted = clientvms.OrderByDescending(c => c.averageRating).Select(c => c.client).Distinct().ToList();
             return clientSorted;
 
         }
+
+        public class LabourerAssignVM
+        {
+            public Labourer labourer { get; set; }
+            public double? averageQualityRating { get; set; }
+            public double? averageSafetyRating { get; set; }
+            public double? averageRating { get; set; }
+        }
+
+        public class ClientAssignVM
+        {
+            public Client client { get; set; }
+            public double? averageRating { get; set; }
+        }
+
+        public class JobVM
+        {
+            public Job job { get; set; }
+            public double? jobAverageRating { get; set; }
+        }
+
+        public class ClientVM
+        {
+            public int ClientId { get; set; }
+            public int? UserId { get; set; }
+            public string ClientName { get; set; }
+            public string ClientEmail { get; set; }
+            public string ClientPhoneNumber { get; set; }
+            public string ClientCity { get; set; }
+            public string ClientState { get; set; }
+            public string ClientDescription { get; set; }
+            public double? ClientAverageRating { get; set; }
+        }
+
     }
 }

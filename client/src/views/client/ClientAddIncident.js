@@ -11,6 +11,7 @@ import FormErrors from "../components/FormErrors";
 import LabourerList from "../components/LabourerList";
 import UnauthorizedMessage from "../components/UnauthorizedMessage";
 
+
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientAddIncident = ({ history }) => {
@@ -41,12 +42,9 @@ const ClientAddIncident = ({ history }) => {
         console.log("Validating form...");
         let errors = [];
 
-        if (
-            !FormValidator.date(incidentdate) &&
-            incidentdate === null &&
-            incidentdate === ""
-        ) {
-            errors.push("Invalid date entered.");
+ 
+        if(!report.incidentdate){
+            errors.push("Invalid date entered");
         }
         if (!selectedIncident) {
             errors.push("You must select incident type.");
@@ -56,6 +54,9 @@ const ClientAddIncident = ({ history }) => {
         }
         if (!selectedLabourers.length) {
             errors.push("You must select labourers affected.");
+        }
+        if(!report.incidentsummary){
+            errors.push("You must provide incident summary.");
         }
 
         if (errors.length) {
@@ -150,6 +151,7 @@ const ClientAddIncident = ({ history }) => {
             IncidentReportDate: incidentdate,
             IncidentReportDescription: incidentsummary,
             JobId: selectedJob,
+            AdminNotified: false
         };
 
         try {
@@ -302,6 +304,7 @@ const ClientAddIncident = ({ history }) => {
                         <div className="form-group mb-4">
                             <label htmlFor="incidentsummary">
                                 Summary of Incident
+                                <span className="text-danger">*</span>
                             </label>
                             <textarea
                                 name="incidentsummary"

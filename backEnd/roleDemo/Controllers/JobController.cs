@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using labourRecruitment.Models.LabourRecruitment;
 using labourRecruitment.Repositories;
+using labourRecruitment.Services;
 using labourRecruitment.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -180,16 +181,30 @@ namespace labourRecruitment.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<Job>>> GetJobByLabourerId(int labourerId)
         {
-            return await _context.JobLabourer.Where(jl => jl.LabourerId == labourerId).Select(jl => new Job
+            var jls= await _context.JobLabourer.Where(jl => jl.LabourerId == labourerId).Select(jl => new GetJobVM
             {
                 JobId = jl.Job.JobId,
                 Title = jl.Job.Title,
-                StartDate = jl.Job.StartDate,
-                EndDate = jl.Job.EndDate,
+                StartDate = jl.StartDay,
+                EndDate = jl.EndDay,
                 InProgress = jl.Job.InProgress,
                 IsComplete = jl.Job.IsComplete,
-                JobLabourer = jl.Job.JobLabourer
+             //   JobLabourer = jl.Job.JobLabourer,
+                
             }).ToListAsync();
+
+            return new ObjectResult(jls);
+        }
+
+        public class GetJobVM
+        {
+            public int JobId { get; set; }
+            public string Title { get; set; }
+            public DateTime StartDate { get; set; }
+            public DateTime EndDate { get; set; }
+            public bool? InProgress { get; set; }
+            public bool? IsComplete { get; set; }
+       //     public ICollection<JobLabourer> JobLabourer { get; set; }
         }
 
         // POST: api/Job
@@ -207,7 +222,7 @@ namespace labourRecruitment.Controllers
 
             _context.SaveChangesAsync();
 
-            ScheduleRepo scheduleRepo = new ScheduleRepo(_context);
+            ScheduleHelper scheduleRepo = new ScheduleHelper(_context);
             scheduleRepo.AddLabourersToFirstSchedule(jobSkill.Job.JobId);
 
             return new ObjectResult(jobSkill.Job.JobId); 

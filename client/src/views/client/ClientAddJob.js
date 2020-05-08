@@ -72,10 +72,21 @@ const ClientAddJob = ({ history }) => {
         return total;
     }
 
+    const isToday = (someDate) => {
+        const today = new Date()
+        return someDate.getDate() == today.getDate() 
+                && someDate.getMonth() == today.getMonth() 
+                && someDate.getYear() == today.getYear()
+    }
+
     const validateForm = e => {
         e.preventDefault();
         let errors = [];
-
+        if(DayCalculator.convert(startdate) < Date.now()){
+            if(!isToday(DayCalculator.convert(startdate))){
+                errors.push("Invalid start date entered. Start date must be future date, or on the same day.");
+            }
+        }
         if(DayCalculator.convert(enddate) < DayCalculator.convert(startdate)) {
             errors.push("Invalid end date entered. End date must be after the start date, or on the same day.");
         }

@@ -48,12 +48,12 @@ namespace roleDemo.Controllers {
             return RedirectToAction("Error");
         }
 
-        public IActionResult CheckCompletion()
-        {
-            new CheckCompletion(_context).CheckIfComplete();
-                return RedirectToAction("Index");
+        //public IActionResult CheckCompletion()
+        //{
+        //    new CheckCompletion(_context).CheckIfComplete();
+        //        return RedirectToAction("Index");
 
-        }
+        //}
 
     }
 }
