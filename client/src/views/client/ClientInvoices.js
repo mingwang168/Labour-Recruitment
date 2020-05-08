@@ -8,7 +8,6 @@ import Layout from '../components/Layout';
 import PageHeader from '../components/PageHeader';
 import Select from 'react-select';
 import FormErrors from '../components/FormErrors';
-import ErrorMessage from '../components/ErrorMessage';
 import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
