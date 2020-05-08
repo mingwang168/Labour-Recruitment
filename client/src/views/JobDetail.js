@@ -15,8 +15,6 @@ import Table from './components/Table';
 import RateClient from "./components/RateClient";
 import CheckSafetyMeeting from './components/CheckSafetyMeeting';
 import ErrorMessage from './components/ErrorMessage';
-
-import { ATTENDANCE_DATES_TABLE_COLUMNS, INCIDENTS_TABLE_COLUMNS } from '../utils/TableColumns';
 import UnauthorizedMessage from './components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
@@ -38,8 +36,10 @@ const JobDetail = (props) => {
 
     // Data
     const [details, setDetails] = useState();
-    const [incidents, setIncidents] = useState([""]);
+    const [incidents, setIncidents] = useState();
+    const [incidentsTableColumns, setIncidentsTableColumns] = useState();
     const [attendanceDates, setAttendanceDates] = useState();
+    const [attendanceDatesTableColumns, setAttendanceDatesTableColumns] = useState();
     
     const fetchJobDetails = async(id) => {
         // Job details
@@ -63,8 +63,8 @@ const JobDetail = (props) => {
                 setDetails(data);
                 setIsJobOwner(isClient && Auth.getID() == data.clientId ? true : false);
             }
-        } catch (err) {
-            console.error(err);
+        } catch(e) {
+            console.error(e);
         }
 
         // Attendance schedule days
@@ -75,10 +75,25 @@ const JobDetail = (props) => {
                     "Accept": "application/json",
                     "Content-Type": "application/json"
                 }
-            })
+            });
+
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
+
             if(data.length) {
-                setAttendanceDates(DataSanitizer.cleanAttendanceDatesData(data));
+                let formattedData = data.map(d => ({
+                    id: DataSanitizer.formatDateParams(d),
+                    date: DataSanitizer.formatDateString(d)
+                }));
+
+                setAttendanceDates(formattedData);
+                setAttendanceDatesTableColumns([{
+                    Header: 'Date',
+                    accessor: 'date'
+                }]);
             }
         } catch (err) {
             console.error(err);
@@ -93,10 +108,40 @@ const JobDetail = (props) => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${Auth.getToken()}`
                 }
-            })
-            let data = await response.json();
-            setIncidents(DataSanitizer.cleanIncidentsData(data));
+            });
 
+            if(response.status !== 200) {
+                throw response;
+            }
+
+            let data = await response.json();
+
+            if(data && data.length) {
+                let formattedData = data.map(d => ({
+                    id: d.incidentReportId,
+                    job: d.job.title,
+                    date: DataSanitizer.formatDateString(d.incidentReportDate),
+                    type: d.incidentType.incidentTypeName,
+                    affected: `${d.labourerIncidentReport.length} labourer(s)`
+                }));
+
+                setIncidents(formattedData);
+
+                setIncidentsTableColumns([
+                    {
+                        Header: 'Date',
+                        accessor: 'date',
+                    },
+                    {
+                        Header: 'Incident Type',
+                        accessor: 'type',
+                    },
+                    {
+                        Header: '# affected',
+                        accessor: 'affected',
+                    }
+                ]);
+            }
         } catch (err) {
             console.error(err);
         }
@@ -209,7 +254,7 @@ const JobDetail = (props) => {
 
             <div className="col-12 col-xl-8">
                 <Tabs
-                    // defaultActiveKey="1"
+                    defaultActiveKey="1"
                     onChange={callback}
                     renderTabBar={() => <ScrollableInkTabBar />}
                     renderTabContent={() => <TabContent />}
@@ -225,9 +270,9 @@ const JobDetail = (props) => {
                             { !attendanceDates ?
                             <ErrorMessage message={"No dates to display."} /> :
                             <Table
-                                columns={ATTENDANCE_DATES_TABLE_COLUMNS}
+                                columns={attendanceDatesTableColumns}
                                 data={attendanceDates}
-                                path={`/job/${props.match.params.id}/attendance`}
+                                path={`/job/${id}/attendance`}
                                 itemsPerPage={5}
                                 searchable={true}
                                 {...props}
@@ -298,7 +343,6 @@ const JobDetail = (props) => {
                     <TabPane tab="Rate Client" key="3">
                     <div className="card">
                         <div className="card-body">
-                            {console.log(details.jobLabourer)}
                             <p>Client Rating is mandatory.</p>
                             { details.jobLabourer.map((jLabourer, i) => (
                                 Auth.getID() === jLabourer.labourerId && 
@@ -318,11 +362,11 @@ const JobDetail = (props) => {
                     <TabPane tab="Incident Reports" key="4">
                     <div className="card">
                         <div className="card-body">
-                        { !incidents.length ?
+                        { !incidents ?
                         <ErrorMessage message={"No incidents to display."} /> :
                         <Table 
                             data={incidents}
-                            columns={INCIDENTS_TABLE_COLUMNS}
+                            columns={incidentsTableColumns}
                             path={"/incident"}
                             itemsPerPage={5}
                             searchable={false}
