@@ -16,6 +16,7 @@ import PageNotFound from "./views/PageNotFound";
 import Dashboard from "./views/Dashboard";
 import Incidents from "./views/Indicents";
 import JobDetail from "./views/JobDetail";
+import SafetyMeetingsDetail from './views/SafetyMeetingsDetail';
 import IncidentDetail from "./views/IncidentDetail";
 import InvoiceDetail from "./views/InvoiceDetail";
 import PayrollDetail from "./views/PayrollDetail";
@@ -82,6 +83,7 @@ class App extends Component {
 		<ProtectedRoute exact path='/dashboard' component={Dashboard} />
         <ProtectedRoute exact path='/incidents' component={Incidents} />
         <ProtectedRoute exact path='/job/:id' component={JobDetail} />
+		<ProtectedRoute exact path='/job/:id/safetymeetings' component={SafetyMeetingsDetail} />
         <ProtectedRoute exact path='/incident/:id' component={IncidentDetail} />
 		<ProtectedRoute exact path='/profile/edit' component={UpdateProfile} />
 		<ProtectedRoute exact path='/invoice/:id/:startdate/:enddate' component={InvoiceDetail} />

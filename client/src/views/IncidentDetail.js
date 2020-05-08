@@ -6,15 +6,12 @@ import { isWholeNumber } from '../utils/IsWholeNumber';
 import Loader from "./components/Loader";
 import Layout from "./components/Layout";
 import PageHeader from "./components/PageHeader";
-import FormErrors from "./components/FormErrors";
 import RateWorkers from "./components/RateWorkers";
-import LabourerList from "./components/LabourerList";
-import UnauthorizedMessage from "./components/UnauthorizedMessage";
+import ErrorMessage from "./components/ErrorMessage";
 
 const BASE_URL = "http://localhost:5001/api";
+
 const IncidentDetail = (props) => {
-    // Authorization
-    const [authorized] = useState(true);
 
     const [id] = useState(
         props.match.params.id && isWholeNumber(props.match.params.id) ? props.match.params.id : null
@@ -91,7 +88,7 @@ const IncidentDetail = (props) => {
         }
     };
 
-    const content = report && (
+    const content = (
     <>
     <PageHeader
         title={"Incident Details"}
@@ -103,6 +100,7 @@ const IncidentDetail = (props) => {
     />
 
     <Loader loaded={loaded}>
+        { !report ? <ErrorMessage message={"Incident does not exist."} /> : (
         <div className="row">
         <div className="col col-md-12">
         <div className="card">
@@ -144,7 +142,7 @@ const IncidentDetail = (props) => {
                     <p>
                         Give effected labourers a rating, based on their safety-wise performance on this job.
                     </p>
-                    <table className="table table-bordered table-hover">
+                    <table className="table table-bordered">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -193,6 +191,7 @@ const IncidentDetail = (props) => {
         </div>
         </div>
         </div>
+        )}
     </Loader>
     </>
     );
@@ -201,7 +200,7 @@ const IncidentDetail = (props) => {
         if(id) fetchIncidentDetails(id);
     }, []);
 
-    return !authorized ? <UnauthorizedMessage /> : <Layout content={content} />;
+    return <Layout content={content} />;
 };
 
 export default IncidentDetail;

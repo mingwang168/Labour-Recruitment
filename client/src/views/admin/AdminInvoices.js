@@ -26,7 +26,7 @@ const AdminInvoices = (props) => {
     const [jobs, setJobs] = useState();
     const [weeks, setWeeks] = useState();
 
-    // Form Selections
+    // Form
     const [selectedClient, setSelectedClient] = useState();
     const [selectedJob, setSelectedJob] = useState();
     const [selectedWeek, setSelectedWeek] = useState();
@@ -54,6 +54,8 @@ const AdminInvoices = (props) => {
                         value: d.clientId
                     }
                 }));
+            } else {
+                setSelectedJob(null);
             }
             
         } catch(e) {
@@ -84,8 +86,9 @@ const AdminInvoices = (props) => {
                         value: d.jobId
                     }
                 }));
+            } else {
+                setSelectedWeek(null);
             }
-            
         } catch(e) {
             console.error(e);
         }

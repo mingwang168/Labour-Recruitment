@@ -162,7 +162,7 @@ const AdminDashboard = (props) => {
                             Total Jobs
                         </h5>
                         <h2 className="mb-0">
-                            {`${totalJobsStat} jobs`}
+                            {`${totalJobsStat} active job(s)`}
                         </h2>
                     </div>
                     <div className="float-right icon-circle-medium icon-box-lg bg-info-light mt-1">

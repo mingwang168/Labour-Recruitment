@@ -60,7 +60,11 @@ const RegisterLabourer = ({ history }) => {
 
     const onChangeSkill = (skills) => {
         if(skills) {
-            skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]));
+            let selected = [];
+            skills.forEach(skill => selected.push(skill.value));
+            setSelectedSkills(selected);
+        } else {
+            setSelectedSkills([]);
         }
     }
 
@@ -160,6 +164,7 @@ const RegisterLabourer = ({ history }) => {
             <div className="form-group">
                 <label htmlFor="firstname">First Name <span className="text-danger">*</span></label>
                 <input
+                    autoFocus
                     className="form-control form-control-lg"
                     name="firstname"
                     type="text"

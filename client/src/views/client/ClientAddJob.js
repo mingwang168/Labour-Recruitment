@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import Select from 'react-select';
+import { Link } from 'react-router-dom';
 
 import * as Auth from '../../utils/Auth';
 import * as DayCalculator from '../../utils/DayCalculator';
 import PROVINCES from '../../utils/staticdata/Provinces';
 
-import TopNav from '../components/TopNav';
-import SideNav from '../components/SideNav';
+import Loader from '../components/Loader';
+import Layout from '../components/Layout';
+import PageHeader from '../components/PageHeader';
+import Select from 'react-select';
 import SelectLabourers from '../components/SelectLabourers';
+import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientAddJob = ({ history }) => {
 
+    // Authorization
+    const [authorized] = useState(Auth.authenticateClient());
+
+    // Component
+    const [loaded, setLoaded] = useState(false);
+
+    // Form
     const [formErrors, setFormErrors] = useState([]);
     const [job, setJob] = useState({
         title: "",
@@ -64,7 +73,6 @@ const ClientAddJob = ({ history }) => {
         if(requiredLabourers.length) {
             requiredLabourers.forEach(i => {
                 if(i.NumberNeeded) {
-                    console.log(i.NumberNeeded)
                     total += parseInt(i.NumberNeeded);
                 }
             });
@@ -82,20 +90,25 @@ const ClientAddJob = ({ history }) => {
     const validateForm = e => {
         e.preventDefault();
         let errors = [];
+
         if(DayCalculator.convert(startdate) < Date.now()){
             if(!isToday(DayCalculator.convert(startdate))){
                 errors.push("Invalid start date entered. Start date must be future date, or on the same day.");
             }
         }
+
         if(DayCalculator.convert(enddate) < DayCalculator.convert(startdate)) {
             errors.push("Invalid end date entered. End date must be after the start date, or on the same day.");
         }
+
         if(!requiredLabourers.length) {
             errors.push("Labourers are required.")
         }
+
         if(province === "") {
             errors.push("Province is required.");
         }
+
         if(errors.length) {
             setFormErrors(errors);
         } else {
@@ -105,11 +118,8 @@ const ClientAddJob = ({ history }) => {
     }
 
     const submitForm = async() => {
-        let token = Auth.getToken();
-        let id = Auth.getID();
-
         let newJob = {
-            ClientId: id,
+            ClientId: Auth.getID(),
             Title: title,
             JobDescription: jobdescription,
             StartDate: startdate,
@@ -128,58 +138,42 @@ const ClientAddJob = ({ history }) => {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${Auth.getToken()}`
                 },
                 body: JSON.stringify({
                     "Job": newJob,
                     "JobSkills": requiredLabourers
                 })
-            })
+            });
 
-            // Bad response
             if(response.status !== 200) {
                 setFormErrors(["Failed to post job. Please try again later."]);
                 throw response;
             }
 
-            // Success
             let data = await response.json();
-            history.push('/job/' + data);
+
+            if(data) {
+                history.push('/job/' + data);
+            }
         } catch(e) {
             console.error(e);
         }
     }
 
-    return !Auth.authenticateClient() ? <Redirect to={{pathname: '/dashboard'}} /> :
-    (
-        <div className="dashboard-main-wrapper">
-        <TopNav />
-        <SideNav />
-
-        <div className="dashboard-wrapper">
-        <div className="container-fluid dashboard-content">
-
-           {/* Page Header */}
-           <div className="row">
-            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <div className="page-header">
-                <h2 className="pageheader-title">Add New Job</h2>
-                <div className="page-breadcrumb">
-                <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/dashboard" className="breadcrumb-link">Dashboard</a></li>
-                    <li className="breadcrumb-item active" aria-current="page">Add New Job</li>
-                </ol>
-                </nav>
-                </div>
-            </div>
-            </div>
-            </div>
-
-            {/* Form */}
-            <div className="card">
-            <div className="card-body">
-            {/* Display form errors, if any */}
+    const content = (
+    <>
+        <PageHeader
+            title={`Add Job`}
+            breadcrumbs={[
+                { name: "Home", path: "/dashboard" },
+                { name: "Add Job" }
+            ]}
+        />
+        
+        <div className="card">
+        <div className="card-body">
+            {/* Display form errors */}
             { formErrors.length > 0 &&
             <div className="alert alert-danger">
             <ul className="pl-3 mb-0">
@@ -187,6 +181,8 @@ const ClientAddJob = ({ history }) => {
             </ul>
             </div>
             }
+
+            {/* Form */}
             <form className="client-add-job-form">
                 <div className="form-group mb-4">
                     <label htmlFor="title">Job Title <span className="text-danger">*</span></label>
@@ -302,13 +298,12 @@ const ClientAddJob = ({ history }) => {
                 </div>
   
             </form>
-            </div>
-            </div>
+        </div>
+        </div> 
+    </>
+    );
 
-        </div>
-        </div>
-    </div>
-    )
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
 export default ClientAddJob;

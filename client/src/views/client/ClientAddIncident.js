@@ -11,7 +11,6 @@ import FormErrors from "../components/FormErrors";
 import LabourerList from "../components/LabourerList";
 import UnauthorizedMessage from "../components/UnauthorizedMessage";
 
-
 const BASE_URL = "http://localhost:5001/api";
 
 const ClientAddIncident = ({ history }) => {
@@ -154,6 +153,20 @@ const ClientAddIncident = ({ history }) => {
 
             if(selected > end) {
                 errors.push("Date of incident cannot be after the job end date.");
+            }
+        }
+
+        // Check if incident is today or before
+        if(incidentdate && incidentdate !== "") {
+            let today = new Date();
+            let selected = new Date(incidentdate);
+
+            // Fix selected date format
+            selected.setDate(selected.getDate() + 1);
+            selected.setHours(0, 0, 0, 0);
+
+            if(selected > today) {
+                errors.push("Date of incident cannot be in the future.");
             }
         }
 
@@ -380,8 +393,8 @@ const ClientAddIncident = ({ history }) => {
             </div>
         </>
     );
-
-    return !authorized ? <UnauthorizedMessage /> : <Layout content={content} />;
+    
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 };
 
 export default ClientAddIncident;

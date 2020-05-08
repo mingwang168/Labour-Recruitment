@@ -49,6 +49,7 @@ const Incidents = (props) => {
             
             // Process response data
             let data = await response.json();
+            
             if(data.length) {
                 let formattedData = data.map(d => ({
                     id: d.incidentReportId,
@@ -63,7 +64,7 @@ const Incidents = (props) => {
                     {Header: 'Job Title', accessor: 'job'},
                 ]);
 
-                setIncidents(formattedData);
+                setIncidents(formattedData.reverse());
             }
         } catch (e) {
             console.error(e);
@@ -107,7 +108,6 @@ const Incidents = (props) => {
                     columns={incidentsTableColumns}
                     path="/incident"
                     searchable={true}
-                    striped={true}
                     {...props}
                 />
                 }
