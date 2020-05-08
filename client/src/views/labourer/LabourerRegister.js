@@ -60,7 +60,11 @@ const RegisterLabourer = ({ history }) => {
 
     const onChangeSkill = (skills) => {
         if(skills) {
-            skills.forEach(skill => setSelectedSkills([...selectedSkills, skill.value]));
+            let selected = [];
+            skills.forEach(skill => selected.push(skill.value));
+            setSelectedSkills(selected);
+        } else {
+            setSelectedSkills([]);
         }
     }
 
