@@ -93,7 +93,14 @@ const ClientLabourerAttendance = (props) => {
                     setIsJobOwner(true);
                 }
 
-                setList(DataSanitizer.cleanAttendanceRatingsData(data));
+                let formattedData = data.map(d => ({
+                    name: `${d.labourer.labourerFirstName} ${d.labourer.labourerLastName}`,
+                    rating: d.dailyQualityRating,
+                    labourerId : d.labourer.labourerId,
+                    clientId: d.job.clientId
+                }));
+
+                setList(formattedData);
                 setTitle(data[0].job.title);
             }
         } catch (e) {
