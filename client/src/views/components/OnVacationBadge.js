@@ -41,16 +41,16 @@ const OnVacationBadge = ({ labourerId, onLeave }) => {
 
     return(
         <>
+            <span className="mr-2">
+                I do not want to be assigned to any new jobs.
+            </span>
             <Checkbox
                 size="2"
-                tickSize="0"
-                color="#5969ff" 
+                tickSize="2" 
+                color="#ef172c"
                 onChange= {ChangeOnVacation} 
                 checked={onVacation}
             />
-            <span className="ml-1">
-                On Vacation
-            </span>
         </>
     );
 }
