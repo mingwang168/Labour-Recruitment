@@ -38,6 +38,7 @@ import AdminIncidents from "./views/admin/AdminIncidents";
 import AdminInvoices from "./views/admin/AdminInvoices";
 import AdminPayrates from "./views/admin/AdminPayrates";
 import AdminSkillDetails from "./views/admin/AdminSkillDetails";
+import AdminNewSkill from "./views/admin/AdminNewSkill";
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 	return (
@@ -101,6 +102,7 @@ class App extends Component {
 		<ProtectedRoute exact path='/admin/invoices' component={AdminInvoices} />
 		<ProtectedRoute exact path='/admin/payrates' component={AdminPayrates} />
 		<ProtectedRoute exact path='/admin/skill/:id' component={AdminSkillDetails} />
+		<ProtectedRoute exact path='/admin/addskill' component={AdminNewSkill} />
 
 		<Route component={PageNotFound} />
 	</Switch>
