@@ -6,14 +6,14 @@ import { isWholeNumber } from '../utils/IsWholeNumber';
 import Loader from "./components/Loader";
 import Layout from "./components/Layout";
 import PageHeader from "./components/PageHeader";
-import FormErrors from "./components/FormErrors";
 import RateWorkers from "./components/RateWorkers";
-import LabourerList from "./components/LabourerList";
+import ErrorMessage from "./components/ErrorMessage";
 import UnauthorizedMessage from "./components/UnauthorizedMessage";
 
 const BASE_URL = "http://localhost:5001/api";
 
 const IncidentDetail = (props) => {
+    
     // Authorization
     const [authorized] = useState(true);
 
@@ -92,7 +92,7 @@ const IncidentDetail = (props) => {
         }
     };
 
-    const content = report && (
+    const content = !report ? <ErrorMessage message={"Incident does not exist."} /> : (
     <>
     <PageHeader
         title={"Incident Details"}
