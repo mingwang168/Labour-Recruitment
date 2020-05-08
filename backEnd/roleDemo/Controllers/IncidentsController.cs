@@ -177,7 +177,7 @@ namespace labourRecruitment.Controllers
             return new ObjectResult(report.IncidentReport.IncidentReportId);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "AdminNotified")]
         public IActionResult ChangeAdminNotified(int id)
         {
             var incident = _context.IncidentReport.FirstOrDefault(i => i.IncidentReportId == id);
@@ -189,7 +189,7 @@ namespace labourRecruitment.Controllers
             {
                 return BadRequest();
             }
-            return new ObjectResult(incident)
+            return new ObjectResult(incident);
         }
     }
 }
