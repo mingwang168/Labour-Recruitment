@@ -69,15 +69,14 @@ namespace labourRecruitment.Controllers
         [HttpGet("{jobId}")]
         public IActionResult GetInvoiceWeeks(int jobId)
         {
-            var isInJobLabourer = _context.JobLabourer.Any(jl => jl.JobId == jobId);
-            List<Week> weeks = new List<Week>();
-           
+          
             var jobLabourers = _context.JobLabourer.Where(j => j.JobId == jobId).Select(j => new Week {
                 FirstDay = j.StartDay,
                 LastDay = j.EndDay,
                 JobId = j.JobId
             }).Distinct();
-            return new ObjectResult(jobLabourers);
+            var weeks = jobLabourers.Where(jb => jb.LastDay.CompareTo(DateTime.Now) < 0);
+            return new ObjectResult(weeks);
 
 
             //var start = _context.Job.FirstOrDefault(j => j.JobId == jobId).StartDate;
