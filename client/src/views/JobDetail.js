@@ -5,6 +5,7 @@ import * as DataSanitizer from '../utils/DataSanitizer';
 import TopNav from './components/TopNav';
 import SideNav from './components/SideNav';
 import Table from './components/Table';
+import RateClient from "./components/RateClient";
 import CheckSafetyMetting from './components/CheckSafetyMeeting';
 import ErrorMessage from './components/ErrorMessage';
 
@@ -14,7 +15,6 @@ import * as Auth from '../utils/Auth';
 import { ATTENDANCE_DATES_TABLE_COLUMNS, INCIDENTS_TABLE_COLUMNS } from '../utils/TableColumns';
 
 const BASE_URL = "http://localhost:5001/api";
-
 const JobDetail = (props) => {
 
     const [details, setDetails] = useState();
@@ -73,7 +73,8 @@ const JobDetail = (props) => {
             console.error(err);
         }
     }
-    
+
+       
     useEffect(() => {
         if(props.match.params.id) {
             if(Number.isInteger(Number(props.match.params.id))) {
@@ -82,7 +83,6 @@ const JobDetail = (props) => {
         }
     }, [props.match.params.id])
 
-    
     return (
     <>
     <div className="dashboard-main-wrapper">
@@ -203,7 +203,7 @@ const JobDetail = (props) => {
                     <div className="card">
                         <h5 className="card-header">Safety Meetings</h5>
                         <div className="card-body">
-                            <p>Safety meetings are mandatory. Please check off the dates where safety meetings were completed.</p>
+                            <p>Safety meetings are mandatory. Please check if safety meetings were completed.</p>
                             {details.jobLabourer.map((jLabourer, i) => (
                             <CheckSafetyMetting 
                                 firstname={jLabourer.labourer.labourerFirstName} key={i}
@@ -217,6 +217,22 @@ const JobDetail = (props) => {
                         </div>
                     </div>
                 
+                    {/* Safety Meetings */}
+                    <div className="card">
+                        <h5 className="card-header">Client Rating</h5>
+                        <div className="card-body">
+                            <p>Client Rating is mandatory.</p>
+                            { details.jobLabourer.map((jLabourer, i) => (
+                                Auth.getID() == jLabourer.labourerId && 
+                                <RateClient key={i}
+                                jobId={details.jobId}
+                                labourerId={jLabourer.labourer.labourerId}
+                                rating={jLabourer.clientQualityRating}
+                                />
+                            ))
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
             </>

@@ -143,7 +143,7 @@ const IncidentDetail = (props) => {
                 </h5>
                 <div className="card-body">
                     <p>
-                        Give affected labourers a rating, based on their safety-wise performance on this job.
+                        Give effected labourers a rating, based on their safety-wise performance on this job.
                     </p>
                     <table className="table table-bordered table-hover">
                         <thead>
