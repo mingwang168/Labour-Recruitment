@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import * as Auth from '../utils/Auth';
+import { isValidDate } from '../utils/ValidateDate';
 import { isWholeNumber } from '../utils/IsWholeNumber';
 
 import Loader from './components/Loader';
@@ -12,26 +13,41 @@ import UnauthorizedMessage from './components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
-const InvoiceDetail = (props) => {
+const InvoiceDetails = (props) => {
 
     // Authorization
     const [authorized, setAuthorized] = useState(
         Auth.authenticateAdmin() || Auth.authenticateClient()
     );
 
-    const [id] = useState(
-        props.match.params.id && isWholeNumber(props.match.params.id) ? props.match.params.id : null
-    );
+    const [params] = useState(props.match.params && {
+        JobId: props.match.params.id && isWholeNumber(props.match.params.id) ? props.match.params.id : null,
+        StartDay: isValidDate(props.match.params.startdate) ? props.match.params.startdate : null,
+        EndDay: isValidDate(props.match.params.enddate) ? props.match.params.enddate : null
+    });
 
-    // Components
+    // Component
     const [loaded, setLoaded] = useState(false);
 
     // Data
     const [invoice, setInvoice] = useState();
 
-    const getInvoiceData = async(id) => {
+    const getDuration = (s, e) => {
+        let start = new Date(s);
+        let end = new Date(e);
+        if(start.getTime() === end.getTime()) {
+            return 1;
+        }
+        const day = 24 * 60 * 60 * 1000;
+        return Math.round(Math.abs((start - end) / day));
+    }
+
+    const fetchInvoice = async() => {
+        let generatedInvoice;
+
+        // Fetch job data
         try {
-            const URI = BASE_URL + `/Job/GetJob/${id}`;
+            const URI = BASE_URL + `/Job/GetJob/${params.JobId}`;
             let response = await fetch(URI, {
                 method: "GET",
                 headers: {
@@ -46,26 +62,74 @@ const InvoiceDetail = (props) => {
             let data = await response.json();
 
             if(data) {
-                setInvoice({
+                generatedInvoice = {
                     job: data.title,
                     complete: data.isComplete,
                     duration: getDuration(data.startDate, data.endDate),
+                    isComplete: data.isComplete,
                     client: {
                         name: data.client.clientName,
                         address: `${data.client.clientCity}, ${data.client.clientState}`,
                         phone: data.client.clientPhoneNumber
-                    },
-                    labourers: data.jobSkill.map(skill => {
-                        return {
-                            type: skill.skill.skillName,
-                            quantity: skill.numberNeeded,
-                            rate: skill.skill.labourerReceives.toFixed(2)
-                        }
-                    })
-                });
+                    }
+                }
             }
         } catch(e) {
             console.error(e)
+        }
+
+        // Fetch labourer data
+        try {
+            const URI = BASE_URL + `/ClientInvoice`;
+            let response = await fetch(URI, {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${Auth.getToken()}`
+                },
+                body: JSON.stringify(params)
+            });
+
+            if(response.status !== 200) {
+                throw response;
+            }
+
+            let data = await response.json();
+
+            if(data.length) {
+                let labourers = [];
+
+                data.forEach(l => {
+                    let skill = l.skill.skillName;
+                    if(labourers.some(e => e.type === skill)) {
+                        let index = labourers.map(e => e.type).indexOf(skill);
+                        let newQuantity = labourers[index].quantity + 1;
+                        labourers[index] = {
+                            ...labourers[index],
+                            quantity: newQuantity
+                        }
+                    } else {
+                        labourers.push({
+                            type: skill,
+                            quantity: 1,
+                            rate: l.skill.labourerReceives
+                        });
+                    }
+                });
+
+                generatedInvoice = {
+                    ...generatedInvoice,
+                    labourers: labourers
+                }
+            }
+        } catch(e) {
+            console.error(e)
+        }
+        
+        // Set invoice
+        if(generatedInvoice && generatedInvoice.labourers) {
+            setInvoice(generatedInvoice);
         }
 
         // Set loading state
@@ -88,11 +152,7 @@ const InvoiceDetail = (props) => {
 
             let data = await response.json();
             
-            if(data.length) {
-                if(data[0].toString() !== Auth.getID()) {
-                    setAuthorized(false);
-                }
-            } else {
+            if(data.length && data[0].toString() !== Auth.getID()) {
                 setAuthorized(false);
             }
         } catch(e) {
@@ -100,40 +160,36 @@ const InvoiceDetail = (props) => {
         }
     }
 
-    const getDuration = (s, e) => {
-        let start = new Date(s);
-        let end = new Date(e);
-        if(start.getTime() === end.getTime()) {
-            return 1;
-        }
-        const day = 24 * 60 * 60 * 1000;
-        return Math.round(Math.abs((start - end) / day));
-    }
-
-    useEffect(() => {
-        if(Auth.authenticateClient()) checkInvoiceBelongsToOwner(id);
-        getInvoiceData(id);
-    }, [])
-
     const content = (
-    <>
+    <Loader loaded={loaded}>
         <PageHeader
             title={`Invoice Details`}
             breadcrumbs={[
                 { name: "Home", path: "/dashboard" },
-                { name: "Invoices", path: Auth.authenticateAdmin() ? "/admin/invoices" : "/invoices" },
+                { 
+                    name: "Invoices",
+                    path: Auth.authenticateAdmin()
+                        ? "/admin/invoices"
+                        : "/invoices"
+                },
                 { name: "Invoice Details" }
             ]}
         />
 
-        <Loader loaded={loaded}>
-        { !invoice ? <ErrorMessage message={"Invoice does not exist."} /> : <Invoice data={invoice} /> }
-        <p></p>
-        </Loader>
-    </>
+        {invoice ? <Invoice data={invoice} /> : <ErrorMessage message={"Invoice does not exist."} />}
+    </Loader>
     );
 
-    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
+    useEffect(() => {
+        if(params) {
+            if(Auth.authenticateClient()) {
+                checkInvoiceBelongsToOwner(params.JobId);
+            }
+            fetchInvoice();
+        }
+    }, [])
+
+    return <Layout content={!authorized ? <UnauthorizedMessage /> : content} />;
 }
 
-export default InvoiceDetail;
+export default InvoiceDetails;
