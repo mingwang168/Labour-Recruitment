@@ -6881,3 +6881,44 @@ Media Query
 .icon-list li i {
     margin-right: 0.5rem;
 }
+
+.rc-tabs-top {
+    border: none;
+}
+
+.rc-tabs-tab {
+    outline: none;
+    background: white;
+    font-size: 1rem;
+    padding: 1rem 2rem;
+    border-radius: 3px;
+}
+
+.rc-tabs-tab:hover {
+    color: #5969ff;
+}
+
+.rc-tabs-tab-active {
+    color: #5969ff;
+}
+
+.rc-tabs-ink-bar {
+   background-color: transparent;
+}
+
+.rc-tabs-tabpane {
+    outline: none;
+    -webkit-font-smoothing: subpixel-antialiased;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.rc-tabs-tabpane-active {
+    -webkit-font-smoothing: subpixel-antialiased;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.rc-tabs-nav-wrap {
+    margin-bottom: 1.5rem;
+}
