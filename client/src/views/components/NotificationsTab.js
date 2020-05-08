@@ -15,13 +15,18 @@ const NotificationTabs = (props) => {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${ Auth.getToken()}`
+                    "Authorization": `Bearer ${Auth.getToken()}`
                 }
             })
-            let data = await response.json()
-            console.log(data)
+
+            if(response.status !== 200) {
+                throw response;
+            }
+
+            let data = await response.json();
+
             if(data) {
-                setIncidents(data)
+                setIncidents(data.reverse());
             }
         } catch (err) {
             console.error(err);
@@ -41,14 +46,15 @@ const NotificationTabs = (props) => {
         .then(data => console.log(data))
     }
 
-
     useEffect(() => {
-        fetchAllIncidentsNotNotified()
+        fetchAllIncidentsNotNotified();
     }, [])
     
     return (
     <>
-    { !incidents ? <li>You do not have any new notifications.</li>   :
+    { !incidents ?
+    <li>You do not have any new notifications.</li>
+    :
     <li className="nav-item dropdown notification">
         <a className="nav-link nav-icons" href="/dashboard" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{marginTop:'5px'}}>
             {incidents.length == 0 ? 
@@ -77,7 +83,7 @@ const NotificationTabs = (props) => {
                        to={`/incident/${incident.incidentReport.incidentReportId}`} key={i}>
                     <div className="notification-info">
                     <div className="notification-list-user-block" style={{paddingLeft:'0px'}}>
-                        <span className="notification-list-user-name" style={{marginRight:'0px'}}>Company {incident.client.clientName}</span> created an Incident Report
+                        <span className="notification-list-user-name" style={{marginRight:'0px'}}>{incident.client.clientName}</span> created an Incident Report
                     </div>
                     </div>
                     </Link>
