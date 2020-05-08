@@ -164,6 +164,7 @@ const RegisterLabourer = ({ history }) => {
             <div className="form-group">
                 <label htmlFor="firstname">First Name <span className="text-danger">*</span></label>
                 <input
+                    autoFocus
                     className="form-control form-control-lg"
                     name="firstname"
                     type="text"
