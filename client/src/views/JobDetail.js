@@ -31,9 +31,7 @@ const JobDetail = (props) => {
     const [isAdmin] = useState(Auth.authenticateAdmin());
     const [isClient] = useState(Auth.authenticateClient());
     const [isLabourer] = useState(Auth.authenticateLabourer());
-    const [isJobOwner] = useState(
-        Auth.authenticateClient() && Auth.getID() === id ? true : false
-    );
+    const [isJobOwner, setIsJobOwner] = useState();
 
     // Component
     const [loaded, setLoaded] = useState(false);
@@ -54,8 +52,17 @@ const JobDetail = (props) => {
                     "Authorization": `Bearer ${ Auth.getToken()}`
                 }
             })
+
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
-            setDetails(data);
+
+            if(data) {
+                setDetails(data);
+                setIsJobOwner(isClient && Auth.getID() == data.clientId ? true : false);
+            }
         } catch (err) {
             console.error(err);
         }
@@ -187,7 +194,6 @@ const JobDetail = (props) => {
                         </p>
                     </div>
 
-                    { isJobOwner &&
                     <div className="card-body border-top">
                         <Link
                             to={`/editjob/${details.jobId}`}
@@ -196,7 +202,6 @@ const JobDetail = (props) => {
                             Edit Job Details
                         </Link>
                     </div>
-                    }
                 </div>
             </div>
 
@@ -208,7 +213,7 @@ const JobDetail = (props) => {
                     renderTabContent={() => <TabContent />}
                 >
                     {/* Labourer Attendance (Client & Admin Only) */}
-                    { isClient || isAdmin &&
+                    { (isClient || isAdmin) &&
                     <TabPane tab="Labourer Attendance" key="1">
                     <div className="card">
                         <div className="card-body">
@@ -232,9 +237,8 @@ const JobDetail = (props) => {
                     }
 
                     {/* Safety Meetings (Client & Admin Only) */}
-                    { isClient || isAdmin &&
+                    { (isClient || isAdmin) &&
                     <TabPane tab="Safety Meetings" key="2">
-                    { isClient || isAdmin &&
                     <div className="card">
                         <div className="card-body">
                             <p>
@@ -284,7 +288,6 @@ const JobDetail = (props) => {
                             </Link>
                         </div>
                     </div>
-                    }
                     </TabPane>
                     }
 
