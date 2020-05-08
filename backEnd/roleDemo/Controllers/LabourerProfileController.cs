@@ -107,6 +107,13 @@ namespace labourRecruitment.Controllers
             else
             {
                 selectedLabourer.OnLeave = labourer.OnLeave;
+                if(labourer.OnLeave == true)
+                {
+                    selectedLabourer.IsAvailable = false;
+                } else
+                {
+                    selectedLabourer.IsAvailable = true;
+                }
                 _context.SaveChanges();
             }
             return new ObjectResult(labourer);
