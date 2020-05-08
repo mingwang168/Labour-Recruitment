@@ -240,7 +240,8 @@ const JobDetail = (props) => {
                             {`${details.totalHired} labourer(s) hired`}
                         </p>
                     </div>
-
+                    
+                    { isJobOwner &&
                     <div className="card-body border-top">
                         <Link
                             to={`/editjob/${details.jobId}`}
@@ -249,6 +250,7 @@ const JobDetail = (props) => {
                             Edit Job Details
                         </Link>
                     </div>
+                    }
                 </div>
             </div>
 

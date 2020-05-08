@@ -197,7 +197,11 @@ const IncidentDetail = (props) => {
     );
 
     useEffect(() => {
-        if(id) fetchIncidentDetails(id);
+        if(id) {
+            fetchIncidentDetails(id)
+        }else {
+            setLoaded(true);
+        }
     }, []);
 
     return <Layout content={content} />;
