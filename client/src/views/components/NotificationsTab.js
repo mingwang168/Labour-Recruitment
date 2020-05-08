@@ -1,6 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
+import * as Auth from '../../utils/Auth';
+
+const BASE_URL = "http://localhost:5001/api";
 const NotificationTabs = () => {
+
+    const [incidents, setIncidents] = useState();
+
+    const fetchAllIncidentsNotNotified = async() => {
+        try {
+            const response = await fetch(BASE_URL + '/Incidents/GetIncidentsNotNotified',  {
+                method : 'GET',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${ Auth.getToken()}`
+                }
+            })
+            let data = await response.json()
+            console.log(data)
+            if(data) {
+                setIncidents(data)
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    useEffect(() => {
+        fetchAllIncidentsNotNotified()
+    }, [])
+
     return (
     <li className="nav-item dropdown notification">
         <a className="nav-link nav-icons" href="/dashboard" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{marginTop:'5px'}}>
