@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-
-import * as Auth from '../../utils/Auth';
-import * as DataSanitizer from '../../utils/DataSanitizer';
-
-import Table from '../components/Table';
+import React, { useEffect } from 'react';
 import TopNav from '../components/TopNav';
 import SideNav from '../components/SideNav';
 import Footer from '../components/Footer';
 
 const Layout = ({ content }) => {
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+
     return (
     <div className="dashboard-main-wrapper">
         <TopNav />

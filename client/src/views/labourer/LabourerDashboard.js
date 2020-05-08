@@ -57,13 +57,15 @@ const LabourerDashboard = (props) => {
                     status: d.isComplete ? "Complete" : "In Progress"
                 }));
 
-                setJobs(formattedData);
+                setJobs(formattedData.reverse());
+                
                 setJobsTableColumns([
                     {Header: 'Job Title', accessor: 'title'},
                     {Header: 'Start Date', accessor: 'startdate'},
                     {Header: 'End Date', accessor: 'enddate'},
                     {Header: 'Completion Status', accessor: 'status'},
                 ]);
+                
                 setAssignedJobsStat(data.length);
             }
 
@@ -225,7 +227,6 @@ const LabourerDashboard = (props) => {
                         columns={jobsTableColumns}
                         path="/job"
                         searchable={true}
-                        striped={true}
                         {...props}
                     />
                 }

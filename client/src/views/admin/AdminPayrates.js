@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { Link } from 'react-router-dom';
 import * as Auth from '../../utils/Auth';
 
 import Loader from '../components/Loader';
@@ -67,7 +67,11 @@ const AdminPayrates = (props) => {
     }
 
     useEffect(() => {
-        if(authorized) fetchSkills();
+        if(authorized) {
+            fetchSkills();
+        } else {
+            setLoaded(true);
+        }
     }, [])
 
     const content = (
@@ -84,24 +88,27 @@ const AdminPayrates = (props) => {
         <div className="row">
         <div className="col">
         <div className="card">
-            <h4 className="card-header">All Skills</h4>
-            <div className="card-body">
-            { !skills ? <ErrorMessage message={"No payrates to display."} /> :
-           <div className="row">
-           <Table
-                data={skills}
-                columns={skillsTableColumns}
-                path="/admin/skill"
-                {...props}
-            />            
+            <div className="card-header d-flex">
+                <h4 className="card-header-title">All Skills</h4>
+                <div className="toolbar ml-auto">
+                    <Link 
+                        to="/admin/addskill"
+                        className="btn btn-primary btn-sm"
+                    >
+                        Add New Skill
+                    </Link>
+                </div>
             </div>
-            }   
-             <button
-                    onClick={() => console.log("Add New Skill button")}
-                    className="btn btn-primary pt-1 pb-0 float-right"
-                >
-                   Add New Skill
-                </button> 
+            <div className="card-body">
+                { !skills ? <ErrorMessage message={"No payrates to display."} /> :
+                <Table
+                    data={skills}
+                    columns={skillsTableColumns}
+                    itemsPerPage={10}
+                    path="/admin/skill"
+                    {...props}
+                />      
+                }
             </div>
         </div>
         </div>

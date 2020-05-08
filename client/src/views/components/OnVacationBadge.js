@@ -3,45 +3,56 @@ import Checkbox from 'react-simple-checkbox';
 import * as Auth from '../../utils/Auth';
 
 const BASE_URL = "http://localhost:5001/api";
-const OnVacationBadge = (props) => {
-    const [onVacation, setOnVacation] = useState(props.onLeave)
+
+const OnVacationBadge = ({ labourerId, onLeave }) => {
+
+    const [onVacation, setOnVacation] = useState(onLeave);
 
     const ChangeOnVacation = async(check) => {
-        console.log(props.labourerId)
-            try{
-                const response = await fetch(BASE_URL + '/LabourerProfile', {
-                    method : 'PUT',
-                    headers : {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        'Authorization': `Bearer ${Auth.getToken()}`
-                    }, 
-                    body : JSON.stringify({
-                        LabourerId : props.labourerId,
-                        OnLeave : check
-                    })
+        try {
+            const URI = BASE_URL + '/LabourerProfile';
+            const response = await fetch(URI, {
+                method: 'PUT',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${Auth.getToken()}`
+                }, 
+                body: JSON.stringify({
+                    LabourerId: labourerId,
+                    OnLeave: check
                 })
-                const data = await response.json()
-                if (data) {
-                    setOnVacation(check)
-                }
-            } catch (err) {
-                console.error(err);
+            });
+
+            if(response.status !== 200) {
+                throw response;
             }
- 
+
+            const data = await response.json();
+
+            if(data) {
+                setOnVacation(check);
+            }
+
+        } catch(e) {
+            console.error(e);
+        }
     }
 
-    return (
-        <div>
-            <Checkbox size="2" tickSize="0" color="#5969ff" 
-                onChange= {ChangeOnVacation} 
-                checked={onVacation} />
-            <span className="ml-1">
-                On Vacation
+    return(
+        <>
+            <span className="mr-2">
+                I do not want to be assigned to any new jobs.
             </span>
-        </div>
-
-    )
-
+            <Checkbox
+                size="2"
+                tickSize="2" 
+                color="#ef172c"
+                onChange= {ChangeOnVacation} 
+                checked={onVacation}
+            />
+        </>
+    );
 }
-export default OnVacationBadge
+
+export default OnVacationBadge;

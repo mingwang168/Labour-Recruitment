@@ -50,11 +50,7 @@ namespace labourRecruitment.Controllers
                 TotalHired = j.TotalHired,
                 ScheduleDone = j.ScheduleDone,
                 Client = _context.Client.Select(c => new Client { ClientName = c.ClientName }).FirstOrDefault(),
-                //IncidentReport = j.IncidentReport,
-                //JobLabourer = j.JobLabourer,
-                //JobSkill = j.JobSkill,
-                //LabourerAttendance = j.LabourerAttendance
-            }).ToListAsync();
+              }).ToListAsync();
 
             return await jobs;
         }
@@ -81,10 +77,7 @@ namespace labourRecruitment.Controllers
                 TotalHired = j.TotalHired,
                 ScheduleDone = j.ScheduleDone,
                 Client = _context.Client.Select(c => new Client { ClientName = c.ClientName }).FirstOrDefault(),
-                //IncidentReport = j.IncidentReport,
-                //JobLabourer = j.JobLabourer,
-                //JobSkill = j.JobSkill,
-                //LabourerAttendance = j.LabourerAttendance
+                
             }).ToListAsync();
 
             return await jobs;
@@ -175,24 +168,13 @@ namespace labourRecruitment.Controllers
                 EndDate = jl.EndDay,
                 InProgress = jl.Job.InProgress,
                 IsComplete = jl.Job.IsComplete,
-             //   JobLabourer = jl.Job.JobLabourer,
-                
+                           
             }).ToListAsync();
 
             return new ObjectResult(jls);
         }
 
-        public class GetJobVM
-        {
-            public int JobId { get; set; }
-            public string Title { get; set; }
-            public DateTime StartDate { get; set; }
-            public DateTime EndDate { get; set; }
-            public bool? InProgress { get; set; }
-            public bool? IsComplete { get; set; }
-       //     public ICollection<JobLabourer> JobLabourer { get; set; }
-        }
-
+       
         // POST: api/Job
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

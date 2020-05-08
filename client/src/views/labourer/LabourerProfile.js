@@ -31,9 +31,7 @@ const LabourerProfile = (props) => {
         false
     );
 
-    const [isProfileOwner] = useState(
-        authorized && Auth.authenticateLabourer()
-    );
+    const [isProfileOwner] = useState(Auth.authenticateLabourer());
 
     // Component
     const [loaded, setLoaded] = useState();
@@ -44,11 +42,9 @@ const LabourerProfile = (props) => {
     const [jobs, setJobs] = useState();
     const [incidents, setIncidents] = useState();
    
-
     // Table Columns
     const [jobsTableColumns, setJobsTableColumns] = useState();
     const [incidentsTableColumns, setIncidentsTableColumns] = useState();
-    
 
     const fetchProfileData = async(id) => {
         // Fetch profile data
@@ -66,7 +62,7 @@ const LabourerProfile = (props) => {
             }
     
             let data = await response.json();
-            console.log(data)
+            
             if(data) {
                 setLabourer({
                     ...data.labourer,
@@ -196,12 +192,6 @@ const LabourerProfile = (props) => {
                 <h1 className="font-26 mb-2">
                     {`${labourer.labourerFirstName} ${labourer.labourerLastName}`}
                 </h1>
-                { (Auth.getID() == labourer.labourerId || Auth.getRole() == "Admin") &&
-                    <OnVacationBadge 
-                        labourerId={labourer.labourerId}
-                        onLeave={labourer.onLeave} 
-                    /> 
-                }
             </div>
 
             <div className="card-body border-top">
@@ -271,6 +261,19 @@ const LabourerProfile = (props) => {
                 </div>
             </div>
 
+            { isProfileOwner &&
+            <div className="card">
+                <h4 className="card-header">Availability</h4>
+                <div className="card-body">
+                    <p>Check the box below if you <strong>do not</strong> want to accept or be assigned to any new jobs.</p>
+                    <OnVacationBadge 
+                        labourerId={labourer.labourerId}
+                        onLeave={labourer.onLeave} 
+                    />
+                </div>
+            </div>
+            }
+
             {/* Jobs */}
             <div className="card">
                 <div className="card-header d-flex">
@@ -333,20 +336,17 @@ const LabourerProfile = (props) => {
     </>
     );
 
-    const content = !authorized ? <UnauthorizedMessage /> :
-    (
-    <>
+    const content = (
     <Loader loaded={loaded}>
     { labourer ? profile : <ErrorMessage message={"No profile found."} /> }
     </Loader>
-    </>
     );
 
     useEffect(() => {
         if(authorized) fetchProfileData(id);
     }, [])
 
-    return <Layout content={content} />;
+    return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
 export default LabourerProfile;

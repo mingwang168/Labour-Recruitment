@@ -12,7 +12,7 @@ import UnauthorizedMessage from '../components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
-const AdminInvoices = (props) => {
+const AdminPayroll = (props) => {
 
     // Authorization
     const [authorized] = useState(Auth.authenticateAdmin());
@@ -26,7 +26,7 @@ const AdminInvoices = (props) => {
     const [jobs, setJobs] = useState();
     const [weeks, setWeeks] = useState();
 
-    // Form
+    // Form Selections
     const [selectedClient, setSelectedClient] = useState();
     const [selectedJob, setSelectedJob] = useState();
     const [selectedWeek, setSelectedWeek] = useState();
@@ -54,8 +54,6 @@ const AdminInvoices = (props) => {
                         value: d.clientId
                     }
                 }));
-            } else {
-                setSelectedJob(null);
             }
             
         } catch(e) {
@@ -86,15 +84,14 @@ const AdminInvoices = (props) => {
                         value: d.jobId
                     }
                 }));
-            } else {
-                setSelectedWeek(null);
             }
+            
         } catch(e) {
             console.error(e);
         }
     }
 
-    const fetchInvoiceWeeksByJobID = async(id) => {
+    const fetchWeeksByJobID = async(id) => {
         try {
             const URI = BASE_URL + `/ClientInvoice/${id}`;
             let response = await fetch(URI, {
@@ -140,7 +137,7 @@ const AdminInvoices = (props) => {
     const onChangeJob = (selection) => {
         if(selection) {
             setSelectedJob(selection.value);
-            fetchInvoiceWeeksByJobID(selection.value);
+            fetchWeeksByJobID(selection.value);
         }
     }
 
@@ -178,7 +175,7 @@ const AdminInvoices = (props) => {
 
         if(validateForm()) {
             const { JobId, StartDay, EndDay } = selectedWeek;
-            props.history.push(`/invoice/${JobId}/${StartDay}/${EndDay}`);
+            props.history.push(`/payroll/${JobId}/${StartDay}/${EndDay}`);
         }
     }
 
@@ -190,10 +187,10 @@ const AdminInvoices = (props) => {
     const content = (
     <>
     <PageHeader
-        title={`Manage Invoices`}
+        title={`Manage Payroll`}
         breadcrumbs={[
             { name: "Home", path: "/dashboard" },
-            { name: "Invoices" }
+            { name: "Payrolls" }
         ]}
     />
 
@@ -201,7 +198,7 @@ const AdminInvoices = (props) => {
         <div className="row">
         <div className="col">
         <div className="card">
-        <h5 className="card-header">Generate an Invoice</h5>
+        <h5 className="card-header">Generate a Report</h5>
         <div className="card-body">
         
         {formErrors.length > 0 && (
@@ -255,4 +252,4 @@ const AdminInvoices = (props) => {
     return <Layout content={authorized ? content : <UnauthorizedMessage />} />;
 }
 
-export default AdminInvoices;
+export default AdminPayroll;

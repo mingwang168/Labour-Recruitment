@@ -25,7 +25,7 @@ const Home = (props) => {
         </div>
 
         <div className="col-6 col-xl-10 text-right pt-1">
-            <Link to="/dashboard" className="text-white mr-3">Client Dashboard</Link>
+            <Link to="/dashboard" className="text-white mr-3">Dashboard</Link>
             <Link to="/register" className="text-white mr-3">Sign Up</Link>
             <Link to="/login" style={{textDecoration:'none'}}>
                 <span className="rounded bg-primary py-2 px-3 text-white">Login</span>
