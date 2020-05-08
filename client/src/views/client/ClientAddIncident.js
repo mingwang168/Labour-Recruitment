@@ -18,9 +18,6 @@ const ClientAddIncident = ({ history }) => {
     // Authorization
     const [authorized] = useState(Auth.authenticateClient());
 
-    // Component
-    const [loaded, setLoaded] = useState(false);
-
     // Data
     const [jobs, setJobs] = useState([]);
     const [labourerList, setLabourerList] = useState([]);
@@ -28,43 +25,19 @@ const ClientAddIncident = ({ history }) => {
 
     // Form Data
     const [formErrors, setFormErrors] = useState([]);
+
     const [selectedJob, setSelectedJob] = useState();
     const [selectedIncident, setSelectedIncident] = useState();
     const [selectedLabourers, setselectedLabourers] = useState([]);
+    const [selectedJobStartDate, setSelectedJobStartDate] = useState();
+    const [selectedJobEndDate, setSelectedJobEndDate] = useState();
+
     const [report, setReport] = useState({
         incidentdate: "",
         incidentsummary: "",
     });
+
     const { incidentdate, incidentsummary } = report;
-
-    const validateForm = (e) => {
-        e.preventDefault();
-        console.log("Validating form...");
-        let errors = [];
-
- 
-        if(!report.incidentdate){
-            errors.push("Invalid date entered");
-        }
-        if (!selectedIncident) {
-            errors.push("You must select incident type.");
-        }
-        if (!selectedJob) {
-            errors.push("You must select the job involved.");
-        }
-        if (!selectedLabourers.length) {
-            errors.push("You must select labourers affected.");
-        }
-        if(!report.incidentsummary){
-            errors.push("You must provide incident summary.");
-        }
-
-        if (errors.length) {
-            setFormErrors(errors);
-        } else {
-            submitForm();
-        }
-    };
 
     const fetchAllJobs = async () => {
         try {
@@ -78,8 +51,15 @@ const ClientAddIncident = ({ history }) => {
                 }
             );
 
+            if(response.status !== 200) {
+                throw response;
+            }
+
             let data = await response.json();
-            setJobs(data);
+
+            if(data.length) {
+                setJobs(data);
+            }
         } catch (e) {
             console.error(e);
         }
@@ -131,8 +111,10 @@ const ClientAddIncident = ({ history }) => {
     };
 
     const onChangeJob = (job) => {
-        if (job) {
+        if(job) {
             setSelectedJob(job.value);
+            setSelectedJobStartDate(job.startDate);
+            setSelectedJobEndDate(job.endDate);
             fetchLabourers(job.value);
         }
     };
@@ -140,6 +122,65 @@ const ClientAddIncident = ({ history }) => {
     const onChangeType = (type) => {
         if (type) {
             setSelectedIncident(type.value);
+        }
+    };
+
+    const validateForm = (e) => {
+        e.preventDefault();
+        let errors = [];
+
+        // Validate date
+        if (
+            !FormValidator.date(incidentdate) &&
+            incidentdate === null &&
+            incidentdate === ""
+        ) {
+            errors.push("Invalid date entered.");
+        }
+
+        // Check if incident date is between selected job start/end date
+        if(selectedJob && incidentdate && incidentdate !== "") {
+            let start = new Date(selectedJobStartDate);
+            let end = new Date(selectedJobEndDate);
+            let selected = new Date(incidentdate);
+
+            // Fix selected date format
+            selected.setDate(selected.getDate() + 1);
+            selected.setHours(0, 0, 0, 0);
+
+            if(selected < start) {
+                errors.push("Date of incident cannot be before the job start date.");
+            }
+
+            if(selected > end) {
+                errors.push("Date of incident cannot be after the job end date.");
+            }
+        }
+
+        // Validate incident type
+        if(!selectedIncident) {
+            errors.push("Incident type is required.");
+        }
+
+        // Validate job selection
+        if(!selectedJob) {
+            errors.push("You must select the job where the incident occured.");
+        }
+
+        // Validate labourers affected
+        if(!selectedLabourers.length) {
+            errors.push("You must select at least one labourer that was involved in the incident.");
+        }
+
+        // Validate incident summary
+        if(!incidentsummary || incidentsummary === "") {
+            errors.push("Incident summary is required.");
+        }
+
+        if(errors.length) {
+            setFormErrors(errors);
+        } else {
+            submitForm();
         }
     };
 
@@ -268,6 +309,8 @@ const ClientAddIncident = ({ history }) => {
                                             return {
                                                 value: job.jobId,
                                                 label: job.title,
+                                                startDate: job.startDate,
+                                                endDate: job.endDate
                                             };
                                         })
                                     }

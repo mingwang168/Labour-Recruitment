@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-import * as Auth from '../../utils/Auth';
-import { isWholeNumber } from '../../utils/IsWholeNumber';
+import * as Auth from '../utils/Auth';
+import { isWholeNumber } from '../utils/IsWholeNumber';
 
-import Loader from '../components/Loader';
-import Layout from '../components/Layout';
-import PageHeader from '../components/PageHeader';
-import Invoice from '../components/Invoice';
-import ErrorMessage from '../components/ErrorMessage';
-import UnauthorizedMessage from '../components/UnauthorizedMessage';
+import Loader from './components/Loader';
+import Layout from './components/Layout';
+import PageHeader from './components/PageHeader';
+import Invoice from './components/Invoice';
+import ErrorMessage from './components/ErrorMessage';
+import UnauthorizedMessage from './components/UnauthorizedMessage';
 
 const BASE_URL = "http://localhost:5001/api";
 
