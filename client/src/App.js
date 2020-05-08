@@ -18,6 +18,7 @@ import Incidents from "./views/Indicents";
 import JobDetail from "./views/JobDetail";
 import IncidentDetail from "./views/IncidentDetail";
 import InvoiceDetail from "./views/InvoiceDetail";
+import PayrollDetail from "./views/PayrollDetail";
 import UpdateProfile from "./views/UpdateProfile";
 
 import ClientRegister from "./views/client/ClientRegister";
@@ -83,7 +84,7 @@ class App extends Component {
         <ProtectedRoute exact path='/incident/:id' component={IncidentDetail} />
 		<ProtectedRoute exact path='/profile/edit' component={UpdateProfile} />
 		<ProtectedRoute exact path='/invoice/:id/:startdate/:enddate' component={InvoiceDetail} />
-	
+		<ProtectedRoute exact path='/payroll/:id/:startdate/:enddate' component={PayrollDetail} />
 
 
 		{/* Client Only Views */}
