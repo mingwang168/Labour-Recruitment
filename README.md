@@ -15,6 +15,7 @@ Wireframes and mockups are hosted on Figma [here](https://www.figma.com/file/uSw
 
 ## ERD
 <img src="erd.jpg">
+
 ## Use Case Diagram
 <img src="ucd.png">
 
