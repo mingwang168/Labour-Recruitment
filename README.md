@@ -22,5 +22,5 @@ Wireframes and mockups are hosted on Figma [here](https://www.figma.com/file/uSw
 To run the front-end:
 Unzip the zip file into an empty directory.
 In Labour-Recruitment\client folder, run the commands: 
->npm install
->npm start
+* npm install
+* npm start
