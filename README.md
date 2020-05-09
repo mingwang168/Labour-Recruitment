@@ -17,3 +17,10 @@ Wireframes and mockups are hosted on Figma [here](https://www.figma.com/file/uSw
 <img src="erd.jpg">
 ## Use Case Diagram
 <img src="ucd.png">
+
+##  Installation instruction
+To run the front-end:
+Unzip the zip file into an empty directory.
+In Labour-Recruitment\client folder, run the commands: 
+>npm install
+>npm start
