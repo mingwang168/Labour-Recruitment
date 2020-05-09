@@ -15,6 +15,6 @@ Wireframes and mockups are hosted on Figma [here](https://www.figma.com/file/uSw
 
 ## ERD
 Check our ERD on LucidChart [here](https://www.lucidchart.com/invitations/accept/fea3775f-ba3c-4686-b0b7-32138a24d362).
-
+<img src="erd.jpg">
 ## Use Case Diagram
 <img src="ucd.png">
